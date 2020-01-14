@@ -1,0 +1,59 @@
+<%# requirements: mode, project, summary, summary_by_month, chart_url %>
+
+<h2>Summary by month</h2>
+
+<% if chart_url %>
+  <img src="<%= chart_url %>" alt="summary graph">
+<% end %>
+
+<% if project.size > 0 then %>
+<table>
+  <tr>
+    <th>Date</th>
+    <th>New reports</th>
+    <th>Replies</th>
+    <th>Closed</th>
+    <th>Opened (to date)</th>
+    <th>Closed (to date)</th>
+    <th>Total</th>
+  </tr>
+
+  <% summary_by_month.each do |month, item| %>
+  <%  
+      params = { 
+        'project' => project.id,
+        'action'  => Summary.name(),
+        'month'   => month.gsub(/\//, '-')
+      }
+  %>
+  <tr>
+    <td class="center_align"><%= month.href(mode.url, params) %></td>
+    <td class="right_align"><%= item.new.to_s   %></td>
+    <td class="right_align"><%= item.reply.to_s   %></td>
+    <td class="right_align"><%= item.close.to_s %></td>
+    <td class="right_align"><%= item.cumm_opened.to_s %></td>
+    <td class="right_align"><%= item.cumm_closed.to_s %></td>
+    <td class="right_align"><%= item.total.to_s %></td>
+  </tr>
+  <% end %>
+</table>
+<!-- [<a href="mrtg/test.html">View report trends using MRTG</a>] -->
+
+<% else %>
+  <p>Since no reports have been submitted, there is no summary.</p>
+<%end %>
+
+<% 
+   etypes = project.report_type.find_all{|etype| 
+     etype.kind_of?(SelectElementType) && etype.report_attr
+   }
+%>
+
+<% if project.top_page_options['count'] then %>
+  <% etypes.each do |etype| %>
+	<h2>Report count (by <%= etype.name %>)</h2>
+    <p>
+      <%= eval_template('topics_count.rhtml', {:mode => mode, :project => project, :etype => etype}) %>
+    </p>
+  <% end %>
+<% end %>

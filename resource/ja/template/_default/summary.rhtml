@@ -1,0 +1,59 @@
+<%# requirements: mode, project, summary, summary_by_month, chart_url %>
+
+<h2>月別サマリ</h2>
+
+<% if chart_url %>
+  <img src="<%= chart_url %>" alt="summary graph">
+<% end %>
+
+<% if project.size > 0 then %>
+<table>
+  <tr>
+    <th>年/月</th>
+    <th>新規</th>
+    <th>リプライ</th>
+    <th>終了</th>
+    <th>累積未終了</th>
+    <th>累積終了</th>
+    <th>合計</th>
+  </tr>
+
+  <% summary_by_month.each do |month, item| %>
+  <%  
+      params = { 
+        'project' => project.id,
+        'action'  => Summary.name(),
+        'month'   => month.gsub(/\//, '-')
+      }
+  %>
+  <tr>
+    <td class="center_align"><%= month.href(mode.url, params) %></td>
+    <td class="right_align"><%= item.new.to_s   %></td>
+    <td class="right_align"><%= item.reply.to_s   %></td>
+    <td class="right_align"><%= item.close.to_s %></td>
+    <td class="right_align"><%= item.cumm_opened.to_s %></td>
+    <td class="right_align"><%= item.cumm_closed.to_s %></td>
+    <td class="right_align"><%= item.total.to_s %></td>
+  </tr>
+  <% end %>
+</table>
+<!-- [<a href="mrtg/test.html">MRTGによるレポート数の推移</a>] -->
+
+<% else %>
+  <p>レポートが投稿されていないので、サマリもありません。</p>
+<%end %>
+
+<% 
+   etypes = project.report_type.find_all{|etype| 
+     etype.kind_of?(SelectElementType) && etype.report_attr
+   }
+%>
+
+<% if project.top_page_options['count'] then %>
+  <% etypes.each do |etype| %>
+    <h2><%= etype.name %>別レポート数</h2>
+    <p>
+      <%= eval_template('topics_count.rhtml', {:mode => mode, :project => project, :etype => etype}) %>
+    </p>
+  <% end %>
+<% end %>

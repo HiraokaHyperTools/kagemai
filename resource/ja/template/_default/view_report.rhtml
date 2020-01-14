@@ -1,0 +1,139 @@
+<%# requirements: project, report, email_notification, 
+                  use_cookie, show_form, params, errors %>
+
+<h2>最新状況</h2>
+
+<table>
+  <% report.each_attr do |etype| %>
+  <%  next if etype['hide_from_guest'] && Mode::GUEST.current? %>
+  <tr>
+    <th><%= etype.name.html_value() %></th>
+    <td><%= report.element(etype.id).html_value() %></td>
+  </tr>
+  <% end %>
+
+  <tr>
+    <th>作成日時</th>
+    <td><span class="date"><%= report.create_time.html_value() %></span></td>
+  </tr>
+
+  <tr>
+    <th>最終更新日時</th>
+    <td><span class="date"><%= report.modify_time.html_value() %></span></td>
+  </tr>
+</table>
+
+
+<h2>履歴</h2>
+
+<% report.each_with_index do |message, i| %>
+<div>
+  <% next if message.hide? && !Mode::ADMIN.current? %>
+  <% msg_num = (i + 1).to_s %>
+  <div class="message-header">
+    <% params = {'name' => msg_num} %>
+    <% msg_num_str = %Q!<span class="message-header">#{msg_num}</span>! %>
+    <%= report.href(msg_num_str, {}, "##{msg_num}", 'message-header', params) %> | 
+    <%= message.log_header() %>
+  </div>
+  <div class="message-body">
+    <%= message.body.html_value() %>
+  </div>
+  
+  <% message.each_fileelement do |felement| %>
+  <%   next if felement.value.to_s.empty?
+       felement.file_descs.each do |desc|   
+         name, mtype, size, params = desc  
+	 url = CGIApplication.instance.mode.url
+         view_url = '表示'.href(url, params)
+          
+         params['d'] = 'true'
+         download_url = 'ダウンロード'.href(url, params)  %>
+         
+         <div class="message-fileelement">
+           <%= name %> (<%= mtype %>, <%= size.to_s %> bytes) 
+           
+           <%  if mtype != 'application/octet-stream' then %>
+            [<%= view_url %>]
+          <% end %>
+          [<%= download_url %>]
+         </div>
+    <% end %>
+  <% end %>
+  <% if Mode::ADMIN.current? %>
+    <% if message.hide? %>
+      <div class="message-bottom">
+        このメッセージは非表示に設定されています。[<%= message.hide_href('表示する', false) %>]
+      </div>
+    <% elsif report.visible_size > 1 %>
+      <div class="message-bottom">[<%= message.hide_href('スパムとして隠す') %>]</div>
+    <% else %>
+      <div class="message-bottom">最後の1つは非表示にできません。<br>レポートを却下などの状態へと変更してください。</div>
+    <% end %>
+  <% end %>
+
+  <br>
+</div>
+<% end %>
+
+<% if show_form then %>
+  <h2 id="form">リプライをつける</h2>
+  
+  <%
+    param = {
+      :project            => project, 
+      :report_id          => report.id.to_s,
+      :params             => params, 
+      :email_notification => email_notification,
+      :use_cookie         => use_cookie, 
+      :errors             => errors,
+      :use_captcha        => use_captcha,
+      :captcha_error      => false
+    }
+  %>
+  
+  <%= eval_template('message_form.rhtml', param) %>
+<% else %>
+<%
+  opts = [report.href('リプライをつける', {'s' => '1'}, '#form')]
+
+  unless Mode::GUEST.current? then
+    opts << SplitReport.href(project.id, report.id)
+  end
+%>
+
+  [<%= opts.join('|') %>]
+<% end %>
+  
+<% if Mode::ADMIN.current? then %>
+
+<hr>
+<h2>メール通知先の変更</h2>
+
+<p>このレポートが変更されたときにメールを通知したいアドレスをチェックしてください。</p>
+
+<form action="<%= project.url  %>" 
+      method="post" 
+      accept-charset="<%= project.charset %>">
+
+  <p>
+  <% addresses = report.email_addresses(false) %>
+  <% addresses.each do |addr, notify| %>
+    <% checked = notify ? 'checked="checked"' : '' %>
+    <input type="checkbox" name="<%= addr.escape_h %>" <%= checked %>> <%= addr.escape_h %><br>
+  <% end %>
+  </p>
+
+  <p><input type="submit" value="設定を変更する"></p>
+
+  <div>
+    <input type="hidden" name="action" value="<%= SetEmailNotification.name %>">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="id" value="<%= report.id %>">
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+  </div>
+</form>
+
+<% end %>

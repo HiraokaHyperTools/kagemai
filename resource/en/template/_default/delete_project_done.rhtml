@@ -1,0 +1,17 @@
+<%# requirements: mode, project, del_name, delete_all %>
+
+<p>The following projects have been deleted:</p>
+
+<% unless delete_all then %>
+<p>
+Their data is saved in '<%= "#{del_name}" %>'.<br>
+(If you are using DBMS, their data remains in the database as well.)
+</p>
+<% end %>
+
+<%= eval_template('project_info.rhtml', {:project => project, :show_report_count => false, :mode => mode}) %>
+
+<ul>
+  <li><%= 'Return to the project deletion page'.href(mode.url, {'action' => DeleteProject.name}) %></li>
+  <li><%= 'Return to the project list page'.href(mode.url, {'action' => Projects.name}) %></li>
+</ul>

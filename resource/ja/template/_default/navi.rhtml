@@ -1,0 +1,46 @@
+<%# requirements: project %>
+
+<%
+  cgi_param_str = ''
+  if !cgi.env_table['QUERY_STRING'].to_s.empty? && !Kagemai::Mode::ADMIN.current?
+     cgi_param_str = cgi.env_table['QUERY_STRING']
+  end
+
+  base_url = CGIApplication.instance.mode.url
+  project_id = project ? project.id : nil
+  
+  top_navi = []
+  top_navi << MessageBundle[:navi_home].href(Config[:home_url])
+  top_navi << Projects.href(base_url, project_id)
+  top_navi << CrossSearch.href(base_url)
+  top_navi << RSSAll.href(base_url, project_id)
+
+  project_navi = []
+  project_navi << Top.href(base_url, project_id)
+  project_navi << NewForm.href(base_url, project_id)
+  project_navi << SearchReport.href(base_url, project_id)
+  project_navi << Summary.href(base_url, project_id)
+  project_navi << RSS.href(base_url, project_id)
+
+  mode_navi = []
+  mode_navi << Mode::GUEST.href(cgi_param_str)
+
+  unless Mode::ADMIN.current? then
+    mode_navi << Mode::USER.href(cgi_param_str)
+  end
+
+  mode_navi << AdminPage.href(Mode::ADMIN.url, project_id)
+
+  navi = [top_navi, project_navi, mode_navi]
+  navi.each {|n| n.compact!}
+%>
+
+<div class="navi">
+  <% navi.each do |n| %>
+    <% if n.size > 0 then %>
+      [<%= n.join('|') %>]
+    <% end %>
+  <% end %>
+</div>
+
+<hr>

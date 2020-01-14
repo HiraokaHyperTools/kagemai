@@ -1,0 +1,5 @@
+<%# requirements: project %>
+
+<p>Below are the changes made to your project:</p>
+
+<%= eval_template('project_info.rhtml', {:show_report_count => false, :project => project}) %>

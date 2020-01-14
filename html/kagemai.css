@@ -1,0 +1,153 @@
+body {
+  color : #333333;
+  background-color : #fafafa;
+  background-image : url(wallpaper.gif);
+}
+
+a:link    { color : #003399; }
+a:visited { color : #990033; }
+a:active  { color : #339900; }
+
+.error { color : #FF4040; }
+
+.center_align { text-align: center; }
+
+.right_align { 
+  text-align: right; 
+  padding-right: 0.3em;
+}
+
+h1 {
+  border-width : 0 0 2px 1em;
+  border-style : solid;
+  border-color : #606060;
+  background-color : #e0e0e0;
+  padding: 2px 0 0 0.5em;
+  width : 95%;
+}
+
+h2 {
+  border-width : 0 0 1px 0.5em;
+  border-style : solid;
+  border-color : #606060;
+  padding: 0 0 0 0.5em;
+  width : 95%;
+}
+
+h3 {
+  text-decoration : underline;
+}
+
+table {
+  border-style : none;
+  color : black;
+}
+
+th {
+  white-space : nowrap;
+  border-style : none;
+  color: #fafafa; 
+  background: #808080;
+  padding: 2px 2px 2px 2px;
+  font-weight : normal;
+}
+
+th.a {
+  background: #d0d0d0;
+}
+
+td {
+  border-style : none;
+  border-top    : 1px solid #d0d0d0;
+  border-bottom : 1px solid #d0d0d0;
+  background: #e0e0e0;
+  padding: 2px 2px 2px 0.5em;
+}
+
+td.d {
+  border-style : none;
+  border-top    : 1px solid #c0c0c0;
+  border-bottom : 1px solid #c0c0c0;
+  background: #d0d0d0;
+}
+
+div.chart {
+  background-repeat: no-repeat;
+  padding: 10px;
+}
+
+table.legend {
+  position: relative; 
+  border-collapse: collapse;
+  border: 1px solid #666666;
+}
+
+td.legend {
+  font-size: 9pt;
+  border-style: none;
+  background-color: #eeeeee;
+}
+
+td.legend-line {
+  font-size: 9pt;
+  font-weight: bold;
+  letter-spacing: -2px;
+  border-style: none;
+  background-color: #eeeeee;
+}
+
+
+a.th {
+  font-weight :bold;
+}
+
+span.form-desc {
+  font-size: small;
+}
+
+div {
+}
+
+.message-header {
+  color: #fafafa; 
+}
+
+div.message-header {
+  width : 90%;
+  border-style : solid;
+  border-color : #606060;
+  border-width : 1px 1px 1px 1px;
+  padding: 2px 2px 2px 0.5em;
+  color: #fafafa; 
+  background: #888888;
+  line-height: 110%;
+}
+
+div.message-body {
+  width : 90%;
+  border-style : solid;
+  border-color : #606060;
+  border-width : 1px 1px 1px 1px;
+  padding: 1ex 2px 2px 0.5em;
+  background: #e0e0e0;
+}
+
+div.message-fileelement {
+  width : 90%;
+  border-style : solid;
+  border-color : #606060;
+  border-width : 0px 1px 1px 1px;
+  padding: 0.5em 2px 0.5em 0.5em;
+  background: #e0e0e0;
+}
+
+div.message-bottom {
+  width : 90%;
+  font-size  : 80%;
+  border-style : solid;
+  border-color : #606060;
+  border-width : 0px 1px 1px 1px;
+  padding: 0em 2px 0em 0.625em;
+  background: #e0e0e0;
+  text-align:right;
+}

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ReportType id="simple" name="Simple">
+  <description>
+    Used for simple bug reports.
+    Bug reports will have e-mail, title, status, and category fields.
+    You can also attach files.
+  </description>
+
+  <string id="email" name="E-mail" use_cookie="true" email_check="true"
+          delete="false"
+          show_header="true" show_header_line="true">
+	    Enter your e-mail address.
+  </string>
+
+  <string id="title" name="Title" 
+          delete="false"
+          list_item="true"
+          allow_guest="true" 
+          report_attr="true">
+	    Enter a simple description of the problem.  Titles like "It's not working!" or "Question" are not useful.
+  </string>
+
+  <select id="status" name="Status" default="New" 
+          report_attr="true"
+          list_item="true"
+          delete="false"
+          show_topics="true"
+          show_header="true"
+          close_by="Deferred, Resolved">
+    <choice id="New" sdesc="New">New bugs</choice>
+    <choice id="Accepted" sdesc="Accepted">Bugs that have been received and accepted by the project administrators</choice>
+    <choice id="Fixed" sdesc="Corrected">Bugs that have been fixed, but
+    whose fix has not been released</choice>
+    <choice id="Deferred">Bugs whose resolution has been deferred</choice>
+    <choice id="Resolved" sdesc="Resolved" show_topics="false">Bugs
+    whose fix has been released.</choice>
+    Select the current status of the bug report.
+  </select>
+
+  <text id="body" name="Content" delete="false">
+  Enter a clear and simple description of the problem.  Excessive quoting and preamble are not necessary.
+  </text>
+
+  <file id="attachment" name="Attachment" default="">
+  Enter the filename.
+  </file>
+
+</ReportType>

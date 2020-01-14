@@ -1,0 +1,48 @@
+<%# requirements: project, report, use_cookie, errors %>
+
+<h2>レポートの分割</h2>
+
+<form action="<%= project.url %>"
+      method="post" 
+      enctype="multipart/form-data"
+      accept-charset="<%= project.charset %>">
+
+  <p>分割して別のレポートに移動するメッセージを選択してください。</p>
+
+  <% report.each_with_index do |message, i| %>
+  <div>
+    <% msg_num = (i + 1).to_s %>
+    <div class="message-header">
+      <input name="split<%= msg_num %>" type="checkbox">
+      <% params = {'name' => msg_num} %>
+      <% msg_num_str = %Q!<span class="message-header">#{msg_num}</span>! %>
+      <%= report.href(msg_num_str, {}, "##{msg_num}", 'message-header', params) %> | 
+      <%= message.log_header(" | ") %>
+    </div>
+    <div class="message-body">
+      <%= message.body.html_value() %>
+    </div>
+    
+    <% message.each_fileelement do |felement| %>
+    <%   next if felement.value.to_s.empty? %>
+      <div class="message-fileelement"><%= felement.html_value() %></div>
+    <% end %>
+  
+    <br>
+  </div>
+  <% end %>
+
+  <div>
+    <input type="submit" value="分割する">
+  </div>
+
+  <div>
+    <input type="hidden" name="action" value="<%= SplitReport.name %>">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="id" value="<%= report.id.to_s %>">
+    <input type="hidden" name="s" value="1">
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+  </div>
+</form>  

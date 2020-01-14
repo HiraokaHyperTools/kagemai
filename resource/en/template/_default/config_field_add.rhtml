@@ -1,0 +1,23 @@
+<%# requirements: mode, project, values, next_stage, etype_class, errors %>
+
+<% 
+  form_param = {
+    :mode         => mode, 
+    :project      => project,
+    :etype_class  => etype_class, 
+    :etype_id     => etype_class.to_s,
+    :values       => values, 
+    :edit_id      => true,
+    :next_stage   => next_stage,
+    :errors       => errors,
+    :submit_title => 'Add field'
+  }
+%>
+
+<% if project.size > 1 then %>
+<p><span style="color:red;">Caution:</span> 
+	Since reports have already been submitted for this project, you cannot add another required field.
+	Thus, you must specify a default value other than "nil".
+<% end %>
+
+<%= eval_template('config_field_form.rhtml', form_param) %>

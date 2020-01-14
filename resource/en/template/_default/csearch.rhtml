@@ -1,0 +1,14 @@
+<%# requirements: mode, bts %>
+
+<%
+  params = {
+    :mode     => mode,
+    :bts      => bts,
+    :ttype    => '',
+    :projects => [],
+    :keyword  => '',
+    :case_insensitive => false,
+  }
+%>
+
+<%= eval_template('csearch_form.rhtml', params) %>

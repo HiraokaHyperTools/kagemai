@@ -1,0 +1,66 @@
+<%# requirements: report_type, reports, total, offset, limit %>
+
+<%
+  item_etypes = []
+  report_type.each do |etype|
+    next if etype['hide_from_guest'] && Mode::GUEST.current? 
+    item_etypes << etype if etype['report_attr'] && etype['list_item']
+  end
+
+  item_size = 1 + item_etypes.size + 2
+
+  hide_first_reporter = report_type['email']['hide_from_guest'] && Mode::GUEST.current?
+%>
+
+<table>
+  <tr>
+    <th style="text-align:left" colspan="<%= item_size.to_s %>">
+      全<%= reports ? total : 0 %>件
+      <% if reports.size < total then %>
+        (<%= offset + 1%>〜<%= offset + reports.size %>件目まで)
+      <% end %>
+    </th>
+  </tr>
+
+  <tr>
+    <th>ID</th>
+
+    <% item_etypes.each do |etype| %>
+      <th><%= etype.name %></th>
+    <% end %>
+
+    <% unless hide_first_reporter then %>
+      <th>最初の報告者</th>
+    <% end %>
+    <th>最終更新日</th>
+  </tr>
+  <% if reports then
+       reports.each do |report| %>
+  <tr>
+    <td style="white-space: nowrap; text-align:right"><%= report.id.html_value() %></td>
+
+    <% item_etypes.each do |etype| %>
+      <% if etype.id != 'title' %>
+        <td class="<%= etype.id %>_index" style="white-space: nowrap; text-align:center"><%= report.element(etype.id).html_value(true) %></td>
+      <% else %>
+        <%
+          value = report.element(etype.id).html_value(true)
+	  title = report.href(value) + " (#{report.visible_size - 1}リプライ)"
+        %>
+        <td class="title_index"><%= title %></td>
+      <% end %>
+    <% end %>
+
+    <% unless hide_first_reporter then %>
+      <td style="white-space: nowrap;"><%= report.author.html_value() %></td>
+    <% end %>
+
+    <td style="white-space: nowrap;"><span class="date"><%= report.modify_time.html_value() %></span></td>
+  </tr>
+    <% end %>
+  <% else %>
+  <tr>
+  <td colspan="<%= item_size.to_s %>">(ありません)</td>
+  </tr>
+  <% end %>
+</table>

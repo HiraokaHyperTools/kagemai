@@ -1,0 +1,22 @@
+<%# requirements: mode, project %>
+
+<p>Is it okay to delete the project below?</p>
+
+<%= eval_template('project_info.rhtml', {:project => project, :show_report_count => true, :mode => mode}) %>
+
+<form action="<%= mode.url %>" method="POST">
+  <ul>
+    <li><input name="confirm" type="radio" value="yes">Yes, delete it, but leave its data intact.</li>
+    <li><input name="confirm" type="radio" value="yes_all">Yes, delete it, and delete its data as well.</li>
+    <li><input name="confirm" type="radio" value="no" checked="checked">No, do not delete it.</li>
+  </ul>
+  <div>
+    <input type="hidden" name="action" value="delete_project">
+    <input type="hidden" name="s" value="2">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <% if project.lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="Æü">
+    <% end %>
+    <input type="submit" value="Send">
+  </div>
+</form>

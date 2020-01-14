@@ -1,0 +1,21 @@
+<%# requirements: mode, project %>
+
+<p>以下の設定でプロジェクトを作成しました。</p>
+
+<%= eval_template('project_info.rhtml', {:project => project, :show_report_count => false, :mode => mode}) %>
+
+<form action="<%= mode.url %>" method="POST">
+    <input type="hidden" name="action" value="config_project">
+    <input type="hidden" name="s" value="1">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="submit" value="設定フォームを表示">
+  </div>
+</form>
+
+<ul>
+  <li><%= 'フィールドのカスタマイズ'.href(mode.url, 
+                                         {'action' => ConfigField.name,
+                                          'project' => project.id,
+                                          's' => '1'}) %></li>
+  <li><%= 'プロジェクト一覧に戻る'.href(mode.url, {'action' => Projects.name}) %></li>
+</ul>

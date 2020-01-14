@@ -1,0 +1,615 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="stylesheet" type="text/css" href="kagemai_doc.css">
+  <title>Kagemai installation guide</title>
+</head>
+<body>
+
+<h1>Kagemai installation guide</h1>
+
+<p>This document describes how to install Kagemai.</p>
+
+<p>Kagemai requires a Web server and Ruby to run; however, their installation is not explained here.  Also, this document assumes that you are using Apache as your Web server.  Please substitute directions as appropriate for your operating environment.</p>
+
+<h2 id="toc">Contents</h2>
+
+<p class="toc">
+<a href="#quick-start">Quick start</a><br>
+<a href="#install_en_rb">Installing Kagemai with install_en.rb</a><br>
+<a href="#gd">Creating graphs with GD and GDChart</a><br>
+<a href="#mod-ruby">Using mod_ruby</a><br>
+<a href="#postgres">Using PostgreSQL</a><br>
+<a href="#mysql">Using MySQL</a><br>
+<a href="#sqlserver">Using SQL Server</a><br>
+<a href="#mail-if">Mail interface settings</a><br>
+<a href="#manual-install">Manual installation example</a><br>
+
+</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="quick-start">Quick start</h2>
+
+<p>This section describes how to get Kagemai up and running quickly.</p>
+
+<ol>
+
+<li>Extract the Kagemai archive file to a Web-accessible location.
+
+<pre>
+  $ cd /home/fukuoka/public_html
+  $ tar xfvz kagemai-0.8.7.tar.gz
+  $ mv kagemai-0.8.7 kagemai
+</pre>
+
+<li>Set permissions so that the Web server can write to the directory where guest.cgi is located.  In step 4, a settings file called kagemai.conf will be created there.
+
+<div>(If su_exec is enabled, this step is probably not needed.)</div>
+
+<li>Access html/guest.cgi from a Web browser.
+
+<div>
+   (Example: http:/www.example.net/~fukuoka/kagemai/html/guest.cgi)
+</div>
+<div>
+   If *.cgi files are not being handled properly, configure your .htaccess file.
+</div>
+
+<pre>
+  $ cat html/.htaccess
+  Options +ExecCGI
+  AddHandler cgi-script .cgi
+</pre>
+
+<li>In "Admin" -> "Change global settings", set the following variables appropriately:
+
+<table style="padding:1ex 0 0 0">
+  <tr class="even">
+   <th>home_url</th><td>Home page for the site</td>
+  </tr>
+  <tr class="odd">
+   <th>project_dir</th><td>Location where project data will be saved</td>
+  </tr>
+</table>
+
+<div>If the directory specified in <var>project_dir</var> does not
+exist, set permissions to let the Web server can create the directory.  Alternatively, create the directory in advance, then set its permissions so that the Web server can write to it.<div>
+
+<div>(If su_exec is enabled, this step is probably not needed.)</div>
+
+<li>Create a project through "Admin" -> "Create a project".
+
+<li>Restrict access to user.cgi and admin.cgi as necessary.  Use html/dot.htaccess as a reference.
+
+<pre>
+  $ cat html/.htaccess
+  &lt;Files "*.conf*"&gt;
+    deny from all
+  &lt;/Files&gt;
+   
+  &lt;Files user.cgi&gt;
+    AuthName      Kagemai-User
+    AuthType      Basic
+    AuthUserFile  /etc/kagemai/user.passwd
+    Require       valid-user
+  &lt;/Files&gt;
+   
+  &lt;Files admin.cgi&gt;
+    AuthName      Kagemai-Administrator
+    AuthType      Basic
+    AuthUserFile  /etc/kagemai/admin.passwd
+    Require       valid-user
+  &lt;/Files&gt;
+</pre>
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="install_en_rb">Installing Kagemai with install_en.rb</h2>
+
+<p>This section explains how to install Kagemai using install_en.rb.</p>
+
+<ol>
+
+<li>Create a kagemai group.
+
+<div>
+If you are receiving data via e-mail as well as via the Web interface, create a group for accessing Kagemai data.
+</div>
+</div>
+
+<pre>
+  # groupadd kagemai
+</pre>
+
+<div>
+Next, add the Web server user (example: apache) to the newly-created group.
+</div>
+
+<pre>
+  # gpasswd -a apache kagemai
+</pre>
+
+<li>Edit install_en.rb.
+
+<div>
+Edit the following variables in install_en.rb as needed:
+</div>
+
+<table>
+  <tr class="even">
+    <th>$user</th>
+    <td>User ID for the data directory</td>
+  </tr>
+
+  <tr class="odd">
+    <th>$group</th>
+    <td>Group ID for the data directory</td>   
+  </tr>
+
+  <tr class="even">
+    <th>$root_dir</th>
+    <td>Directory containing libraries and resource files for Kagemai</td>
+  </tr>
+
+  <tr class="odd">
+    <th>$html_dir</th>
+    <td>Web-accessible directory where the CGI scripts are placed</td>
+  </tr>
+
+  <tr class="even">
+    <th>$data_dir</th>
+    <td>Directory where project data is store</td>
+  </tr>
+
+  <tr class="odd">
+    <th>$passwd_dir</th>
+    <td>Directory where passwords used in .htaccess authentication are placed</td>
+  </tr>
+</table>
+
+<div>
+If <var>$user</var> and <var>$group</var> do not need to be set, comment them out.
+</div>
+
+<div>If <var>$user</var> is set, but not <var>$group</var>, the
+permissions of the data directory and its files will be set to 0755 and 0644 respectively.  Other directories will be set to 0775 and their files to 0664.</div>
+
+<li>Run install_en.rb.
+
+<div>
+When you are finished editing install_en.rb, execute it (after becoming root, if necessary).
+</div>
+
+<pre>
+  # ruby install_en.rb
+</pre>
+
+<li>Verify functionality.
+
+<div>
+Access guest.cgi and verify that it displays properly.
+</div>
+
+<div>If it displays properly, try creating a new project through "Admin" -> "Create a new project".  If you can create a project, try submitting a bug report in that project.</div>
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h2 id="gd">Creating graphs with GD and GDChart</h2>
+
+<p>If you install GD and GDChart, you can display report summary graphs.
+If you do not need graphs, the steps below are not needed.</p> 
+
+<p>(The libraries mentioned below are also available at <a href="http://www.daifukuya.com/archive/kagemai/lib/">http://www.daifukuya.com/archive/kagemai/lib/</a>.  While the library versions there have been confirmed to work with Kagemai, they are likely not the latest versions.)</p>
+
+<ol>
+
+<li>Install GD.
+
+<div>Download GD from <a href="http://www.boutell.com/gd/">http://www.boutell.com/gd/</a> and install it.</div>
+
+<div>You will need to have PNG and TrueType fonts enabled in GD.  To enable PNG and TrueType font support, libpng, zlib, and FreeType need to be installed beforehand.  (If you run the configure script in GD 2.0.15, it will display whether or not these libraries are configured.)</div>
+
+<pre>
+  $ tar xfvz gd-2.0.15.tar.gz
+  $ cd gd-2.0.15
+  $ ./configure
+  ...(snip)...
+  ** Configuration summary for gd 2.0.15:
+
+   Support for PNG library:          yes
+   Support for JPEG library:         yes
+   Support for Freetype 2.x library: yes
+   Support for Xpm library:          yes
+  ...(snip)...
+  $ make
+  $ sudo make install
+</pre>
+
+<li>Install Ruby/GD.
+
+<div>Download Ruby/GD from <a href="http://raa.ruby-lang.org/list.rhtml?name=ruby-gd">http://raa.ruby-lang.org/list.rhtml?name=ruby-gd</a> and install it.
+
+</div>
+<div>You will need to specify --with-ttf and --with-freetype when you configure it.</div>
+
+<pre>
+  $ tar xfvz ruby-GD-0.7.4.tar.gz
+  $ cd ruby-GD-0.7.4
+  $ ruby extconf.rb --with-ttf --with-freetype
+  $ make
+  $ sudo make install
+</pre>
+
+<li>Install Ruby/GDChart.
+
+<div>Download Ruby/GDChart from <a href="http://raa.ruby-lang.org/list.rhtml?name=ruby-gdchart">http://raa.ruby-lang.org/list.rhtml?name=ruby-gdchart</a> and install it.  (Ruby/GDChart is an extension library for <a href="http://www.fred.net/brv/chart/">GDChart</a>, but GDChart is included in the Ruby/GDChart archive.)</div>
+
+<pre>
+  $ tar xfvz ruby-gdchart-0.0.9-beta.tar.gz 
+  $ cd ruby-gdchart-0.0.9-beta
+  $ ruby extconf.rb
+  $ make
+  $ sudo make install
+</pre>
+
+<li>Configure <var>enable_gdchart</var>, <var>gd_font</var>, and <var>gd_charset</var>.
+
+<div>
+In <a href="guide.html#global-config">"Change global settings"</a>, set <var>enable-gdchart</var> to true, set <var>gd-font</var> to the path for your TrueType fonts, and set <var>gd_charset</var> to UTF-8.
+</div>
+
+<li>Verify functionality
+<div>
+Open a project summary page where one or more reports have been
+submitted, and verify that the graphs display correctly.
+</div>
+<div>
+Because the summary page is cached, changes made may not be reflected if you do not submit a report or reply, or if you do not delete the file cache/cache.pstore in the project directory.
+</div>
+</ol>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mod-ruby">Using mod_ruby</h2>
+
+<p>You can run Kagemai with <a href="http://modruby.net">mod_ruby</a>.  Using dot.htaccess as a guide, configure guest.cgi, user.cgi, and admin.cgi so that they start up through mod_ruby.</p>
+
+<p>If you will change the *.cgi extensions to *.rbx, for example, do the following:</p>
+
+<ol>
+<li>Copy guest.cgi, user.cgi, and admin.cgi to *.rbx files.
+
+<pre>
+  $ cp -p guest.cgi guest.rbx
+  $ cp -p user.cgi user.rbx
+  $ cp -p admin.cgi admin.rbx
+</pre>
+
+<li>Access admin.cgi and change the following items in "Global settings":
+
+<pre>
+  guest_mode_cgi : guest.rbx
+  user_mode_cgi  : user.rbx
+  admin_mode_cgi : admin.rbx
+</pre>
+
+<li>Try accessing guest.rbx.
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="postgres">Using PostgreSQL</h2>
+
+<p>This section explains the configuration needed to save data using
+PostgreSQL.  (However, it does not explain how to install PostgreSQL
+itself.)  If you are not saving data using PostgreSQL, the configuration below is not necessary.</p>
+
+<ol>
+<li>Install Ruby/Postgres.
+
+<div>
+Download Ruby/Postgres from <a href="http://www.postgresql.jp/interfaces/ruby/">http://www.postgresql.jp/interfaces/ruby/</a> and install it.
+</div>
+
+<pre>
+   $ tar xfvz ruby-postgres-0.7.1.tar.gz   
+   $ cd ruby-postgres-0.7.1
+   $ ruby extconf.rb
+   $ make
+   $ su
+   # make install
+</pre>
+
+<li id="ruby-dbi">Install Ruby/DBI.
+
+<div>
+Download Ruby/DBI from <a href="http://rubyforge.org/projects/ruby-dbi/">http://rubyforge.org/projects/ruby-dbi/</a> and install it.
+</div>
+
+<pre>
+  $ tar xfvz ruby-dbi-all-0.1.0.tar.gz
+  $ cd ruby-dbi-all
+  $ ruby setup.rb config --with=dbi,dbd_pg,dbd_mysql
+  $ ruby setup.rb setup
+  $ su
+  # ruby setup.rb install
+</pre>
+   
+<li>Create an account for Kagemai to use in PostgreSQL.
+
+<pre>
+  $ createuser kagemai
+  Shall the new role be a superuser? (y/n) n
+  Shall the new role be allowed to create databases? (y/n) n
+  Shall the new role be allowed to create more new roles? (y/n) n
+  CREATE ROLE
+</pre>
+
+<li>Create a database for Kagemai in PostgreSQL.
+
+<pre>
+  $ createdb kagemai
+</pre>
+
+<li>In "Change global settings", set <var>enable_postgres</var> to true.
+
+<div>Configure the settings below as well.</div>
+
+<table>
+  <tr class="even">
+    <th>postgres_host</th>
+    <td>Name of the host where PostgreSQL runs.  If you are using Unix
+    domain sockets, specify the directory for the socket.  The default is /tmp.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>postgres_port</th>
+    <td>Port number (if you are connecting via TCP)</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_user</th>
+    <td>Username for the PostgreSQL account</td>
+  </tr>
+
+  <tr class="odd">
+    <th>postgres_pass</th>
+    <td>Password for the PostgreSQL account</td>
+  </tr>
+
+  <tr class="even">
+    <th>mysql_dbname</th>
+    <td>Name of the Kagemai database in PostgreSQL</td>
+  </tr>
+</table>
+
+<li>Confirm that you can select PostgresStore as a method for saving data when you create a project.
+
+<li>Select PostgresStore as the data saving method, then try to create a project.
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h2 id="mysql">Using MySQL</h2>
+
+<p>This section explains the necessary configuration for saving data using MySQL.  </p>
+
+<ol>
+<li>Download MySQL/Ruby or Ruby/MySQL.
+
+<div>
+Download either library from <a href="http://tmtm.org/en/mysql/">http://tmtm.org/en/mysql/</a> and install it.
+</div>
+
+<li>Install Ruby/DBI in the same way you would for <a href="#ruby-dbi">for PostgreSQL</a>.</a> 
+
+<li>Create a database for Kagemai in MySQL.
+
+<pre>
+  $ mysql -u root -p
+  mysql> create database kagemai;
+</pre>
+
+<li>Create a user for Kagemai in MySQL.</li>
+
+<div>The user must be able to access the database.</div>
+
+<pre>
+  mysql> grant all to on kagemai.* to kagemai@localhost;
+</pre>
+
+<div>Set passwords as needed.</div>
+
+<li>Set <var>enable_mysql</var> to true in "Change global settings".
+
+<div>Configure the settings below as well.</div>
+
+<table>
+  <tr class="even">
+    <th>mysql_host</th>
+    <td>Name of the host where MySQL runs.  The default is localhost.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>mysql_port</th>
+    <td>Port number for MySQL.  The default is 3306.</td>
+  </tr>
+
+  <tr class="even">
+    <th>mysql_user</th>
+    <td>Username for the MySQL account
+  </tr>
+
+  <tr class="odd">
+    <th>mysql_pass</th>
+    <td>Password for the MySQL account</td>
+  </tr>
+
+  <tr class="even">
+    <th>mysql_dbname</th>
+    <td>Name of the Kagemai database in MySQL</td>
+  </tr>
+</table>
+
+
+<li>Confirm that you can select Kagemai::MySQLStore as a method for saving data when you create a project.
+
+<li>Select Kagemai::MySQLStore as the data saving method, then try to create a project.
+
+</ol>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="sqlserver">Using SQL Server</h2>
+
+<p>To use SQL Server, the configuration steps below are necessary.</p>
+
+<ol>
+  <li>Create an account for Kagemai in SQL Server.  This user must have "create database" rights.</li>
+  <li>In the ODBC settings on the machine where Kagemai will run, set the SQL Server in the system DNS.</li>
+  <li>Set <var>enable_mssql</var> to true in "Change global settings".</li>
+  <li>Enter the system DNS name in <var>mssql_dns</var>.</li>
+  <li>Enter the SQL Server username/password in <var>mssql_user</var> and <var>mssql_pass</var>.</li>
+  <li>Confirm that you can select Kagemai::MSSQLStore as a method for saving data when you create a project.
+  <li>Select Kagemai::MSSQLStore as the data saving method, then try to create a project.
+</ol>
+
+    
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mail-if">Mail interface settings</h2>
+
+<p>To use the mail interface, you will first have to set three variables in mailrf.rb: <var>kagemai_root</var>, <var>config_file</var>, and <var>$LOGFILE</var>.  (If you installed Kagemai using install_en.rb, suitable values were already set at the time of installation.)</p>
+
+<p>When you create a project, an include file for that project will be created that can be used by sendmail or other mail programs.</p>
+
+<pre>
+  $ cat /var/lib/kagemai/project/test/include
+  "|/usr/bin/ruby /usr/local/kagemai/bin/mailif.rb test"
+</pre>
+
+<p>Here, "test" is the project ID.</p>
+
+<p>If you are using sendmail, edit /etc/aliases to call that file, then update /etc/aliases.db.</p>
+
+<pre>
+  # grep 'test-bugs' /etc/aliases
+  test-bugs: :include:/var/lib/kagemai/project/test/include
+  # /usr/bin/newaliases
+</pre>
+
+<p>By default, the include file is placed in a group-writable directory.  Move it to another directory and use it there if necessary.</p>
+
+
+<p>In the default mail template, the URL for the submitted report is inserted.
+To have the correct URL inserted, set <var>base_url</var> appropriately in "Change global settings."
+<var>base_url</var> is the URL of the directory containing guest.cgi.
+For example, if guest.cgi is at 'http://www.example.net/kagemai/guest.cgi', set <var>base_url</var> to 'http://www.example.net/kagemai/'.</p>
+
+<p>Kagemai automatically figures out whether submitted mail is a new
+report or a reply to an existing report by using the "Subject" and
+"In-Reply-To" headers.</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="manual-install">Manual installation example</h2>
+
+<p>This section gives an installation example in which all of the configuration is done manually.</p>
+
+<ol>
+
+<li>Decide on the location of installation directories.
+
+<pre>
+  Kagemai libraries: /usr/local/kagemai
+  CGI scripts: /var/www/html/kagemai
+  Data directory: /var/lib/kagemai
+</pre>
+
+<div>We will assume that files placed in /var/www/html/kagemai are accessible via the URL http://www.example.net/kagemai.</div>
+
+<li>Create directories and copy files.
+
+<pre>
+  $ tar xfvz kagemai-0.8.7.tar.gz
+  $ cd kagemai-0.8.7
+
+  $ su
+  # mkdir /usr/local/kagemai
+  # mkdir /var/www/html/kagemai
+  # mkdir /var/lib/kagemai
+  # mkdir /var/lib/kagemai/project
+
+  # cp -pr bin /usr/local/kagemai
+  # cp -pr lib /usr/local/kagemai
+  # cp -pr resource /usr/local/kagemai
+  # cp -p html/* /var/www/html/kagemai
+</pre>
+
+<li>Edit paths within files.
+
+<div>Edit the Ruby path, <var>kagemai_root</var>, and <var>config_file</var> in the files below.</div>
+
+<ul>
+  <li> /usr/local/kagemai/bin/convert.rb
+  <li> /usr/local/kagemai/bin/mailif.rb
+  <li> /usr/local/kagemai/bin/migrate.rb
+  <li> /var/www/html/kagemai/guest.cgi
+  <li> /var/www/html/kagemai/user.cgi
+  <li> /var/www/html/kagemai/admin.cgi
+</ul>
+
+<div>Here, we will assume that <var>kagemai_root</var> is /usr/local/kagemai and that <var>config_file</var> is /var/www/html/kagemai/kagemai.conf.  We will also set <var>$LOGFILE</var> in mailrf.rb to be /var/lib/kagemai/mailif.log.</div>
+
+<li>Add the kagemai group and set permissions.
+
+<pre>
+  # groupadd kagemai
+  # cd /var/lib
+  # chgrp -R kagemai kagemai
+  # chmod -R 02770 kagemai
+</pre>
+
+<div>Also, add apache to the kagemai group.</div>
+
+<pre>
+  # gpasswd -a apache kagemai
+</pre>
+
+<li>Edit the variables below in "Change global settings":
+
+<pre>
+  project_dir : /var/lib/kagemai
+  base_url    : http://www.example.net/kagemai/
+</pre>
+
+</ol>
+
+<p>And you're done.</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<hr>
+
+<div class="footer">
+  <a href="http://www.daifukuya.com/kagemai/">Kagemai</a> bug tracking system
+</div>
+<div class="footer">
+  Copyright(C) 2002-2005
+  <a href="mailto:fukuoka@daifukuya.com">Tomoyuki Fukuoka</a>. all rights reserved. 
+</div>
+<div class="footer">
+  $Id: install.html 329 2008-02-15 16:36:46Z fukuoka $
+</div>
+
+</body>
+</html>

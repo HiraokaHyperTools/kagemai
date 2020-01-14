@@ -1,0 +1,22 @@
+<%# requirements: mode, project, result, etype, attr %>
+
+<h2><%= etype.name %>: <%= attr %></h2>
+
+<% search_navi = eval_template('search_navi.rhtml', 
+                               {:mode => mode, :result => result}) %>
+
+<%
+  params = {
+    :report_type => project.report_type, 
+    :reports => result.reports,
+    :total   => result.total,
+    :offset  => result.offset,
+    :limit   => result.limit
+  }
+%>
+
+<!-- <%= search_navi %> -->
+
+<%= eval_template('report_index.rhtml', params) %>
+
+<%= search_navi %>

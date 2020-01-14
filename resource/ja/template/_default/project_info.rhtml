@@ -1,0 +1,81 @@
+<%# requirements: project, show_report_count %>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <td><%= project.id.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>名前</th>
+    <td><%= project.name.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>説明文</th>
+    <td><%= project.description.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>管理者アドレス</th>
+    <td><%= project.admin_address.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>投稿用アドレス</th>
+    <td><%= project.post_address.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>通知先アドレス</th>
+    <td><%= project.notify_addresses.each{|addr| addr.escape_h}.join("<br>\n") %></td>
+  </tr>
+
+  <tr>
+    <th>テキストの折り返し桁数</th>
+    <td><%= project.fold_column %></td>
+  </tr>
+
+  <tr>
+    <th>バグIDの桁数</th>
+    <td><%= project.subject_id_figure %></td>
+  </tr>
+
+  <tr>
+    <th>フィルタの使用</th>
+    <td>
+      <%if project.use_filter then%>
+        有効     
+      <% else %>
+        無効
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <th>スタイルシートのURL</th>
+    <td><%= project.css_url %></td>
+  </tr>
+
+  <tr>
+    <th>保存形式</th>
+    <td style="white-space: nowrap;"><%= project.db_manager_class %></td>
+  </tr>
+
+  <tr>
+    <th>言語</th>
+    <td><%= project.lang %></td>
+  </tr>
+
+  <tr>
+    <th>エンコーディング</th>
+    <td><%= project.charset %></td>
+  </tr>
+
+  <% if show_report_count then %>
+  <tr>
+    <th>レポート数</th>
+    <td><span class="ignore"><%= project.size() %></span></td>
+  </tr>
+  <% end %>
+</table>

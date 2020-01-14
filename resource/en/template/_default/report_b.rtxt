@@ -1,0 +1,18 @@
+<%= report.attr('email') %> wrote: 
+
+<%= message_body %>
+
+== The details of this report are below. ==
+
+Report ID  : <%= report.id.to_s %>
+Report URL : <%= report_url %>
+
+<% message_detail.each do |name, value| %><%= name %> : <%= value %>
+<% end %>
+ # If this message has reached you in error,
+ # please contact the project administrator at
+ # <<%= project.admin_address %>>.
+
+--
+Kagemai bug tracking system (version <%= Kagemai::VERSION %>)
+<%= Kagemai::URL %>

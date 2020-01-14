@@ -1,0 +1,952 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="stylesheet" type="text/css" href="kagemai_doc.css">
+  <title>影舞への手引き</title>
+</head>
+<body>
+
+<h1>影舞への手引き</h1>
+
+<p>
+このドキュメントは、影舞を利用してみようと思っている人への手引きです。
+</p>
+
+<h2 id="toc">目次</h2>
+
+<p class="toc">
+<!-- 目次は自動生成です。-->
+<a href="#what_is">影舞とは？</a><br>
+<a href="#license">ライセンス</a><br>
+<a href="#install">インストール</a><br>
+<a href="#mode">利用者の分類</a><br>
+<a href="#global-config">全体の設定</a><br>
+<a style="margin-left:1.5em" href="#global-options">全体設定のオプション</a><br>
+<a style="margin-left:1.5em" href="#mail-configuration">メール送信の設定について</a><br>
+<a href="#project-management">プロジェクトの管理</a><br>
+<a style="margin-left:1.5em" href="#create-project">プロジェクトの作成</a><br>
+<a style="margin-left:1.5em" href="#delete-project">プロジェクトの削除</a><br>
+<a style="margin-left:1.5em" href="#config-project">プロジェクトの設定変更</a><br>
+<a style="margin-left:1.5em" href="#backup-project">データのバックアップ</a><br>
+<a style="margin-left:1.5em" href="#security">セキュリティ上の注意点</a><br>
+<a href="#customize">カスタマイズ</a><br>
+<a style="margin-left:1.5em" href="#field-config">フィールドのカスタマイズ</a><br>
+<a style="margin-left:1.5em" href="#template-config">ページテンプレートのカスタマイズ</a><br>
+<a style="margin-left:1.5em" href="#project-script">プロジェクト固有スクリプト</a><br>
+<a style="margin-left:1.5em" href="#regist-template">プロジェクトテンプレートの登録</a><br>
+<a href="#mail-command">メールでの状態変更</a><br>
+<a href="#mrtg">MRTGでのグラフ化</a><br>
+<a href="#multi">複数の BTS としての利用</a><br>
+
+</p>
+
+<h2 id="what_is">影舞とは？</h2>
+
+<p>
+影舞は <a href="http://www.ruby-lang.org">Ruby</a> によってかかれた、
+いわゆるバグトラッキングシステム(Bug Tracking System: BTS)です。
+小規模なプロジェクトや個人的な ToDo リストなどにも容易に利用できるように、
+簡単に使えるシステムを目指しています。
+</p>
+
+<p>
+できるだけ簡単に利用できるようにするため、Ruby を除けば単体で動作する形で配布しています。
+別の場所からライブラリを拾い集めたり、拡張ライブラリをコンパイルしたり、
+データベースをセットアップしたりしなくても、基本的な機能はすべて利用できます。
+また、いくつかの BTS ではメールの使用が必須になっていますが、
+影舞はメールの使用を前提にはしていません。メールが使えない状況でも問題なく動作します。
+そして、一度インストールした後は、できるだけサーバにログインしなくても管理できるようにしています。
+（まだ十分ではないかもしれませんが。）
+</p>
+
+<p>
+現在(2008/02/22)のところ実現されている主な機能は以下のとおりです。
+</p>
+
+<ul>
+  <li>日本語がだいたい正しく扱えます。
+  <li>フォームやメールでレポートを投稿したり、リプライをつけたりできます。
+  <li>レポートには状態や重要度などを設定でき、リプライ時に変更できます。
+  <li>レポートの投稿やリプライを、あらかじめ設定されたメールアドレスやレポートの関係者に通知できます。
+  <li>レポートをキーワードや個々の選択肢、期間などを指定して検索できます。
+  <li>レポートに複数のバグの情報が書き込まれたとき、レポートを分割することができます。
+  <li>レポートやリプライの投稿の内容をRSSで配信できます。
+  <li>プロジェクトの作成、削除、設定変更も Web ベースのインタフェースでできます。
+  <li>レポートのフィールド（状態、重要度、担当者など）は、プロジェクトごとにカスタマイズできます。
+  <li>影舞のユーザインタフェースを構成する各ページも、プロジェクトごとに必要に応じてカスタマイズできます。
+  <li>カスタマイズしたプロジェクトをテンプレートとして、別のプロジェクトで再利用できます。
+  <li>データの保存方法として、テキストファイル、PostgreSQL、MySQL、SQL Server を選択できます。保存方法はいつでも変更できます。
+</ul>
+
+<p>
+影舞はまだまだ初期段階にあります。
+しかし、個人的な、あるいは、小規模なプロジェクトで利用するバグトラッキングシステムを
+求めているなら、影舞を試してみる価値はあるでしょう。
+影舞のインストールは簡単ですから、試して気に入らなくても失うものはそう多くはないはずです。
+
+もし試して気に入らなかったら、
+どうか、なにが気に入らなかったかを
+<a href="http://www.daifukuya.com/kagemai/index.html#ml">kagemai-users ML</a> で教えてください。
+気に入って使う場合にも、利用しての感想、提案、
+まだまだ残っているに違いないバグの報告などを送っていただけると嬉しいです。
+肯定的な意見も、否定的な意見も、いずれも影舞の進化の糧にさせていただきます。
+</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="license">ライセンス</h2>
+
+<p>
+影舞はフリーソフトウェアです。
+GNU General Public License Version 2 の元で利用や再配布が可能です。<br>
+</p>
+
+<p>
+また、影舞の配布物には以下のライブラリが含まれています。
+これらのライブラリの再配布など関しては、各ライブラリのライセンスに従ってください。
+</p>
+
+<ul>
+ <li>ERB
+     <a href="http://www2a.biglobe.ne.jp/~seki/ruby/">&lt;http://www2a.biglobe.ne.jp/~seki/ruby/&gt;</a>
+ <li>rubymail
+     <a href="http://www.lickey.com/rubymail/">&lt;http://www.lickey.com/rubymail/&gt;</a>
+ <li>xmlscan-snapshot-20011123 
+     <a href="http://www.blue.sky.or.jp/atelier/ruby/xmlscan/old/">&lt;http://www.blue.sky.or.jp/atelier/ruby/xmlscan/old/&gt;</a>
+</ul>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="install">インストール</h2>
+
+<p>影舞のインストールについては、<a href="install.html">インストール方法</a>を参照してください。</p>
+
+
+<h2 id="mode">利用者の分類</h2>
+
+<p>影舞では、利用者をゲスト、ユーザ、管理者に分類しています。</p>
+
+<dl>
+  <dt>ゲスト</dt>
+  <dd>いくつかの機能が制限された利用者です。
+      レポートの新規作成、レポートへのリプライ、レポートの検索などは行えますが、
+      状態の変更などは行えない場合があります。（プロジェクトの設定に依存します。）
+  </dd>
+
+  <dt>ユーザ</dt>
+  <dd>ゲストの権限に加えて、状態の変更などが行える利用者です。</dd>
+
+  <dt>管理者</dt>
+  <dd>影舞の管理者です。
+      ゲストやユーザの権限に加えて、プロジェクトの作成や削除、設定の変更などが行えます。</dd>
+</dl>
+
+<p>ゲスト、ユーザ、管理者はそれぞれ呼び出す CGI スクリプト
+(guest.cgi, user.cgi, admin.cgi)によって区別しています。
+必要に応じて、Web サーバの機能を用いてそれぞれのファイルへのアクセスを制限してください。</p>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<h2 id="global-config">全体の設定</h2>
+
+<p>
+全体に影響する設定項目です。
+全体の設定は、guest.cgi で指定した設定ファイル(kagemai.conf) ファイルに保存されます。
+全体設定のデフォルト値は config.rb に書かれていますが、通常は config.rb を直接書き換える必要はありません。
+</p>
+
+<p>
+設定項目のうち、language, action_dir, resource_dir, default_template_dir, message_bundle_name, 
+admin_mode_cgi については、不用意に書き換えると動作しなくなります。
+これらの項目を設定して動作しなくなった場合には、
+kagemai.conf を直接編集して、項目を設定している部分を削除してください。</p>
+
+<h3 id="global-options">全体設定のオプション</h3>
+
+<table>
+  <tr class="even">
+    <th>maintenance_mode</th>
+    <td>ture のとき、影舞をメンテナンスモードにします。メンテナンスモードでは、
+        管理者以外はアクセスできなくなります。</td>
+  </tr>
+  <tr class="odd">
+    <th>language</th>
+    <td>言語を指定します。この設定で、resource_dir の下に配置されたリソースを選択します。
+        いまのところは ja しか使えません。</td>
+  </tr>
+  <tr class="even">
+    <th>charset</th>
+    <td>文字セットを指定します。いまのところ EUC-JP しか使えません。</td>
+  </tr>
+  <tr class="odd">
+    <th>home_url</th>
+    <td>各ページに表示されるナビゲータの、"ホーム" アンカーのリンク先を指定します。</td>
+  </tr>
+  <tr class="even">
+    <th>base_url</th>
+    <td>guest.cgi などが置かれている URL です。
+       メール送信時に、通知メール内で BTS の URL として使用されます。</td>
+  </tr>
+  <tr class="odd">
+    <th>action_dir</th>
+    <td>CGI での動作を記述したスクリプトを配置しているディレクトリです。
+        このディレクトリに置かれたスクリプトは自動的にロードされます。
+        通常、このディレクトリの設定を変更する必要はありません。</td>
+  </tr>
+  <tr class="even">
+    <th>project_dir</th>
+    <td>プロジェクトのデータを保存するディレクトリです。
+        Web サーバがデータを書き込めるように、適切なパーミッションが設定されている必要があります。</td>
+  </tr>
+  <tr class="odd">
+    <th>resource_dir</th>
+    <td>エラーメッセージなどや各ページのテンプレート、
+        プロジェクトのテンプレートが置かれているディレクトリです。
+        通常、このディレクトリの設定を変更する必要はありません。</td>
+  </tr>
+
+  <tr class="even">
+    <th>mailer</th>
+    <td>メール送信用のクラスを指定します。今のところ、Kagemai::SmtpMailer,
+        Kagemai::MailCommandMailer, Kagemai::SendmailCommandMailer が指定できます。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>smtp_server</th>
+    <td>メールの送信に使用する SMTP サーバの名前です。
+        メールヘッダの Message-ID の一部として使用するので、できるだけ FQDN で指定してください。</td>
+  </tr>
+
+  <tr class="even">
+    <th>smtp_port</th>
+    <td>SMTP サーバのポート番号です。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>mail_command</th>
+    <td>mailer に Kagemai::MailCommandMailer もしくは  Kagemai::SendmailCommandMailer 
+        を指定した場合に、送信に使用するコマンドを指定します。</td>
+  </tr>
+
+  <tr class="even">
+    <th>default_template_dir</th>
+    <td>各ページのデフォルトのテンプレートが配置されているディレクトリの名前です。
+        通常、この設定を変更する必要はありません。</td>
+  </tr>
+  <tr class="odd">
+    <th>message_bundle_name</th>
+    <td>エラーメッセージなどが定義されているファイルの名前です。
+        通常、この設定を変更する必要はありません。</td>
+  </tr>
+  <tr class="even">
+    <th>default_store</th>
+    <td>プロジェクトの作成時に、最初に選択されているデータ保存方法です。
+        PostgreSQL のセットアップをすれば、Kagemai::PostgresStore を指定することもできます。</td>
+  </tr>
+  <tr class="odd">
+    <th>default_template</th>
+    <td>プロジェクトの作成時に、最初に選択されているプロジェクトのテンプレートIDです。
+        simple, normal, old などが指定できます。</td>
+  </tr>
+  <tr class="even">
+    <th>subject_id_figure</th>
+    <td>メール送信時に、メールのサブジェクトに挿入するレポートIDの桁数です。
+        プロジェクトID が test_project で、レポートID が 1、指定した桁数が 4 のときには、
+        [test_project:0001] がメールのサブジェクトの先頭につきます。</td>
+  </tr>
+  <tr class="odd">
+    <th>fold_column</th>
+    <td>Web でのレポートの表示やメールでの送信時に、長いテキストを折り返す桁数です。</td>
+  </tr>
+
+  <tr class="even">
+    <th>css_url</th>
+    <td>デフォルトで使用するスタイルシートの URL です。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>max_attachment_size</th>
+    <td>添付ファイルの上限サイズ(KBytes)です。0 を指定すると制限なしになります。</td>
+  </tr>
+
+  <tr class="even">
+    <th>guest_mode_cgi</th>
+    <td>ゲストモードの CGI スクリプトの名前です。
+        guest.cgi の名前を変更した場合に指定してください。</td>
+  </tr>
+  <tr class="odd">
+    <th>user_mode_cgi</th>
+    <td>ユーザモードの CGI スクリプトの名前です。
+        user.cgi の名前を変更した場合に指定してください。</td>
+  </tr>
+  <tr class="even">
+    <th>admin_mode_cgi</th>
+    <td>管理者モードの CGI スクリプトの名前です。
+        admin.cgi の名前を変更した場合に指定してください。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>use_javascript</th>
+    <td>フォームで Javascript を使用するかどうかです。true もしくは false を指定してください。
+        今のところ、フィールドの作成、編集フォームで Javascript を利用しています。</td>
+  </tr>
+
+  <tr class="even">
+    <th>allow_mail_body_command</th>
+    <td>メールでのレポートの状態変更などを許すかどうかです。
+        true もしくは false を指定してください。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>search_form_method</th>
+    <td>検索フォームを送信するときに GET か POST のどちらを用いるかを指定します。</td>
+  </tr>
+
+  <tr class="even">
+    <th>pretty_html</th>
+    <td>生成した HTML の整形を行うかどうかです。
+        整形を行うと、それなりに時間がかかります。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>enable_postgres</th>
+    <td>PostgreSQL を用いたデータ保存方法を有効にするかどうかです。
+        true もしくは false を指定してください。
+        true に設定する場合には、
+       最初に<a href="install.html#postgres">インストール方法</a>に書いてあるように、
+        Ruby/Postgres や Ruby/DBI などを正しくインストールしてください。</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_host</th>
+    <td>データの保存に使用する PostgreSQL のサーバのホスト名です。
+        Unix ドメインソケットで接続する場合には、
+        Unix ドメインソケットのディレクトリを指定してください。</td>
+
+  <tr class="odd">
+    <th>postgres_port</th>
+    <td>PostgreSQL に TCP で接続する場合のサーバのポート番号です。</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_user</th>
+    <td>データの保存に使用する PostgreSQL のユーザ名です。
+        指定したユーザは、データベースを作成する権限を持っている必要があります。</td>
+  </tr>
+  <tr class="odd">
+    <th>postgres_pass</th>
+    <td>データの保存に使用する PostgreSQL ユーザのパスワードです。</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_opts </th>
+    <td>PostgreSQL のサーバに接続するときに、サーバに渡されるオプションです。</td>
+  </tr>
+
+  <tr class="odd">
+     <th>enable_mssql</th>
+     <td>SQL Server によるデータ保存を有効にします</td>
+  </tr>
+  
+  <tr class="even">
+     <th>mssql_dsn</th>
+     <td>ODBC の DSN を指定します</td>
+  </tr>
+  
+  <tr class="odd">
+     <th>mssql_user</th>
+     <td>SQL Server のユーザ名です</td>
+  </tr>
+  
+  <tr class="even">
+     <th>mssql_pass</th>
+     <td>SQL Server のパスワードです。</td>
+  </tr>
+
+  <tr class="odd">
+     <th>enable_mysql</th>
+     <td>MySQL によるデータ保存を有効にします。</td>
+  </tr>
+
+  <tr class="even">
+     <th>mysql_host</th>
+     <td>接続する MySQL のホスト名を指定します。</td>
+  </tr>
+
+  <tr class="odd">
+     <th>mysql_port</th>
+     <td>接続する MySQL のポート番号を指定します。</td>
+  </tr>
+
+  <tr class="even">
+     <th>mysql_user</th>
+     <td>MySQL の接続に用いるユーザ名を指定します。</td>
+  </tr>
+
+  <tr class="odd">
+     <th>mysql_pass</th>
+     <td>MySQL に接続するユーザのパスワードを指定します。</td>
+  </tr>
+
+  <tr class="even">
+     <th>mysql_dbname</th>
+     <td>MySQL で使用するデータベースの名前を指定します。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>enable_gdchart</th>
+    <td>GD, GDChart を用いたグラフ作成を有効にするかどうかです。ture か false を指定してください。
+        true に視する場合には、
+        最初に<a href="install.html#gd">インストール方法</a>に書いてあるように、
+        GD, Ruby/GD, Ruby/GDChart をインストールしてください。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>gd_font</th>
+    <td>グラフ作成に用いるフォントです。日本語の TrueType フォントを指定してください。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>gd_charset</th>
+    <td>グラフ作成に用いる文字コードです。</td>
+  </tr>
+
+  <tr class="even">
+    <th>rss_feed_title</th>
+    <td>BTS全体のRSSフィードにつけるタイトルです。</td>
+  </tr>
+</table>
+
+<h3 id="mail-configuration">メール送信の設定について</h3>
+
+<p>影舞では、メールを送信するための方法として、SMTP, mail コマンド、
+sendmail コマンドが利用できます。メールの送信方法は、全体設定の mailer
+で指定することができます。</p>
+
+<table>
+  <tr class="even">
+    <th>Kagemai::SmtpMailer</th>
+    <td>SMTP によってメールを送信します。SmtpMailer を指定した場合には、
+        smtp_server と smtp_port も正しく設定する必要があります。
+    </td>
+  </tr>
+  
+  <tr class="odd">
+    <th>Kagemai::MailCommandMailer</th>
+    <td>mailコマンドを使用してメールを送信します。
+        MailCommandMailer を指定した場合には、
+        mail_command オプションで mail コマンドのパスを正しく設定する必要があります。
+        SMTP サーバが使用できない環境でもメールを送信できますが、
+        欠点として、mail コマンドでは送信者を指定することができないため、
+        送信時のプロセスのユーザが送信者になってしまいます。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>Kagemai::SendmailCommandMailer</th>
+    <td>sendmail コマンドを使用してメールを送信します。
+        SendmailCommandMailer を指定した場合には、
+        mail_command オプションで sendmail コマンドのパスを正しく設定する必要があります。
+        sendmail コマンドでは送信者の指定ができるため、
+       投稿した人のメールアドレスでメールが送信できます。
+    </td>
+  </tr>
+</table>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="project-management">プロジェクトの管理</h2>
+
+<h3 id="create-project">プロジェクトの作成</h3>
+
+<p>プロジェクト作成時の設定項目は以下の通りです。</p>
+
+<table>
+  <tr class="even">
+    <th>ID</th>
+    <td>各プロジェクトを識別するための ID です。個々のプロジェクトの設定情報は、
+        全体設定で指定された project_dir 以下に、プロジェクト ID
+        と同じ名前のディレクトリが作成され、その中に保存されます。<br>
+        ID には、英数字しか使用できません。また、'CVS' という ID は使用できません。
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>名前</th>
+    <td>各プロジェクトを利用者が識別するための名前です。
+        実際の利用者にわかりやすい名前をつけてください。</td>
+  </tr>
+
+  <tr class="even">
+    <th>説明文</th>
+    <td>プロジェクト一覧において、各プロジェクトを説明するための文章です。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>管理者アドレス</th>
+    <td>管理者のメールアドレスです。
+        指定されている場合には、通知メールの送信者として使用されます。
+        エラーメールを受け取るために、正しいアドレスを指定してください。
+        管理者のメールアドレスが指定されていない場合には、メールによる通知機能は off になります。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>投稿用アドレス</th>
+    <td>レポートのメールでの投稿用のメールアドレスです。
+        ここに設定されたメールアドレスは、通知メールの Reply-To ヘッダに設定されます。
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>通知先アドレス</th>
+    <td>レポートが投稿されたときや、リプライが投稿されたときに、
+        必ずメールで通知を行いたいメールアドレスです。ここに設定されたメールアドレスは、
+        通知メールの Bcc として設定されます。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>テキストの折り返し桁数</th>
+    <td>Web でのレポートの表示やメールでの送信時に、長いテキストを折り返す桁数です。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>バグIDの桁数</th>
+    <td>メール送信時に、メールのサブジェクトに挿入するレポートIDの桁数です。
+        プロジェクトID が test_project で、レポートID が 1、指定した桁数が 4 のときには、
+        [test_project:0001] がメールのサブジェクトの先頭につきます。</td>
+  </tr>
+
+  <tr class="even">
+    <th>スタイルシートのURL</th>
+    <td>プロジェクトのスタイルシートの URL を指定します。</td>
+  </tr>
+  <tr class="odd">
+    <th>保存形式</th>
+    <td>データの保存形式です。
+        デフォルトでは、１レポートを１つのテキストファイルに保存する、Kagemai::XMLFileStore
+        が選択できます。PostgreSQL 関係の設定を行えば、PostgreSQL にデータを保存する
+        Kagemai::PostgresStore が選択可能になります。<br>
+        データの保存形式は、プロジェクト作成後にも変更可能です。
+    </td>
+  </tr>
+  <tr class="even">
+    <th>テンプレート</th>
+    <td>プロジェクトのテンプレートです。
+        テンプレートごとに、レポートの形式などが異なります。
+    </td>
+  </tr>
+  <tr class="odd">
+    <th>トップページ</th>
+    <td>プロジェクトのトップページに表示する項目を選択します。</td>
+  </tr>
+</table>
+
+<p>
+プロジェクトの ID とテンプレート以外は、プロジェクト作成後に変更することができます。
+</p>
+
+<h3 id="delete-project">プロジェクトの削除</h3>
+
+<p>プロジェクトの削除には、完全な削除と、データを残した削除があります。</p>
+
+<p>完全な削除を選択した場合には、データはすべて消去されます。
+データを残す削除を選択した場合には、プロジェクトの一覧には表示されなくなりますが、
+必要であれば後から復活させることもできます。</p>
+
+<p>ただし、データの保存に PostgreSQL を使用しているプロジェクトでは、
+データを残した削除を行った場合、それ以降、同じプロジェクトID
+を持つプロジェクトを作成するときに、データの保存形式として
+PostgreSQL を使用できなくなります。
+（選択はできますが、エラーになります。）</p>
+
+<h3 id="config-project">プロジェクトの設定変更</h3>
+
+<p>
+プロジェクトの ID とテンプレート以外は、プロジェクト作成後に変更することができます。
+</p>
+
+<p>
+投稿されたレポートの数が多くなってきた場合には、
+トップページのバグのリストを表示しないようにしたり、
+データの保存を PostgreSQL へ行うように変更するのをおすすめします。
+</p>
+
+<h3 id="backup-project">データのバックアップ</h3>
+
+<p>データのバックアップが必要な場合には、全体の設定の project_dir 
+で指定したディレクトリ以下のファイルを保存してください。
+PostgreSQL を利用している場合には、
+PostgreSQL のデータベースのバックアップも必要です。</p>
+
+<h3 id="security">セキュリティ上の注意点</h3>
+
+<p>プロジェクトのデータが Web サーバの権限で読み書きできるようになっている場合には、
+当然のことながら、Web サーバの権限で動作する CGI などを設置できる人であれば、
+そのプロジェクトのデータを操作することができます。</p>
+
+<p>回避方法としては、</p>
+
+<ul>
+  <li>suExec などを利用して、ユーザが設定する CGI はそのユーザのアカウントで動作するようにする。
+  <li>suExec などを利用して、プロジェクトのデータを特定のアカウントでしか読み書きできないようにする。
+  <li>保護が必要なプロジェクトのデータは、PostgreSQL に保存するようにする。
+  <li>影舞を設置しているサーバに管理者以外のアカウントを作らない。
+</ul>
+
+<p>などが考えられます。必要に応じて検討してください。</p>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="customize">カスタマイズ</h2>
+
+<h3 id="field-config">フィールドのカスタマイズ</h3>
+
+<p>
+影舞はプロジェクトごとにレポートのフィールドをカスタマイズすることができます。
+ここでは、フィールドの設定項目のうちのオプションと、選択肢フィールド固有の設定について説明します。
+</p>
+
+<p>各フィールドは、以下のオプションを指定できます。</p>
+
+<table>
+  <tr class="even">
+    <th>クッキーで値を保存する</th>
+    <td>利用者がクッキーを使用するように選択したときに、
+        クッキーを使用して入力された値を保存するかどうかです。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>メールアドレスチェックを行う</th>
+    <td>入力された値がメールアドレスとして正しいかをチェックするかどうかです。
+        チェックを行う場合には、メールアドレスとして正しくない値はエラーになります。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>レポート属性として扱う</th>
+    <td>フィールドをレポート属性にするかどうかです。
+        状態や優先度など、レポート固有の値は、レポートの属性として指定します。
+        送信者のメールアドレスやメッセージの内容などは、非レポート属性に指定します。
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>ゲストによる変更を許可する</th>
+    <td>フィールドがレポート属性に指定されている場合に、
+        フィールドをゲストが変更できるかどうかを指定します。
+        ゲストによる変更を許さない場合には、ゲスト用の新規作成フォームや、
+        リプライフォームで、このフィールドの値を指定できません。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>ユーザによる変更を許可する</th>
+    <td>フィールドがレポート属性に指定されている場合に、
+        フィールドをユーザが変更できるかどうかを指定します。
+        ユーザによる変更を許さない場合には、ユーザ用の新規作成フォームや、
+        リプライフォームで、このフィールドの値を指定できません。
+        （ゲスト、ユーザの両方が変更できないように設定したフィールドの値であっても、
+          管理者は変更することができます。）
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>レポートのインデックス項目として表示する</th>
+    <td>トップページや検索結果でレポートのインデックスとして、
+        このフィールドの値を表示するかどうかです。レポート属性の場合のみ意味を持ちます。</td>
+  </tr>
+
+  <tr class="even">
+    <th>履歴のヘッダに表示する</th>
+    <td>レポートの詳細表示の履歴において、
+        各メッセージのヘッダとしてこのフィールドの値を表示するかどうかです。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>履歴のヘッダに一行で表示する</th>
+    <td>メッセージのヘッダとしてこのフィールドの値を表示するときに、
+        値を一行で表示するかどうかです。
+        このオプションにより、メールアドレスなどは一行に表示し、状態や優先度はまとめて表示する、
+        といったカスタマイズができます。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>ゲストに見せない</th>
+    <td>このフィールドをゲストにも見せるかどうかです。
+        on の時には、ゲストにはこのフィールド自体が見えなくなります。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>トップページで取り上げる</th>
+    <td>単一選択肢、複数選択肢フィールドで指定できます。
+        フィールドがレポート属性に指定されているとき、トップページで、
+        選択肢別のインデックスを作成するかどうかです。
+        状態別などのインデックスを表示したい場合に指定します。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>ラジオボタンとして表示する</th>
+    <td>単一選択肢フィールドで指定できます。
+        単一選択肢を、ラジオボタンにするかどうかです。
+        off の場合には、リストボックスになります。
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>チェックボックスとして表示する</th>
+    <td>複数選択肢フィールドで指定できます。
+        複数選択肢を、チェックボックスにするかどうかです。
+        off の場合には複数選択可能なリストボックスになります。
+    </td>
+  </tr>
+
+</table>
+
+<p>
+フィールドの追加や、設定の変更はいつでも行うことができます。
+ただし、すでにレポートが投稿されているプロジェクトにおいては、
+デフォルト値を持たないフィールドは追加できません。
+</p>
+
+<p>
+また、選択肢フィールドでは、フィールドの追加、設定の変更を行った後に、
+選択肢の編集フォームが表示されます。
+選択肢の編集フォームでは、各選択肢ごとに以下の項目を設定できます。
+</p>
+
+<table>
+  <tr class="even">
+    <th>短い説明</th>
+    <td>選択肢の短い説明です。
+        トップページにインデックスを表示するときの見出しになります。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>長い説明</th>
+    <td>選択肢の長い説明です。
+        トップページにインデックスを表示するときに、補足の説明として表示されます。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>トップページへの表示</th>
+    <td>この選択肢をトップページに表示するかどうかです。
+        フィールドの設定で、
+        選択肢フィールドをトップページに取り上げるように設定されていなければ効果を持ちません。
+    </td>
+  </tr>
+
+</table>
+
+
+<h3 id="template-config">ページテンプレートのカスタマイズ</h3>
+
+<p>各プロジェクトディレクトリ内の template ディレクトリに、
+デフォルトのページのテンプレートファイルと同じ名前のファイルを置くと、
+ページを作成するときに優先的に使用されます。
+</p>
+
+<p>各テンプレートファイルが何に使用されているかは、
+ソースコードや<a href="page-template.html">テンプレートファイル一覧</a>を参考にしてください。</p>
+
+
+<h3 id="project-script">プロジェクト固有スクリプト</h3>
+
+<p>各プロジェクトディレクトリ内の、script ディレクトリに置かれた *.rb ファイルは、
+CGI スクリプトを実行するときに、自動的にロードして評価されます。
+script ディレクトリにスクリプトを置くことによって、
+レポートのフィールドのレンダリング方法を変更したり、
+メッセージ投稿時に処理を実行させたりできます。</p>
+
+<p>
+今のところ、汎用的にできなかった処理を実現するために、以下のような
+スクリプトを実験的に用意しています。
+</p>
+
+<table>
+  <tr class="even">
+    <th>color.rb</th>
+    <td>選択肢の値ごとに表示色を変更します。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>replace.rb</th>
+    <td>HTML を生成するときに、フィールド中の文字列を置き換えます。
+        メールアドレスの '@' を ' at ' に置き換えに使用しています。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>email_message.rb</th>
+    <td>リプライの投稿時に担当者が割り当てられているとき、
+        担当者にメールを送ります。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>depend.rb</th>
+    <td>"依存するバグ"フィールドに入力された数字を、
+        BTS 内の別のレポートID として、リンクに変換して表示します。
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>change_status.rb</th>
+    <td>メッセージの投稿時に、フィールド値を自動的に変更します。
+        （選択肢の内容に依存するため、全体をコメントアウトして無効になっています。）
+    </td>
+  </tr>
+</table>
+
+<p>script ディレクトリの各スクリプトは、セーフレベル 1 で eval されます。</p>
+
+
+<h3 id="regist-template">プロジェクトテンプレートの登録</h3>
+
+<p>カスタマイズしたプロジェクトの設定（フィールド、ページテンプレート、
+スクリプトなど）を、プロジェクトのテンプレートとして登録し、
+再利用することができます。</p>
+
+<ul>
+  <li>テンプレートディレクトリ(resource/ja/template)に、
+      ディレクトリを作成します。ディレクトリ名がテンプレートのIDとなります。
+<pre>
+  $ cd /usr/local/kagemai/resource/ja/template
+  $ mkdir my_template
+</pre>
+
+  <li>登録したいプロジェクトの、reporttype.xml、template/*, script/*.rb 
+      を作成したディレクトリにコピーします。
+<pre>
+  $ cp /var/lib/kagemai/project/custom/reporttype.xml my_template
+  $ cp -r /var/lib/kagemai/project/custom/template my_template
+  $ cp -r /var/lib/kagemai/project/custom/script my_template
+</pre>
+
+  <li>reporttype.xml の ReportType 要素の、id と name を編集します。
+      また、description 要素を編集して、テンプレートの説明を入れます。
+
+<pre>
+  $ head -7 reporttype.xml
+  &lt;?xml version="1.0" encoding="EUC-JP"?&gt;
+
+  &lt;ReportType id="my_template" name="マイテンプレート"&gt;
+    &lt;description&gt;
+      カスタマイズした私のテンプレートです。
+    &lt;/description&gt;
+</pre>
+
+  <li>プロジェクト作成フォームを表示させ、
+      新たなテンプレートとして選択可能になっていることを確認します。
+
+</ul>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mail-command">メールでの状態変更</h2>
+
+<p>レポートの新規投稿やリプライの投稿をメールで行う場合、
+全体の設定で allow_mail_body_command が true に設定されているなら、
+メールの本文で、状態の変更などフィールドの値を設定することができます。</p>
+
+<p>設定を行うには、行を '# kagemai : ' で始め、
+その後ろにフィールド名に対する代入を書きます。</p>
+
+<pre>
+  # kagemai : 状態 = 受付済
+</pre>
+
+<p>また、フィールドID を指定することもできます。</p>
+
+<pre>
+  # kagemai : status = 受付済
+</pre>
+
+<p>フィールドの設定コマンドとして認識された行は、受付時に削除されます。</p>
+
+<p>
+メールによるフィールド値の設定は、今のところ利用者の識別などを行わずに、
+誰でも行うことが可能になっています。
+また、設定する値は、選択肢に存在しないものでも設定できてしまいます。
+（例えば、“状態”フィールドの選択肢として、“新規”、“修正済み”、“完了” しかない場合でも、
+“受付済”をメールによって設定できます。）
+こういった制限が問題になる場合には、allow_mail_body_command を false にしてください。
+</p>
+
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mrtg">MRTGでのグラフ化</h2>
+
+<p>影舞には、未終了のバグ数、終了したバグ数の遷移を
+MRTG などでグラフ化するために、未終了、終了バグ数をテキストで返すアクションがあります。</p>
+
+<p>test というプロジェクトID のプロジェクトがあるとき、
+<em>http://www.example.net/kagemai/guest.cgi?project=test&action=mrtg&t=2</em>
+のように、action として 'mrtg' を指定すると、text/plain 形式で、１行目に未終了のバグ数、
+２行目に終了したバグ数を返します。</p>
+
+<p>MRTG での設定については、配布ファイル内の mrtg/mrtg.cfg を参考にしてください。
+例えば、
+<a href="http://www.daifukuya.com/kagemai/mrtg/kagemai-t2.html">このような</a>グラフが作成できます。
+</p>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="multi">複数の BTS としての利用</h2>
+
+<p>
+影舞は１つのインストールを複数の BTS として利用できます。
+</p>
+
+<p>まず、Webサーバで公開可能なディレクトリを作成し、
+guest.cgi, user.cgi, admin.cgi をコピーします。
+また、必要に応じて kagemai.css や wallpaper.gif もコピーします。</p>
+
+<pre>
+  $ mkdir public_html/my_bts
+  $ cp /var/www/html/kagemai/*.cgi public_html/my_bts
+  $ cp /var/www/html/kagemai/kagemai.css public_html/my_bts
+  $ cp /var/www/html/kagemai/wallpaper.gif public_html/my_bts
+</pre>
+
+<p>次に、guest.cgi 中の config_file を適切に変更します。</p>
+
+<pre>
+  $ vi guest.cgi
+  $ grep 'config_file' guest.cgi
+  config_file  = '/home/fukuoka/public_html/my_bts/kagemai.conf'
+</pre>
+
+<p>admin.cgi にアクセスし、"全体の設定"で、project_dir を変更します。
+これで、もとの BTS とは別に利用することが可能になります。
+</p>
+
+
+<!-- ページのフッターは footer から自動で取り込まれます。-->
+<hr>
+
+<div class="footer">
+  Bug Tracking System <a href="http://www.daifukuya.com/kagemai/">影舞</a>
+</div>
+<div class="footer">
+  Copyright(C) 2002-2008
+  <a href="mailto:fukuoka@daifukuya.com">FUKUOKA Tomoyuki</a>. All Rights Reserved. 
+</div>
+<div class="footer">
+  $Id: guide.html 402 2008-02-22 16:54:41Z fukuoka $
+</div>
+
+</body>
+</html>

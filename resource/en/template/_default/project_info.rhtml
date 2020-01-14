@@ -1,0 +1,81 @@
+<%# requirements: project, show_report_count %>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <td><%= project.id.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>Name</th>
+    <td><%= project.name.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>Description</th>
+    <td><%= project.description.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>Admin address</th>
+    <td><%= project.admin_address.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>Submission address</th>
+    <td><%= project.post_address.escape_h %></td>
+  </tr>
+
+  <tr>
+    <th>Notification address</th>
+    <td><%= project.notify_addresses.each{|addr| addr.escape_h}.join("<br>\n") %></td>
+  </tr>
+
+  <tr>
+    <th>Line wrap width</th>
+    <td><%= project.fold_column %></td>
+  </tr>
+
+  <tr>
+    <th>Bug ID padding digits</th>
+    <td><%= project.subject_id_figure %></td>
+  </tr>
+
+  <tr>
+    <th>Spam filter</th>
+    <td>
+      <%if project.use_filter then%>
+        enable
+      <% else %>
+        disable
+      <% end %>
+    </td>
+  </tr>
+
+  <tr>
+    <th>Stylesheet URL</th>
+    <td><%= project.css_url %></td>
+  </tr>
+
+  <tr>
+    <th>Save format</th>
+    <td style="white-space: nowrap;"><%= project.db_manager_class %></td>
+  </tr>
+
+  <tr>
+    <th>Language</th>
+    <td><%= project.lang %></td>
+  </tr>
+
+  <tr>
+    <th>Encoding</th>
+    <td><%= project.charset %></td>
+  </tr>
+
+  <% if show_report_count then %>
+  <tr>
+    <th>Report count</th>
+    <td><span class="ignore"><%= project.size() %></span></td>
+  </tr>
+  <% end %>
+</table>

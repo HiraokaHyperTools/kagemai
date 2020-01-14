@@ -1,0 +1,27 @@
+<%# requirements: mode, project, keyword, result, case_insensitive, search_elements %>
+
+<%= eval_template('keyword_search.rhtml', 
+                  {:mode => mode, 
+                   :project => project, 
+                   :keyword => keyword,
+                   :case_insensitive => case_insensitive,
+                   :search_elements => search_elements}) %>
+
+<% search_navi = eval_template('search_navi.rhtml', 
+                               {:mode => mode, :result => result}) %>
+
+<p>検索条件にあったレポートは以下のとおりです。</p>
+
+<%
+  params = {
+    :report_type => project.report_type, 
+    :reports => result.reports,
+    :total   => result.total,
+    :offset  => result.offset,
+    :limit   => result.limit
+  }
+%>
+
+<%= eval_template('report_index.rhtml', params) %>
+
+<%= search_navi %>

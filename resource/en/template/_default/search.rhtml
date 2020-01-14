@@ -1,0 +1,13 @@
+<%# requirements: mode, project %>
+
+<%
+  params = {
+    :mode => mode, 
+    :project => project, 
+    :and_op => true,
+    :period_begin => Time.now,
+    :period_end   => Time.now
+  }
+%>
+
+<%= eval_template('search_form.rhtml', params) %>

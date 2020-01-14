@@ -1,0 +1,162 @@
+<%# requirements: mode, project, etype_class, etype_id, values, edit_id, next_stage, errors, submit_title %>
+
+<% 
+  # id to name map
+  items = {
+    'id'          => 'ID',
+    'name'        => 'Name',
+    'description' => 'Description',
+    'default'     => 'Default value',
+    'choices'      => 'Choices',
+  }
+
+  def self.disabled?(opt)
+    return '' unless Config[:use_javascript]
+    return '' if opt.depends.to_s.empty?
+
+    value = values[opt.depends]
+    enabled = (value == 'on' || value == ['on'] || value == true)
+    enabled ? '' : 'disabled="disabled"'
+  end
+
+  depends = {}
+  
+  if Config[:use_javascript] then
+    etype_class.boolean_options.each do |opt|
+      depends[opt.name] = opt.depends unless opt.depends.to_s.empty?
+    end
+  end
+%>
+
+<script language="javascript">
+<!--
+function on_click(element) {
+  <% depends.each do |name, name2| %>
+    if (element.name == "<%= name2 %>") {
+      element.form.<%= name %>.disabled = !element.checked
+    }
+  <% end %>
+}
+//-->
+</script>
+
+<% unless errors.empty? then %>
+  <p>The following errors occurred:</p>
+
+  <ul>
+  <% errors.each do |key, value| %>
+    <li><%= MessageBundle[key] %></li>
+    <ul>
+      <% value.each do |e| %>
+      <li><%= items[e] %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  </ul>
+
+<p>Please correct these errors and resubmit.</p>
+<% end %>
+
+<form action="<%= mode.url %>" method="POST">
+  <table>
+    <tr>
+      <th <%= errors.tag_class('id') %>>ID<small>*</small></th>
+      <td>
+      <% if edit_id then %>
+        <input type="text" name="id" value="<%= values['id'] %>"><br>
+        <span class="form-desc">Field ID (alphanumeric characters only)</span>
+      <% else %>
+        <%= values['id'] %>
+      <% end %>
+      </td>
+    </tr>
+  
+    <tr>
+      <th <%= errors.tag_class('name') %>>Name<small>*</small></th>
+      <td>
+        <input type="text" name="name" value="<%= values['name'] %>"><br>
+        <span class="form-desc">Display name of the field.</span>
+      </td>
+    </tr>
+  
+    <tr>
+      <th>Description</th>
+      <td>
+        <textarea name="description" cols="40" rows="3"><%= values['description'] %></textarea><br>
+        <span class="form-desc">Description of the field for when it appears in a form.</span>
+      </td>
+    </tr>
+
+    <% if etype_class.ancestors.include?(SelectElementType) %>
+    <tr>
+      <th <%= errors.tag_class('choices') %>>Choices</th>
+      <td>
+        <textarea name="choices" cols="40" rows="3"><%= values['choices'] %></textarea><br>
+        <span class="form-desc">Separate choices with carriage returns or punctuation.</span>
+      </td>
+    </tr>
+    <% end %>
+
+    <tr>
+      <th <%= errors.tag_class('default') %>>Default value</th>
+      <td>
+        <input type="text" name="default" value="<%= values['default'] ? values['default'] : 'nil' %>"><br>
+        <span class="form-desc">
+	Fields that do not have a default value set become required fields.<br>
+	If you do not want to set a default value, enter "nil".<br>
+	If this value is blank, the default value will be set to blank.
+        </span>
+      </td>
+    </tr>
+
+    <% etype_class.extended_options(nil).each do |opt| %>
+    <tr>
+      <th><%= opt.dispname %></th>
+      <td>
+        <input type="text" name="<%= opt.name %>" value="<%= values[opt.name] %>">
+	<% if opt.description then %>
+        <br>
+        <span class="form-desc">
+          <%= opt.description %>
+        </span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+
+    <tr>
+      <th>Options</th>
+      <td>
+      <% etype_class.boolean_options.each do |opt| %>
+        <% checked = (values[opt.name] == true || 
+                      values[opt.name] == 'on' || 
+                      values[opt.name] == ['on']) ? 'checked="checked"' : '' %>
+        <input type="checkbox" 
+               name="<%= opt.name %>" 
+               <%= checked %> 
+               <%= disabled?(opt) %>
+               onclick="on_click(this)"><%= opt.dispname %><br>
+      <% end %>
+      </td>
+    </tr>
+  
+  </table>
+
+  <p>Items marked with an asterisk are required.</p>
+
+  <div>
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="action" value="<%= ConfigField.name %>">
+    <input type="hidden" name="s" value="<%= next_stage %>">
+    <input type="hidden" name="f" value="<%= etype_id %>">
+
+    <% unless edit_id then %>
+    <input type="hidden" name="id" value="<%= values['id'] %>">
+    <% end %>
+
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="Æü">
+    <% end %>
+    <input type="submit" value="<%= submit_title %>">
+  </div>
+</form>

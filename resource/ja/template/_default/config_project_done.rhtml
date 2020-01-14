@@ -1,0 +1,13 @@
+<%# requirements: project, mode %>
+
+<p>プロジェクトの設定を以下のように変更しました。</p>
+
+<%= eval_template('project_info.rhtml', {:show_report_count => false, :project => project, :mode => mode}) %>
+
+<form action="<%= mode.url %>" method="POST">
+    <input type="hidden" name="action" value="config_project">
+    <input type="hidden" name="s" value="1">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="submit" value="設定フォームを表示">
+  </div>
+</form>

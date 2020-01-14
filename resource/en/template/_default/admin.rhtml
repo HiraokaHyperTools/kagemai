@@ -1,0 +1,19 @@
+<%# requirements: mode %>
+
+<h2>Global settings</h2>
+
+<ul>
+  <li><%= 'Change global settings'.href(mode.url, {'action' => ConfigEnv.name, 's' => '0'}) %></li>
+</ul>
+
+<ul>
+  <li><%= 'Create a project'.href(mode.url, {'action' => CreateProject.name}) %></li>
+  <li><%= 'Delete a project'.href(mode.url, {'action' => DeleteProject.name}) %></li>
+</ul>
+
+<h2>Project settings</h2>
+
+<ul>
+  <li><%= 'Change project settings'.href(mode.url, {'action' => ConfigProject.name}) %></li>
+  <li><%= 'Customize project report fields'.href(mode.url, {'action' => ConfigField.name}) %></li>
+</ul>

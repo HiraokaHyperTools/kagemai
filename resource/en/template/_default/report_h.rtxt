@@ -1,0 +1,31 @@
+Date: <%= date %>
+From: <%= from %>
+
+<% unless reply_to.to_s.empty? then %>
+Reply-To: <%= reply_to %>
+<% end %>
+
+Subject: <%= subject %>
+
+<% if to.size > 0 then %>
+To: <%= to.join(', ') %>
+<% end %>
+
+<% if cc.size > 0 then %>
+Cc: <%= cc.join(', ') %>
+<%end %>
+
+Message-ID: <%= message_id %>
+
+<% if references then %>
+References: <%= references %>
+<% end %>
+
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+X-Kagemai-Version: <%= Kagemai::VERSION %>/<%= Kagemai::CODENAME %>
+X-Kagemai-Project-ID: <%= project.id %>
+X-Kagemai-Project-Name: <%= project_name %>
+X-Kagemai-Report-ID: <%= report.id.to_s %>
+X-Kagemai-Message-ID: <%= message.id.to_s %>
+X-Kagemai-Loop: 1

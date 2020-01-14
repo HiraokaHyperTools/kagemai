@@ -1,0 +1,39 @@
+<%# requirements: mode, project, result, cond_attr, cond_other, and_op, peroid_begin, period_end %>
+
+<!--
+cond_attr = <%= cond_attr.to_s(project.report_type) %>
+<%= and_op ? "AND" : "OR" %>
+cond_other = <%= cond_other.to_s(project.report_type) %>
+-->
+
+<% search_navi = eval_template('search_navi.rhtml', 
+                               {:mode => mode, :result => result}) %>
+
+
+<h2>¸¡º÷·ë²Ì</h2>
+
+<%
+  params = {
+    :report_type => project.report_type, 
+    :reports => result.reports,
+    :total   => result.total,
+    :offset  => result.offset,
+    :limit   => result.limit
+  }
+%>
+<%= eval_template('report_index.rhtml', params) %>
+<%= search_navi %>
+
+<h2>¸¡º÷¾ò·ï</h2>
+
+<%
+  params = {
+    :mode => mode, 
+    :project => project, 
+    :and_op => and_op,
+    :period_begin => period_begin,
+    :period_end   => period_end
+  }
+%>
+
+<%= eval_template('search_form.rhtml', params) %>

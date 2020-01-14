@@ -1,0 +1,27 @@
+<%# requirements: report, message %>
+
+<p>Your message has been received.  Below are its contents.</p>
+
+<table>
+  <tr>
+    <th>Report ID</th>
+    <td><%= report.id %></td>
+  </tr>
+
+  <% message.type.each do |etype| %>
+    <% next if etype.report_attr && !etype.allow_guest && Mode::GUEST.current? %>
+  <tr>
+    <th><%= etype.name %></th>
+    <td><%= etype.html_value(message.element(etype.id)) %></td>
+  </tr>
+  <% end %>
+</table>
+
+<p><%= report.href('View report details') %></p>
+
+<% if report.error then %>
+<hr>
+<div class="error">
+There was an error sending the notification mail.
+</div>
+<% end %>

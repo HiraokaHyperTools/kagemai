@@ -1,0 +1,28 @@
+<%# requirements: report, message %>
+
+<p>メッセージの投稿を受け付けました。<br>
+   投稿されたメッセージの内容は以下の通りです。</p>
+
+<table>
+  <tr>
+    <th>レポートID</th>
+    <td><%= report.id %></td>
+  </tr>
+
+  <% message.type.each do |etype| %>
+    <% next if etype.report_attr && !etype.allow_guest && Mode::GUEST.current? %>
+  <tr>
+    <th><%= etype.name %></th>
+    <td><%= etype.html_value(message.element(etype.id)) %></td>
+  </tr>
+  <% end %>
+</table>
+
+<p><%= report.href('レポートの詳細を見る') %></p>
+
+<% if report.error then %>
+<hr>
+<div class="error">
+通知メールの送信でエラーが発生しました。(<%= report.error %>)
+</div>
+<% end %>

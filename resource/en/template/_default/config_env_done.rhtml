@@ -1,0 +1,17 @@
+<%# requirements: mode, config, config_file %>
+
+<p>Below are the new settings.  They are saved in <%= config_file %>.</p>
+
+<table>
+  <% CONFIG_VAR_NAMES.each do |name| %>
+    <tr>
+      <th><%= name %></th>
+      <td><%= config[name.intern] %></td>
+    </tr>
+  <% end %>
+</table>
+
+
+<p>
+<%= 'Return to the global settings page'.href(mode.url, {'action' => ConfigEnv.name, 's' => '0'}) %>
+</p>

@@ -1,0 +1,18 @@
+<%= report.attr('email') %> wrote: 
+
+<%= message_body %>
+
+
+== このレポートの詳細は以下の通りです ==
+
+レポート ID  : <%= report.id.to_s %>
+レポート URL : <%= report_url %>
+
+<% message_detail.each do |name, value| %><%= name %> : <%= value %>
+<% end %>
+＃ あなたが、このようなメッセージに無関係である場合には、
+＃ 管理者 <<%= project.admin_address %>> までご連絡ください。
+
+--
+Bug Tracking System 影舞 <%= Kagemai::VERSION %>.
+<%= Kagemai::URL %>

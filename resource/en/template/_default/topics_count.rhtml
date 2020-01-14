@@ -1,0 +1,28 @@
+<%# requirements: mode, project, etype %>
+
+<%
+   counts = project.count_reports(etype.id) 
+   total = 0
+%>
+
+<% project.report_type[etype.id].each do |choice| %>
+  <% params = { 'project'     => project.id, 
+                'action'      => SearchReport.name, 
+                'search_type' => 'attr', 
+                'etype'       => etype.id,
+                 etype.id     => choice.id.escape_u } %>
+  <%= choice.id.html_value.href(mode.url, params) %> (<%= counts[choice.id] %>) 
+  <% total = total + counts[choice.id] %>
+<% end %>
+
+(<%= total %> total)
+
+<% if project.size < total then %>
+	<% if (total - project.size) == 1 then %>
+	(1 duplicate)
+	<% else %>
+	(<%= total - project.size %> duplicates)
+	<% end %>
+<% elsif project.size > total then %>
+  (<%= project.size - total %> unset)
+<% end %>

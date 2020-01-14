@@ -1,0 +1,56 @@
+<%# requirements: mode, project, edit_p, order_p, delete_p, up_p, down_p %>
+
+<h2>Edit/delete a field</h2>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <th>Name</th>
+    <th>Type</th>
+    <th>Description</th>
+    <th>Action</th>
+    <th>Display order</th>
+  </tr>  
+  <% project.report_type.each do |etype| %>
+  <% 
+       edit_p['f'] = etype.id; delete_p['f'] = etype.id
+       up_p['f'] = etype.id; down_p['f'] = etype.id
+       op_delete = ' / non-removable'
+       if etype.can_delete? then
+         op_delete = ' / ' + 'Delete'.href(mode.url, delete_p)
+       end
+  %>
+  <tr>
+    <td style="white-space: nowrap;"><%= etype.id %></td>
+    <td style="white-space: nowrap;"><%= etype.name %></td>
+    <td style="white-space: nowrap;"><%= etype.class.name %></td>
+    <td><%= etype.description %></td>
+    <td style="white-space: nowrap;"><%= 'Edit'.href(mode.url, edit_p) %><%= op_delete %></td>
+    <td style="white-space: nowrap;"><%= 'Up'.href(mode.url, up_p) %> / <%= 'Down'.href(mode.url, down_p) %></td>
+  </tr>
+  <% end %>
+</table>
+
+<ul>
+  <li>Fields that are set as non-removable in the template cannot be removed.</li>
+  <li>Fields are deleted individually, without a request for confirmation.</p> 
+</ul>
+
+<h2>Add a field</h2>
+
+<p>Select the type of field you would like to add.</p>
+
+<table>
+  <tr>
+    <th>Type</th>
+    <th>Description</th>
+  </tr>
+
+  <% ElementType.each_children() do |etype_class| %>
+  <tr>
+    <% add_p['f'] = etype_class.to_s %>
+    <td><%= etype_class.name.href(mode.url, add_p) %></td>
+    <td><%= etype_class.description %></td>
+  </tr>
+  <% end %>
+</table>

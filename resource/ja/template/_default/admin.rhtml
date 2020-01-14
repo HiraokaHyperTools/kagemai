@@ -1,0 +1,19 @@
+<%# requirements: mode %>
+
+<h2>全体の設定</h2>
+
+<ul>
+  <li><%= '全体の設定の変更'.href(mode.url, {'action' => ConfigEnv.name, 's' => '0'}) %></li>
+</ul>
+
+<ul>
+  <li><%= 'プロジェクトの作成'.href(mode.url, {'action' => CreateProject.name}) %></li>
+  <li><%= 'プロジェクトの削除'.href(mode.url, {'action' => DeleteProject.name}) %></li>
+</ul>
+
+<h2>プロジェクト別の設定</h2>
+
+<ul>
+  <li><%= '設定の変更'.href(mode.url, {'action' => ConfigProject.name}) %></li>
+  <li><%= 'フィールドのカスタマイズ'.href(mode.url, {'action' => ConfigField.name}) %></li>
+</ul>

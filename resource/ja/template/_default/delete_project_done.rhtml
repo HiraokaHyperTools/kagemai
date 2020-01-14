@@ -1,0 +1,17 @@
+<%# requirements: mode, project, del_name, delete_all %>
+
+<p>以下のプロジェクトを削除しました。</p>
+
+<% unless delete_all then %>
+<p>
+データは '<%= "#{del_name}" %>' に保存されています。<br>
+(DBMS を利用している場合には、DB にもデータが残されています。)
+</p>
+<% end %>
+
+<%= eval_template('project_info.rhtml', {:project => project, :show_report_count => false, :mode => mode}) %>
+
+<ul>
+  <li><%= 'プロジェクトの削除に戻る'.href(mode.url, {'action' => DeleteProject.name}) %></li>
+  <li><%= 'プロジェクト一覧に戻る'.href(mode.url, {'action' => Projects.name}) %></li>
+</ul>

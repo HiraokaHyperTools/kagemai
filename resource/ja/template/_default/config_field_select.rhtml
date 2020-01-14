@@ -1,0 +1,21 @@
+<%# requirements: mode, bts %>
+
+<% if bts.count_project() == 0 %>
+
+<p>現在、プロジェクトは登録されていません。</p>
+
+<% else %>
+
+<p>フィールドをカスタマイズしたいプロジェクトを選択してください。</p>
+
+<ul>
+  <% bts.each_project do |project| %>
+    <li><%= project.name.escape_h.href(mode.url, 
+                                       {'action' => ConfigField.name, 
+                                        's' => '1', 
+                                        'project' => project.id }) %>
+        [<%= project.id.escape_h %>] : <%= project.description.escape_h %></li>
+  <% end %>
+</ul>
+
+<% end %>

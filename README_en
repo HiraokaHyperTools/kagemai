@@ -1,0 +1,57 @@
+= README file for Kagemai
+
+Copyright(C) 2002-2008 Tomoyuki Fukuoka.
+http://www.daifukuya.com/kagemai/
+
+Kagemai is a bug-tracking system that is both easy
+to configure and easy to use.
+
+== Features
+
+* Easy to install
+* Easy to use
+  * Web interface for creating, deleting, and changing projects
+  * Web interface for submitting messages and replies
+  * Web interface for administration
+  * Can receive and send messages via e-mail
+  * RSS feed
+* Japanese support
+
+== Operating environment
+
+Kagemai has been confirmed to work in the following operating
+environment:
+
+* Fedora 7, Windows XP
+* Ruby 1.8.6
+* Apache 2.2.4
+* mod_ruby 1.2.6
+* PostgreSQL 7.4.6 (+ ruby-postgres 0.7.1 + ruby-dbi 0.1.1)
+* MySQL 5.1.11 (+ MySQL/Ruby 2.7.4 + ruby-dbi 0.1.1)
+
+* Kagemai will operate even if mod_ruby and a database are not
+installed.
+
+== Installation
+
+Please read doc/en/install.html for installation instructions.
+
+== License
+
+Please abide by the terms of the GPL when using, modifying, or
+redistributing Kagemai.  For details, please read COPYING and GPL.
+
+This distribution of Kagemai also includes the following libraries.
+Please abide by the terms of their licenses when redistributing them.
+
+* rubymail 0.10 <http://www.lickey.com/rubymail/>
+* xmlscan-snapshot-20011123 <http://www.blue.sky.or.jp/atelier/ruby/xmlscan/old/>
+
+== Acknowledgements
+
+* Akio Tajima (NCR Japan Ltd.)  : SQL Server patch and Win32 patch
+* Shingo Noguchi (daifukuya.com): MySQL patch
+* Steve Brumbaugh               : English documents and resources
+
+--
+Tomoyuki Fukuoka <fukuoka@daifukuya.com>

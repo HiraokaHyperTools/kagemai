@@ -1,0 +1,17 @@
+<%# requirements: mode, project, etype_class, etype_id, values, errors %>
+
+<% 
+  form_param = {
+    :mode        => mode,
+    :project     => project,
+    :etype_class => etype_class,
+    :etype_id    => etype_id,
+    :values      => values,
+    :errors      => errors,
+    :edit_id     => false,
+    :next_stage  => '12',
+    :submit_title => '¹¹¿·'
+  }
+%>
+
+<%= eval_template('config_field_form.rhtml', form_param) %>

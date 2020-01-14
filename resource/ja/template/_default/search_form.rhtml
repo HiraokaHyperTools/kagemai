@@ -1,0 +1,65 @@
+<%# requirements: mode, project, and_op, period_begin, period_end %>
+
+<form action="<%= mode.url %>" method="<%= Config[:search_form_method] %>" >
+<table>
+  <% project.report_type.each do |etype| %>
+  <tr>
+    <th><%= etype.name %></th>
+    <td><%= etype.html_search(@cgi) %></td>
+  </tr>
+  <% end %>
+
+  <tr>
+    <th>対象期間</th>
+    <td>
+      <select name="period_type">
+      <% SearchPeriodType.each() do |ptype| %>
+        <% selected = @cgi.get_param('period_type') == ptype.id ? 'selected="selected"' : '' %>
+        <option value="<%= ptype.id %>" <%= selected %>><%= ptype.name %></option>
+      <% end %>
+      </select><br>
+
+      <input type="text" size="4" name="b_year"  
+             value="<%= period_begin.year.to_s.escape_h %>">年
+      <input type="text" size="2" name="b_month"
+             value="<%= period_begin.month.to_s.escape_h %>">月
+      <input type="text" size="2" name="b_day"   
+             value="<%= period_begin.day.to_s.escape_h %>">日から
+      <input type="text" size="4" name="e_year"  
+             value="<%= period_end.year.to_s.escape_h %>">年
+      <input type="text" size="2" name="e_month" 
+             value="<%= period_end.month.to_s.escape_h %>">月
+      <input type="text" size="2" name="e_day"   
+             value="<%= period_end.day.to_s.escape_h %>">日まで
+    </td>        
+  </tr>
+</table>
+
+<div>
+  <% or_all = !and_op ? 'checked="checked"' : '' %>
+  <% and_all = and_op ? 'checked="checked"' : '' %>
+  <input type="radio" name="search_op" 
+         value="and_all" <%= and_all %>>すべてのフィールドの AND で検索する。<br>
+  <input type="radio" name="search_op" 
+         value="or_all" <%= or_all %>>すべてのフィールドの OR で検索する。
+</div>
+<div>（入力されていないフィールドは無視されます。）</div>
+
+<div>
+  <input type="checkbox" name="as_csv"> 結果を CSV 形式で出力する。<br>
+  <input type="checkbox" name="as_csv_file"> 結果を CSV 形式でダウンロードする。
+</div>
+
+<div>
+  <input type="hidden" name="project" value="<%= project.id %>">
+  <input type="hidden" name="action" value="search">
+  <input type="hidden" name="search_type" value="search">
+
+  <% if @lang == 'ja' %>
+  <input type="hidden" name="jp_enc_test" value="日">
+  <% end %>
+
+  <input type="submit" value="検索"> 
+  <input type="reset" value="リセット">
+</div>
+</form>

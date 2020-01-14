@@ -1,0 +1,161 @@
+<%# requirements: mode, project, etype_class, etype_id, values, edit_id, next_stage, errors, submit_title %>
+
+<% 
+  # id to name map
+  items = {
+    'id'          => 'ID',
+    'name'        => '名前',
+    'description' => '説明',
+    'default'     => 'デフォルト値',
+
+    'choices'      => '選択肢',
+  }
+
+  def self.disabled?(opt)
+    return '' unless Config[:use_javascript]
+    return '' if opt.depends.to_s.empty?
+
+    value = values[opt.depends]
+    enabled = (value == 'on' || value == ['on'] || value == true)
+    enabled ? '' : 'disabled="disabled"'
+  end
+
+  depends = {}
+  
+  if Config[:use_javascript] then
+    etype_class.boolean_options.each do |opt|
+      depends[opt.name] = opt.depends unless opt.depends.to_s.empty?
+    end
+  end
+%>
+
+<script language="javascript">
+<!--
+function on_click(element) {
+  <% depends.each do |name, name2| %>
+    if (element.name == "<%= name2 %>") {
+      element.form.<%= name %>.disabled = !element.checked
+    }
+  <% end %>
+}
+//-->
+</script>
+
+<% unless errors.empty? then %>
+  <p>以下の項目でエラーが発生しました。入力値を修正してください。</p>
+
+  <ul>
+  <% errors.each do |key, value| %>
+    <li><%= MessageBundle[key] %></li>
+    <ul>
+      <% value.each do |e| %>
+      <li><%= items[e] %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  </ul>
+<% end %>
+
+<form action="<%= mode.url %>" method="POST">
+  <table>
+    <tr>
+      <th <%= errors.tag_class('id') %>>ID<small>*</small></th>
+      <td>
+      <% if edit_id then %>
+        <input type="text" name="id" value="<%= values['id'] %>"><br>
+        <span class="form-desc">フィールドのID。(英数字のみ)</span>
+      <% else %>
+        <%= values['id'] %>
+      <% end %>
+      </td>
+    </tr>
+  
+    <tr>
+      <th <%= errors.tag_class('name') %>>表示名<small>*</small></th>
+      <td>
+        <input type="text" name="name" value="<%= values['name'] %>"><br>
+        <span class="form-desc">HTMLで表示するときの名前。</span>
+      </td>
+    </tr>
+  
+    <tr>
+      <th>説明</th>
+      <td>
+        <textarea name="description" cols="40" rows="3"><%= values['description'] %></textarea><br>
+        <span class="form-desc">フォームで入力するときの説明文。</span>
+      </td>
+    </tr>
+
+    <% if etype_class.ancestors.include?(SelectElementType) %>
+    <tr>
+      <th <%= errors.tag_class('choices') %>>選択肢</th>
+      <td>
+        <textarea name="choices" cols="40" rows="3"><%= values['choices'] %></textarea><br>
+        <span class="form-desc">選択肢を改行かカンマで区切って入れてください。</span>
+      </td>
+    </tr>
+    <% end %>
+
+    <tr>
+      <th <%= errors.tag_class('default') %>>デフォルト値</th>
+      <td>
+        <input type="text" name="default" value="<%= values['default'] ? values['default'] : 'nil' %>"><br>
+        <span class="form-desc">
+          デフォルト値が設定されていないフィールドは、必須項目になります。<br>
+          デフォルト値を設定したくない場合には、nil と入れてください。<br>
+          空白の場合には、空文字列がデフォルト値として設定されます。
+        </span>
+      </td>
+    </tr>
+
+    <% etype_class.extended_options(nil).each do |opt| %>
+    <tr>
+      <th><%= opt.dispname %></th>
+      <td>
+        <input type="text" name="<%= opt.name %>" value="<%= values[opt.name] %>">
+	<% if opt.description then %>
+        <br>
+        <span class="form-desc">
+          <%= opt.description %>
+        </span>
+        <% end %>
+      </td>
+    </tr>
+    <% end %>
+
+    <tr>
+      <th>オプション</th>
+      <td>
+      <% etype_class.boolean_options.each do |opt| %>
+        <% checked = (values[opt.name] == true || 
+                      values[opt.name] == 'on' || 
+                      values[opt.name] == ['on']) ? 'checked="checked"' : '' %>
+        <input type="checkbox" 
+               name="<%= opt.name %>" 
+               <%= checked %> 
+               <%= disabled?(opt) %>
+               onclick="on_click(this)"><%= opt.dispname %><br>
+      <% end %>
+      </td>
+    </tr>
+  
+  </table>
+
+  <p>*がついた項目は必須項目です。</p>
+
+  <div>
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="action" value="<%= ConfigField.name %>">
+    <input type="hidden" name="s" value="<%= next_stage %>">
+    <input type="hidden" name="f" value="<%= etype_id %>">
+
+    <% unless edit_id then %>
+    <input type="hidden" name="id" value="<%= values['id'] %>">
+    <% end %>
+
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+    <input type="submit" value="<%= submit_title %>">
+  </div>
+</form>

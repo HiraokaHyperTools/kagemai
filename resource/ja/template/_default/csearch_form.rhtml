@@ -1,0 +1,59 @@
+<div class="day">
+
+<h2 style="margin-bottom:0;"><span class="title">検索条件</span></h2>
+  
+<div class="form" >
+<div class="section">
+
+<form action="<%= mode.url %>" method="<%= Config[:search_form_method] %>">
+  <div class="caption"><h3>対象プロジェクト</h3></div>
+  <%
+     asel = ttype == 'all' ? selected="selected" : ''
+     ssel = ttype == 'sel' ? selected="selected" : ''
+  %>
+  <div>
+  <select name="ttype">
+    <option value="all" <%= asel %>>すべてのプロジェクト</option>
+    <option value="sel" <%= ssel %>>選択したプロジェクトのみ</option>
+  </select>
+  </div>
+
+  <div>
+  <% bts.each_project do |project| %>
+    <%
+       sel = '' 
+       if projects.size == 0 || projects.include?(project.id) then
+         sel = 'selected="selected"'
+       end
+    %>
+    <input type="checkbox"  name="projects" <%= sel %> 
+           value="<%= project.id %>"> <%= project.name %>
+  <% end %>
+  </div>
+
+  <div class="caption"><h3>キーワード</h3></div>
+  <div class="field" style="margin-right:0em;">
+    <input type="text" name="keyword" size="30" value="<%= keyword.escape_h %>">
+  </div>
+  <div class="button" style="display:inline; margin-left:0em;">
+            <input type="submit" value="検索">
+  </div>
+
+  <div>
+    <% checked = case_insensitive ? 'checked="checked"' : '' %>
+    <input type="checkbox" name="case_insensitive" <%= checked %>> 大文字小文字を区別しない。
+  </div>  
+
+  <div>
+    <input type="hidden" name="action" value="csearch">
+    <input type="hidden" name="search_type" value="keyword">
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+  </div>
+
+</form>
+ 
+</div>
+</div>
+</div>

@@ -1,0 +1,24 @@
+<%# requirements: mode, result %>
+
+<%
+  navi = []
+  params = result.params.dup
+
+  if result.offset > 0 then
+    prev_offset = result.offset - result.limit
+    prev_offset = 0 if prev_offset < 0
+    params['offset'] = prev_offset.to_s
+    navi << '前のページ'.href(mode.url, params)
+  end
+
+  if result.offset + result.reports.size < result.total then
+    next_offset = result.offset + result.reports.size
+    params['offset'] = next_offset.to_s
+    navi << '次のページ'.href(mode.url, params)
+  end
+
+%>
+
+<% if navi.size > 0 %>
+<p style="text-align:right">[<%= navi.join(' | ') %>]</p>
+<% end %>

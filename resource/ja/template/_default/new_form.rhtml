@@ -1,0 +1,94 @@
+<%# requirements cgi, project, email_notification, allow_cookie, use_captcha, errors %>
+
+<% error = !errors.empty? || captcha_error %>
+
+<% if error then %>
+  <p>以下の項目でエラーが発生しました。入力値を修正してください。</p>
+
+  <ul>
+  <% errors.each do |key, value| %>
+    <li><%= MessageBundle[key] %></li>
+    <ul>
+      <% value.each do |e| %>
+      <li><%= project.report_type[e].name %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  <% if captcha_error then %>
+    <li>認証用文字が正しくありません。</li>
+  <% end %>
+  </ul>
+<% end %>
+
+<form action="<%= project.url  %>" 
+      method="post" 
+      enctype="multipart/form-data"
+      accept-charset="<%= project.charset %>">
+  <table>
+
+  <!-- ReportType からの入力フィールド生成 -->
+  <% project.report_type.each do |etype| %>
+    <% next if etype.report_attr && !etype.allow_guest && Mode::GUEST.current? %>
+    <% next if etype.report_attr && !etype.allow_user && Mode::USER.current? %>
+  <tr>
+    <% sclass = errors.has_id?(etype.id) ? 'class="error"' : '' %>
+    <% html_input = error ? etype.html_input_with_error(cgi.get_param(etype.id)) : etype.html_input()  %>
+
+    <th <%= sclass %>><%= etype.name %><%= etype.required? ? '<small>*</small>' : '' %></th>
+    <td>
+      <%= html_input %>
+      <span class="form-desc"><%= etype.html_description() %></span>
+    </td>
+  </tr>
+  <% end %>
+
+  <tr>
+    <th>オプション</th>
+
+    <td>
+      <input type="checkbox" <%= email_notification ? 'checked="checked"' : '' %>
+             name="email_notification"> リプライをメールで受け取る。
+      <% if project.report_type.use_cookie? %>
+        <br>
+        <input type="checkbox" <%= allow_cookie ? 'checked="checked"' : '' %>
+               name="allow_cookie"> Cookieを使って 
+        {<%= project.report_type.use_cookie_element_list %>}
+        の保存を行う。
+      <% end %>
+    </td>
+  </tr>
+
+  <% if use_captcha && Mode::GUEST.current? then %>
+  <tr>
+    
+    <th <%= captcha_error ? 'class="error"' : ''%>>認証*</th>
+    <td>
+       <% captcha_url = project.url() + "&action=#{CaptchaImage.name}" %>
+       <img src="<%= captcha_url %>" alt="captcha" ><br>
+       <input name="<%= CaptchaHandler::CAPTCHA_CODE_KEY %>" type="text" size="6">
+       画像の文字を入力してください。
+    </td>
+  </tr>
+  <% end %>
+  </table>
+
+  <div>
+    <small>*がついた項目は必須項目です。</small><br>
+    <input type="submit" value="送信する">
+  </div>
+
+  <div>
+    <input type="hidden" name="action" value="<%= NewReport.name %>">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+  </div>
+</form>
+
+<ul>
+  <li>URLは自動的にリンクに変換されます。</li>
+  <li>&lt;BTS:1&gt; のようにバグの ID を '&lt;BTS:' と '>' でかこむと、別のバグにリンクされます。</li>
+  <li>別のプロジェクトのバグにリンクするときには、'&lt;BTS:project_id:1&gt;'のようにします。</li>
+  <li>先頭が '&gt' もしくは、空白で始まっている行は、どんなに長くても折り返されません。
+</ul>

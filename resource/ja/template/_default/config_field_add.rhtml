@@ -1,0 +1,23 @@
+<%# requirements: mode, project, values, next_stage, etype_class, errors %>
+
+<% 
+  form_param = {
+    :mode         => mode, 
+    :project      => project,
+    :etype_class  => etype_class, 
+    :etype_id     => etype_class.to_s,
+    :values       => values, 
+    :edit_id      => true,
+    :next_stage   => next_stage,
+    :errors       => errors,
+    :submit_title => 'フィールドを追加'
+  }
+%>
+
+<% if project.size > 1 then %>
+<p><span style="color:red;">注意:</span> 
+   すでにレポートが投稿されているため、デフォルト値を持たないフィールドは追加できません。
+   デフォルト値には、必ず nil 以外を指定してください。</p>
+<% end %>
+
+<%= eval_template('config_field_form.rhtml', form_param) %>

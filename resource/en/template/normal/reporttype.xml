@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ReportType id="normal" name="Normal">
+  <description>
+    Used for normal bug reports.
+Bug reports will have e-mail, title, status, category, version, and owner fields.
+You can also attach files.
+  </description>
+
+  <string id="email" name="E-mail" use_cookie="true" email_check="true"
+          delete="false"
+          show_header="true" show_header_line="true">
+	  Enter your e-mail address.
+  </string>
+
+  <string id="title" name="Title" 
+          delete="false"
+          list_item="true"
+          allow_guest="true" 
+          report_attr="true">
+	  Enter a simple description of the problem.  Titles like "It's not working!" or "Question" are not useful.
+  </string>
+
+  <select id="status" name="Status" default="New"
+          delete="false"
+          list_item="true" 
+          report_attr="true"
+          show_header="true"
+          show_topics="true" 
+          close_by="Resolved">
+    <choice id="New" sdesc="New">New bugs</choice>
+    <choice id="Assigned" sdesc="Assigned">Bugs that have been assigned to an owner</choice>
+    <choice id="Awaiting verification" sdesc="Awaiting verification">Bugs that have been fixed, and are waiting for verification that they have been fixed</choice>
+    <choice id="Resolved" sdesc="Resolved" show_topics="false">Bugs that
+    are confirmed to have been fixed</choice>
+  </select>
+
+  <select id="resolution" name="Resolution method" default="Unresolved" 
+          list_item="true" 
+          report_attr="true" 
+          show_header="true">
+    <choice id="Unresolved">Bugs that have not been resolved</choice>
+    <choice id="Fixed">Bugs that have been fixed</choice>
+    <choice id="Deferred">Bugs whose resolution has been deferred</choice>
+    <choice id="Rejected">Bugs that have been rejected</choice>
+  </select>
+
+  <select id="priority" name="Priority" default="Medium"
+          list_item="true" 
+          show_header="true" 
+          report_attr="true">
+    <choice id="Urgent"></choice>
+    <choice id="High"></choice>
+    <choice id="Medium"></choice>
+    <choice id="Low"></choice>
+  </select>
+  
+  <select id="severity" name="Severity" default="Normal"
+          list_item="true" 
+          show_header="true" 
+          report_attr="true">
+    <choice id="Critical"></choice>
+    <choice id="Severe"></choice>
+    <choice id="Normal"></choice>
+    <choice id="Mild"></choice>
+  </select>
+
+  <select id="assigned" name="Owner"  default="None"
+          show_header="true" 
+          report_attr="true">
+    <choice id="None"></choice>
+    <choice id="Owner 1"></choice>
+    <choice id="Owner 2"></choice>
+  </select>
+
+  <string id="depend" name="Depends on" report_attr="true" default="">
+  If another bug needs to be fixed before this bug can be fixed, enter the ID of that bug.
+  </text>
+
+  <text id="body" name="Content" delete="false">
+  Enter a clear and simple description of the problem.  Excessive quoting and preamble are not necessary.
+  </text>
+
+  <file id="attachment" name="Attachment" default="">
+  Enter the filename.
+  </file>
+</ReportType>

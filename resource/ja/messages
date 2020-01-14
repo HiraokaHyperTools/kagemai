@@ -1,0 +1,206 @@
+### Kagemai message resources. 
+### Encoding: EUC-JP
+###
+
+### Navi
+navi_home = ホーム
+
+### Action
+action_projects      = プロジェクト一覧
+action_top           = トップ
+action_new_report    = 新規レポート
+action_search_report = 検索
+action_summary       = 統計
+action_admin         = 管理
+action_split_report  = レポートの分割
+action_csearch       = 全体検索
+action_rssall        = RSS(全プロジェクト)
+
+### Mode
+mode_guest = ログアウト
+mode_user  = ログイン
+mode_admin = 管理者
+
+### Page Titles
+title_projects = プロジェクト一覧
+title_top      = %s
+
+title_admin = 影舞の管理
+
+title_new_report = バグ報告の新規作成
+title_new_report_e = バグ報告の新規作成(エラー)
+title_new_report_added = 新規バグ報告送信完了
+
+title_add_message_e = メッセージ投稿(データエラー)
+title_add_message   = 新規メッセージ送信完了
+
+
+title_search_form = バグの検索
+title_search_result = 検索結果
+
+title_summary = 統計
+
+title_config_env = 全体の設定
+
+title_config_choice = 選択肢の編集
+title_field_add     = %sフィールドの追加
+title_field_edit    = %sフィールドの編集
+title_field_select  = フィールドのカスタマイズ
+title_field_main    = フィールドのカスタマイズ
+title_config_choice = 選択肢の編集
+
+title_config_project_select = プロジェクトの設定変更
+title_config_project        = プロジェクトの設定変更 (%s)
+title_config_project_done   = プロジェクトの設定変更終了(%s)
+
+title_create_project      = プロジェクトの作成
+title_create_project_done = プロジェクトの作成終了
+
+title_delete_project = プロジェクトの削除
+title_delete_project_confirm = プロジェクト削除の確認
+title_delete_project_delete = プロジェクトの削除完了
+
+title_split_done = レポートの分割終了
+
+title_csearch_form   = 全体検索
+title_csearch_result = 検索結果
+title_spam_error = 投稿失敗
+title_post_error = 投稿失敗
+
+### 検索関連
+
+search_cond_include = %s に %s を含む
+search_cond_equal   = %s が %s に等しい
+
+search_cond_case_insensitive = 大文字小文字を区別しない
+
+search_select_any = すべて
+
+search_keyword_include_all     = すべての語を含む
+search_keyword_include_any     = いずれかの語を含む
+search_keyword_not_include_all = すべての語を含まない
+search_keyword_not_include_any = いずれかの語を含まない
+search_keyword_regexp          = 正規表現
+
+search_multi_equal       = 完全に一致する
+search_multi_include_all = すべての選択肢を含む
+search_multi_include_any = いずれかの選択肢を含む
+
+
+# 検索期間
+search_period_all        = すべての期間
+search_period_last_year  = 1年以内
+search_period_last_month = 1ヶ月以内
+search_period_last_week  = 1週間以内
+search_period_last_day   = 24時間以内
+search_period_other      = 指定した期間
+
+### サマリ関係
+
+summry_legend_new        = 新規
+summry_legend_reply      = リプライ
+summry_legend_close      = 終了
+summry_legend_cumm_open  = 累積未終了
+summry_legend_cumm_close = 累積終了
+summry_legend_total      = 合計
+
+### Form Strings
+StringElementType_opt_size = サイズ
+TextElementType_opt_cols  = 横幅
+TextElementType_opt_rows  = 行数
+TextElementType_opt_quote = リプライ時に前回の内容を引用する
+TextElementType_opt_quote_mark = 引用時に引用記号をつける
+
+ElementType_opt_use_cache        = 値をキャッシュする
+ElementType_opt_use_cookie       = クッキーで値を保存する
+ElementType_opt_email_check      = メールアドレスチェックを行う
+ElementType_opt_report_attr      = レポートの属性として扱う
+ElementType_opt_allow_guest      = ゲストによる変更を許可する
+ElementType_opt_allow_user       = ユーザによる変更を許可する
+ElementType_opt_list_item        = レポートのインデックス項目として表示する
+ElementType_opt_show_header      = 履歴のヘッダに表示する
+ElementType_opt_show_header_line = 履歴のヘッダに一行で表示する
+ElementType_opt_hide_from_guest  = ゲストには見せない
+
+SelectElementType_opt_show_topics = トップページで取り上げる
+SelectElementType_opt_radio       = ラジオボタンとして表示する
+SelectElementType_opt_close_by    = 終了状態
+
+SelectElementType_opt_close_by_desc  = 終了状態をカンマで区切って入れてください。<br />ここに指定されたいずれかの状態になったとき、そのレポートが終了したと見なします。<br />複数のフィールドで終了状態が指定されているときには、AND をとって判断されます。
+
+MultiSelectElementType_opt_show_topics = トップページで取り上げる
+MultiSelectElementType_opt_checkbox    = チェックボックスとして表示する
+
+Choice_opt_show_topics = トップページに表示する
+
+cached_attachment = %s (%d bytes) をキャッシュしています。<br />
+
+no_values = なし
+
+
+### Store type description
+FileStore     = 1メッセージを1ファイルで保存します。
+XMLFileStore  = 1レポートを1ファイルに保存します。
+PStore        = PStore を用いてレポートを保存します。
+PostgresStore = PostgreSQL を用いてレポートを保存します。
+MySQLStore    = MySQL を用いてレポートを保存します。
+MSSqlStore    = SQL*Server を用いてレポートを保存します。
+
+### ElementType name
+Kagemai::StringElementType      = 文字列
+Kagemai::SelectElementType      = 単一選択肢
+Kagemai::MultiSelectElementType = 複数選択肢
+Kagemai::TextElementType        = テキスト
+Kagemai::BooleanElementType     = フラグ
+Kagemai::FileElementType        = ファイル添付
+
+Kagemai::StringElementType_desc       = １行の文字列です。
+Kagemai::SelectElementType_desc       = 複数の候補から１つの値を選択できます。
+Kagemai::MultiSelectElementType_desc  = 複数の候補から複数の値を選択できます。
+Kagemai::TextElementType_desc         = 複数行のテキストです。
+Kagemai::BooleanElementType_desc      = On/Off の値をとります。
+Kagemai::FileElementType_desc         = ファイル添付用の入力フィールド。
+
+
+### Error massages
+err_no_such_project   = 指定されたプロジェクト '%s' はありません。
+err_invalid_report_id = 指定されたレポート(ID = '%s')はありません。
+err_invalid_split     = 分割もと、もしくは分割さきのレポートには１つ以上のメッセージが必要です。
+err_spam = 投稿に失敗しました。
+
+### Form Errors
+err_exist_id = すでに存在するIDは指定できません。
+err_required = 以下の必須項目は必ず入力してください。
+err_exist_project = すでに存在するプロジェクトのIDは指定できません。
+err_invalid_email_address = 以下の項目には正しいメールアドレスを指定する必要があります。
+err_limit_cvs = プロジェクトIDに 'CVS' は使用できません。
+err_ascii_only = プロジェクトID は英数字だけを使用してください。
+err_subject_tag_figure = バグIDの桁数は 0 から 7 の間にしてください。
+err_invalid_int_value = 整数値を入力してください。
+err_exceed_max_size = 文字列が長すぎます。
+
+err_config_field_default = すでにレポートが投稿されているため、デフォルト値を nil にすることはできません。
+err_config_field_default2 = 要素をレポート属性にするとき、ゲストによる変更を許さない場合には、デフォルト値を設定する必要があります。
+
+err_no_mime_type = MIME type が指定されていません。
+err_attachment_size = 添付ファイルのサイズが制限値を越えています。
+
+err_double_post = 二重投稿です。
+
+### Week of day
+wod_sun = 日
+wod_mon = 月
+wod_tue = 火
+wod_wed = 水
+wod_thu = 木
+wod_fri = 金
+wod_sat = 土
+
+### Misc
+m_max_size     = (%dKバイトまで)
+mime_type_auto = 拡張子で判定
+
+### CSV
+csv_author = 報告者
+csv_ctime  = 報告日
+csv_mtime  = 最終更新日

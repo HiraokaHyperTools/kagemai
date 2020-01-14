@@ -1,0 +1,763 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="stylesheet" type="text/css" href="kagemai_doc.css">
+  <title>Kagemai user's guide</title>
+</head>
+<body>
+
+<h1>Kagemai user's guide</h1>
+
+<p>
+This document is a guide for people using Kagemai.
+</p>
+
+<h2 id="toc">Contents</h2>
+
+<p class="toc">
+<a href="#what_is">What is Kagemai?</a><br>
+<a href="#license">License</a><br>
+<a href="#install">Installing Kagemai</a><br>
+<a href="#mode">User categories</a><br>
+<a href="#global-config">Global settings</a><br>
+<a style="margin-left:1.5em" href="#global-options">Global setting options</a><br>
+<a style="margin-left:1.5em" href="#mail-configuration">Mail configuration</a><br>
+<a href="#project-management">Project management</a><br>
+<a style="margin-left:1.5em" href="#create-project">Creating projects</a><br>
+<a style="margin-left:1.5em" href="#delete-project">Deleting projects</a><br>
+<a style="margin-left:1.5em" href="#config-project">Changing project settings</a><br>
+<a style="margin-left:1.5em" href="#backup-project">Backing up project data</a><br>
+<a style="margin-left:1.5em" href="#security">Important security notes</a><br>
+<a href="#customize">Customization</a><br>
+<a style="margin-left:1.5em" href="#field-config">Customizing fields</a><br>
+<a style="margin-left:1.5em" href="#template-config">Customizing page templates</a><br>
+<a style="margin-left:1.5em" href="#project-script">Individual scripts for projects</a><br>
+<a style="margin-left:1.5em" href="#regist-template">Registering project templates</a><br>
+<a href="#mail-command">Changing a report's status via mail</a><br>
+<a href="#mrtg">Graphing with MRTG</a><br>
+<a href="#multi">Using Kagemai for multiple bug tracking systems</a><br>
+
+</p>
+
+<h2 id="what_is">What is Kagemai?</h2>
+
+<p>
+Kagemai is a bug tracking system written in <a href="http://www.ruby-lang.org">Ruby</a>.  It aims to be a easy-to-use system for small projects or individual to-do lists.</p>
+
+<p>
+To make Kagemai as easy to use as possible, it is distributed as a
+single working unit (with the exception of Ruby).  You can use all of
+its basic functions right away, even if you do not get libraries from
+other locations, compile extension libraries, or set up a database.
+Also, unlike many other bug tracking systems that require e-mail usage,
+Kagemai works with no problem even if you cannot use e-mail.  And once
+you install Kagemai, it will let you perform administration tasks
+without having to log into the server (although this feature is not
+quite sufficiently implemented yet).</p> 
+
+<p>
+As of January 15, 2005, one can do the following things with Kagemai:
+</p>
+
+<ul>
+  <li>Submit bug reports and replies via Web forms or e-mail
+  <li>Set the status and severity of reports when submitting or replying
+  to them
+  <li>Notify project administrators and other e-mail addresses when a report or reply is submitted
+  <li>Search for reports by keyword, field value, or date
+  <li>Split reports if they contain information on multiple bugs
+  <li>Syndicate the contents of bug reports and replies with RSS
+  <li>Create, delete, and change settings for projects using a Web
+  interface
+  <li>Customize report fields (status, severity, owner, etc.) for each project
+  <li>Customize every page of the user interface for each project
+  <li>Turn customized projects into templates and reuse them in other projects
+  <li>Save data using text files, PostgreSQL, MySQL, or SQL server, and
+  change the save format at any time
+  <li>Handle Japanese
+</ul>
+
+<p>
+Kagemai is in its early stages of development. However, if you are
+looking for a bug tracking system that can be used for individual,
+small-scale projects, it will be worth it to try out Kagemai. Since
+installing Kagemai is simple, you will not lose much if you try it out
+and end up not liking it.  If you try it and find that it does not suit you, please send e-mail to the 
+<a href="http://www.daifukuya.com/kagemai/index.html#ml">kagemai-users mailing list</a> saying what you did not like.  Even if you liked Kagemai and decided to use it, your thoughts, suggestions, and bug reports for Kagemai itself are greatly appreciated.  Both positive and negative opinions spur Kagemai's progress.
+</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="license">License</h2>
+
+<p>
+Kagemai is free software; it can be used and redistributed under the terms of the GNU General Public License.
+</p>
+
+<p>
+The libraries below are also included in the Kagemai distribution. Please abide by their licenses when redistributing them.
+</p>
+
+<ul>
+ <li>ERB
+     <a href="http://www2a.biglobe.ne.jp/~seki/ruby/index.en.html">&lt;http://www2a.biglobe.ne.jp/~seki/ruby/index.en.html&gt;</a>
+ <li>rubymail
+     <a href="http://www.lickey.com/rubymail/">&lt;http://www.lickey.com/rubymail/&gt;</a>
+ <li>xmlscan-snapshot-20011123 
+     <a href="http://www.blue.sky.or.jp/atelier/ruby/xmlscan/old/">&lt;http://www.blue.sky.or.jp/atelier/ruby/xmlscan/old/&gt;</a>
+</ul>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="install">Installing Kagemai</h2>
+
+<p>Please refer to the <a href="install.html">installation guide</a> for instructions on installing Kagemai.</p>
+
+<h2 id="mode">User categories</h2>
+
+<p>Kagemai divides its users into guests, users, and admins.</p>
+
+<dl>
+  <dt>Guests</dt>
+  <dd>Restricted to a few functions. They can create reports, post replies, and search for reports, but may not be able to change certain report fields, such as the status. (This depends on the settings for the project.)</dd>
+
+  <dt>Users</dt>
+  <dd>In addition to having all the privileges of guests, users can also change report fields such as status.</dd>
+
+  <dt>Admins</dt>
+  <dd>The administrators of Kagemai. In addition to having all the privileges of guests and users, admins can create, delete, and change the settings of projects.</dd>
+</dl>
+
+<p>Kagemai distinguishes guests, users, and admins by the CGI script they call (guest.cgi, user.cgi, and admin.cgi, respectively).  Kagemai does not perform any user authentication of its own; instead, restrict access to these scripts as needed using the functions of your Web server.</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<h2 id="global-config">Global settings</h2>
+
+<p>
+Global settings affect all of Kagemai.  They are saved in the configuration file specified in guest.cgi (kagemai.conf).  The default global setting values are written in config.rb, but you will normally not ever need to change config.rb directly.
+</p>
+
+<p>
+If you carelessly change the values of <var>language</var>, <var>action_dir</var>, <var>resource_dir</var>, <var>default_template_dir</var>, <var>message_bundle_name</var>, or <var>admin_mode_cgi</var>, Kagemai will no longer function.  If this happens, edit kagemai.conf directly and remove the parts that specify those settings.</p>
+
+<h3 id="global-options">Global setting options</h3>
+
+<table>
+  <tr class="even">
+    <th>maintenance_mode</th>
+    <td>When this is set to true, Kagemai will be placed in maintenance mode.  In maintenance mode, only admins can access Kagemai.</td>
+  </tr>
+  <tr class="odd">
+    <th>language</th>
+    <td>Working language for Kagemai.  For this option, select the name of a resource directory under <var>resource_dir</var> (mentioned below).  Currently, you can select "en" (English) and "ja" (Japanese).</td>
+  </tr>
+  <tr class="even">
+    <th>charset</th>
+    <td>Character set for displaying text.  (Note: if you use Japanese, you can only use the EUC-JP encoding for now.)</td>
+  </tr>
+  <tr class="odd">
+    <th>home_url</th>
+    <td>URL of the "Home" link placed in the navigation bar on every page.</td>
+  </tr>
+  <tr class="even">
+    <th>base_url</th>
+    <td>URL where guest.cgi is located.  This will be used as the URL of the bug tracking system in notification e-mails.</td>
+  </tr>
+  <tr class="odd">
+    <th>action_dir</th>
+    <td>Directory where the action scripts called by the CGIs reside.  Scripts placed in this directory are loaded automatically.  Normally, you will not need to change this setting.</td>
+  </tr>
+  <tr class="even">
+    <th>project_dir</th>
+    <td>Directory where project data is stored.  You will need to set the permissions of this directory such that the Web server can write data to it.</td>
+  <tr class="odd">
+    <th>resource_dir</th>
+    <td>Directory where error messages, page templates, and project templates are placed.  Normally, you will not need to change this directory.</td>
+  </tr>
+
+  <tr class="even">
+    <th>mailer</th>
+    <td>Class used to send mail.  Currently, you can specify Kagemai::SmtpMailer, Kagemai::MailCommandMailer, and Kagemai::SendmailCommandMailer.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>smtp_server</th>
+    <td>Name of the SMTP server used for sending mail.  Because this value will be used as part of the Message-ID in the mail header, specify as much of a FQDN (fully-qualified domain name) as possible.</td>
+  </tr>
+
+  <tr class="even">
+    <th>smtp_port</th>
+    <td>Port number for the SMTP server.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>mail_command</th>
+    <td>If you specified Kagemai::MailCommandMailer or Kagemai::SendmailCommandMailer for <var>mailer</var>, this specifies the command used to send mail.</td>
+  </tr>
+
+  <tr class="even">
+    <th>default_template_dir</th>
+    <td>Directory where the default templates for every page are placed.  Normally, you will not need to edit this value.</td>
+  </tr>
+  <tr class="odd">
+    <th>message_bundle_name</th>
+    <td>Name of the file where error messages are defined.  Normally, you will not need to change this setting.</td>
+  </tr>
+  <tr class="even">
+    <th>default_store</th>
+    <td>The initially-selected save format when you create a project.  If you have set up database support in Kagemai, you can select that for a save format as well.</td>
+  </tr>
+  <tr class="odd">
+    <th>default_template</th>
+    <td>ID of the initially-selected project template when you create a project.  You can select simple or normal.</td>
+  </tr>
+  <tr class="even">
+    <th>subject_id_figure</th>
+    <td>Number of digits used for padding when the report ID is inserted into the subject of an e-mail.  For example, if the project ID is test_project, the report ID is 1, and this option is set to 4, [test_project:00001] will be added to the beginning of the subject.</td>
+  </tr>
+  <tr class="odd">
+    <th>fold_column</th>
+    <td>Number of characters at which long text lines will be wrapped in report displays on the Web and in sent e-mail.</td>
+  </tr>
+
+  <tr class="even">
+    <th>css_url</th>
+    <td>URL for the default style sheet.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>max_attachment_size</th>
+    <td>Maximum size (in kilobytes) for file attachments.  If this is set to 0, there will be no size limit.</td>
+  </tr>
+
+  <tr class="even">
+    <th>guest_mode_cgi</th>
+    <td>Name of the script used for guest mode.  If you change the name of guest.cgi, set this option.</td>
+  </tr>
+  <tr class="odd">
+    <th>user_mode_cgi</th>
+    <td>Name of the script used for user mode.  If you change the name of user.cgi, set this option.</td>
+  </tr>
+  <tr class="even">
+    <th>admin_mode_cgi</th>
+    <td>Name of the script used for admin mode.  If you change the name of admin.cgi, set this option.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>use_javascript</th>
+    <td>Whether or not to use Javascript for forms.  Set this to true or false.  Currently, Javascript is used in forms for field creation and field editing.</td>
+  </tr>
+
+  <tr class="even">
+    <th>allow_mail_body_command</th>
+    <td>Whether or not one can change the status of reports via e-mail.  Set this to true or false.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>search_form_method</th>
+    <td>Whether to use GET or POST when sending a search form.</td>
+  </tr>
+
+  <tr class="even">
+    <th>pretty_html</th>
+    <td>Whether or not to fix up generated HTML.  Note that it will take some time for Kagemai to fix up HTML before displaying it.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>enable_postgres</th>
+    <td>Whether or not to enable PostgreSQL as a save format.  (Set this to true or false.)  If you set this to true, install Ruby/Postgres and Ruby/DBI first, as described in the <a href="install.html#postgres">installation guide</a>.</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_host</th>
+    <td>Host name of the PostgreSQL server used to save data.  If you are connecting via Unix domain sockets, specify the directory of the Unix domain socket.</td>
+
+  <tr class="odd">
+    <th>postgres_port</th>
+    <td>Port number of the PostgreSQL server, if you are connecting via TCP.</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_user</th>
+    <td>Username of the PostgreSQL user that will save project data.  The specified user must have privileges to create databases.</td>
+  </tr>
+  <tr class="odd">
+    <th>postgres_pass</th>
+    <td>Password for the PostgreSQL user that will save data.</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_opts </th>
+    <td>Options passed to the PostgreSQL server when you connect to it.</td>
+  </tr>
+
+  <tr class="odd">
+     <th>enable_mssql</th>
+     <td>Whether or not SQL Server as a format for saving data.  (Set this to true or false.)</td>
+  </tr>
+  
+  <tr class="even">
+     <th>mssql_dsn</th>
+     <td>Specifies the ODBC DSN.</td>
+  </tr>
+  
+  <tr class="odd">
+     <th>mssql_user</th>
+     <td>Username for connecting to SQL Server.</td>
+  </tr>
+  
+  <tr class="even">
+     <th>mssql_pass</th>
+     <td>Password for connecting to SQL Server.</td>
+  </tr>
+
+  <tr class="odd">
+     <th>enable_mysql</th>
+     <td>Whether or not to enable MySQL as a format for saving data.  (Set this to true or false.)</td>
+  </tr>
+
+  <tr class="even">
+     <th>mysql_host</th>
+     <td>Hostname of the MySQL server.</td>
+  </tr>
+
+  <tr class="odd">
+     <th>mysql_port</th>
+     <td>Port number of the MySQL server.</td>
+  </tr>
+
+  <tr class="even">
+     <th>mysql_user</th>
+     <td>Username for connecting to MySQL.</td>
+  </tr>
+
+  <tr class="odd">
+     <th>mysql_pass</th>
+     <td>Password for connecting to MySQL.</td>
+  </tr>
+
+  <tr class="even">
+     <th>mysql_dbname</th>
+     <td>Name of the MySQL database being used.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>enable_gdchart</th>
+    <td>Whether or not to enable graphing using GD and GDChart.  (Set this to true or false.)  If you set this to true, install Ruby/GD and Ruby/GDChart first, as described in the <a href="install.html#gd">installation guide</a>.</td>
+  </tr>
+
+  <tr class="even">
+    <th>gd_font</th>
+    <td>Font used in creating graphs.  Specify an appropriate TrueType font.</td>
+  </tr>
+
+  <tr class="odd"> 
+    <th>gd_charset</th>
+    <td>Character encoding used in graph creation.</td>
+  </tr>
+
+  <tr class="even">
+    <th>rss_feed_title</th>
+    <td>Title of the RSS feed for the bug tracking system</td>
+  </tr>
+</table>
+
+<h3 id="mail-configuration">Mail configuration</h3>
+
+<p>In Kagemai, you can use SMTP, the mail command, or the sendmail command for sending e-mail.  You can specify which one to use in the global setting <var>mailer</var>.
+
+<table>
+  <tr class="even">
+    <th>Kagemai::SmtpMailer</th>
+    <td>Send mail via SMTP.  If you have specified SmtpMailer, you will need to set <var>smtp_server</var> and <var>smtp_port</var> correctly as well.</td>
+  </tr>
+  
+  <tr class="odd">
+    <th>Kagemai::MailCommandMailer</th>
+    <td>Send mail using the mail command.  If you have specified MailCommandMailer, you will need to set <var>mail_command</var> and the path to the mail command correctly as well.  You can send mail even in environments where an SMTP server cannot be used.  However, a disadvantage is that you cannot specify the sender name via the mail command; it will end up being the ID of the user running the mail process.</td>
+  </tr>
+
+  <tr class="even">
+    <th>Kagemai::SendmailCommandMailer</th>
+    <td>Send mail using the sendmail command.  If you have specified SendMailCommandMailer, you will need to set <var>mail_command</var> and the path to the sendmail command correctly as well.  Because you can set the sender name with the sendmail command, you can use the e-mail address of the person who submitted the report/reply for the sender name.</td>
+  </tr>
+</table>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="project-management">Managing projects</h2>
+
+<h3 id="create-project">Creating projects</h3>
+
+<p>Below are the options available for creating a new project.</p>
+
+<table>
+  <tr class="even">
+    <th>ID</th>
+    <td>ID for Kagemai to identify the project.  Information for each project is saved in a directory with the same name as the project's ID, under the directory specified in the global setting <var>project_dir</var>.  You can only use alphanumeric characters for the ID; in addition, you cannot use "CVS" for an ID.
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>Name</th>
+    <td>Name for end users to identify the project.
+    Select a name that is easy to understand.</td>       
+  </tr>
+
+  <tr class="even">
+    <th>Description</th>
+    <td>Description that will appear in the projects list.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Admin address</th>
+    <td>E-mail address of the project administrator.
+    If this is set, it will be used as the sender address for notification e-mails.  Make sure to set this to a valid e-mail address.  If the admin address is not set, the e-mail notification function will be disabled.
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>Submission address</th>
+    <td>E-mail address for receiving reports.  The e-mail address specified here will be placed in the Reply-To line of notification e-mails.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Notification address</th>
+    <td>E-mail address(es) that you would like to have notified when reports or replies are submitted.  Mail addresses specified here will be placed in the Bcc line of notification e-mails.</td>
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>Line wrap width</th>
+    <td>Number of characters at which long text lines will be wrapped in report displays on the Web and in sent e-mail.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Bug ID padding</th>
+    <td>Number of digits used for padding when the report ID is inserted into the subject of an e-mail. For example, if the project ID is test_project, the report ID is 1, and this option is set to 4, [test_project:00001] will be added to the beginning of the subject.</td>
+  </tr>
+
+  <tr class="even">
+    <th>Stylesheet URL</th>
+    <td>URL for the project's style sheet.</td>
+  </tr>
+  <tr class="odd">
+    <th>Save format</th>
+    <td>Format for saving data.
+    The default is to save data for one report in one text file; you can select this behavior by selecting Kagemai::XMLFileStore.  If you set up support for PostgreSQL, SQL Server, or MySQL, you will be able to select them as save formats.  You can also change the data save format after creating the project.
+    </td>
+  </tr>
+  <tr class="even">
+    <th>Template</th>
+    <td>Template for the project.  
+    Report forms differ for each template.
+    </td>
+  </tr>
+  <tr class="odd">
+    <th>Top page</th>
+    <td>Items that will appear on the main page for the project.</td>
+  </tr>
+</table>
+
+<p>
+With the exception of <var>ID</var> and <var>Template</var>, you can change any of the options after creating the project.
+</p>
+
+<h3 id="delete-project">Deleting projects</h3>
+
+<p>When deleting a project, you can delete the project completely, or delete the project without deleting its data.</p>
+
+<p>However, if you delete a project that saved data using PostgreSQL, but do not delete its data, you cannot create a new project that has the same ID as the previous project and saves data using PostgreSQL.  (You can select PostgreSQL as a save format, but it will result in an error.)</p>
+
+<h3 id="config-project">Configuring projects</h3>
+
+<p>
+Other than for <var>ID</var> and <var>template</var>, you can change the options of a project after creating it.
+</p>
+
+<p>If there are a large number of reports, it is recommended that you save data using a database and that you do not display the bug list on the front page.</p>
+
+<h3 id="backup-project">Backing up data</h3>
+
+<p>If you need to back up project data, save the files in the global setting <var>project_dir</var>.  If you are using a database to store project data, it will need to be backed up as well.</p>
+
+<h3 id="security">Important security notes</h3>
+
+<p>This may be obvious, but if the Web server user can read and write project data, anyone who can configure CGIs to run with that user's rights can manage project data.  There are several ways to avoid this situation:</p>
+
+<ul>
+  <li>Use suexec and have the CGIs run under that user's account
+  <li>Use suexec and set the permissions of the project data directories so that only a certain user can read and write from them
+  <li>Use databases for project data that needs to be protected
+  <li>Do not create non-admin user accounts on the server where Kagemai is located
+</ul>
+
+<p>Investigate other options as needed.</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="customize">Customization</h2>
+
+<h3 id="field-config">Customizing fields</h3>
+
+<p>Kagemai allows you to customize the report fields for every project.  This section explains the options for fields and options for individual choices in a field.</p>
+
+<p>You can set the options below for every field.</p>
+
+<table>
+  <tr class="even">
+    <th>Save the value of this field in a cookie</th>
+    <td>Whether or not to save the entered value in a cookie, if the user has chosen to use cookies.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Check e-mail address</th>
+    <td>Whether or not to check if the submitted value is a valid e-mail address.  If you perform the check, values that are not valid e-mail addresses will return an error.</td>
+  </tr>
+
+  <tr class="even">
+    <th>Make this field a report property</th>
+    <td>Whether or not to make this field a report property.  Status, priority, and report-specific values are set to be report properties.  The sender's e-mail address and the message contents are not.</td>
+  <tr class="odd">
+    <th>Allow guests to change this field</th>
+    <td>If the field is a report property, this specifies whether or not guests can alter the field.  If guests are not allowed to change the value, you cannot have it appear on the new report form for guests or on the reply form.</td>
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>Allow users to change this field</th>
+    <td>If the field is a report property, this specifies whether or not users can alter the field.  If users are not allowed to change this value, you cannot have it appear on the new report form for users or on the reply form.  (Admins can change the values of any field, even if guests and users cannot.)</td>
+    </td>
+  </tr>
+
+  <tr class="odd">
+    <th>Display as a report index item</th>
+    <td>Whether or not to display the field in the report index on the main page or the search results page.  This only applies to fields that are report properties.</td>
+  </tr>
+
+  <tr class="even">
+    <th>Display in log message headers</th>
+    <td>Whether or not to display the field in the log message headers on the report details page.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Display on a separate line in log message headers</th>
+    <td>Whether or not to display the field in message log headers on a separate line.  For example, you can customize headers to show the e-mail address on a separate line, and status and priorities together on another line.</td>
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>Hide from guests</th>
+    <td>Whether or not to show the field to guests.  When this is set to on, guests will be unable to see the field.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Use as an index on the project home page</th>
+    <td>If the field is a single-selection or a multiple-selection box and is set to be a report property, this specifies whether or not to create a report list on the top page based on the field, with reports separated by field value.  Set this if you want a list of reports separated by status, for example.</td>
+  </tr>
+
+  <tr class="even">
+    <th>Display as a radio button</th>
+    <td>If the field is a single-selection field, this specifies whether or not to display the field as a checkmark.  When this is off, it will be a list box.</td>
+    </td>
+  </tr>
+
+  <tr class="odd">
+
+    <th>Display as a checkbox</th>
+    <td>If the field is a multiple-selection field, this specifies whether or not to display the field as a set of checkboxes.  When this is off, it will be a list box.</td>
+    </td>
+  </tr>
+
+</table>
+
+<p>You can always add fields and change the settings of fields.  However, if reports have already been submitted for a project, you cannot add fields that lack a default value.</p>
+
+<p>
+In addition, a field choice editing form will be displayed after for selection fields after they have been added or edited.  You can change the following items for each choice in the field:</p>
+
+<table>
+  <tr class="even">
+    <th>Short description</th>
+    <td>Short description of the choice.  This will become a heading if the field is used as an index on the top page.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>Long description</th>
+    <td>Long description of the choice.
+    If the field is used as an index, this will be displayed as a supplementary description.</td>
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>Display on the top page</th>
+    <td>Whether or not to display the choice on the top page.
+    If the field is not used as an index, this setting will have no effect.</td>
+  </tr>
+
+</table>
+
+
+<h3 id="template-config">Customizing page templates</h3>
+
+<p>If you place files with the same name as the default page templates in the template directory for a project, they will be used first when the page is created.</p>
+
+<p>Refer to the <a href="page-template.html">template file list</a> and the source code to find out how each template file is used.</p>
+
+<h3 id="project-script">Individual scripts for projects</h3>
+
+<p>*.rb files placed in the script directory for a project will automatically be loaded and evaluated when a CGI script is run.  By placing scripts in the script directory, you can change the rendering methods for report fields or manage messages at the time of submission, among other things.</p>
+
+<p>At the moment, the following experimental scripts have been prepared to handle functions that cannot be done generically:</p>
+
+<table>
+  <tr class="even">
+    <th>color.rb</th>
+    <td>Changes the display color of field choices depending on their value.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>replace.rb</th>
+    <td>Replaces characters in fields when HTML is generated.  It is used to replace the "@" symbol with "at" in e-mail addresses.</td>
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>email_message.rb</th>
+    <td>Sends mail to the owner of a report after it has been assigned an owner.</td>
+  </tr>
+
+  <tr class="odd">
+    <th>depend.rb</th>
+    <td>Converts the ID of the bug entered in the "Depends on" field into a link to that bug.</td>
+  </tr>
+
+  <tr class="even">
+    <th>change_status.rb</th>
+    <td>Automatically changes the values of fields when a message is submitted.  (Because the script depends on the content of the field choices, if you comment it all out, it will no longer do anything.)</td>
+  </tr>
+</table>
+
+<p>All scripts in the script directory will be run at safe level 1.</p>
+
+<h3 id="regist-template">Creating project templates</h3>
+
+<p>You can turn settings from customized projects (fields, templates, scripts, etc.) intoa project template and reuse them.</p>
+
+<ul>
+  <li>Create a directory under the template directory (resource/en/template).  The directory name will become the ID of the template.
+
+<pre>
+  $ cd /usr/local/kagemai/resource/en/template
+  $ mkdir my_template
+</pre>
+
+<li>Copy reporttype.xml, template/*, and script/*.rb from the project you wish to turn into a template.
+
+<pre>
+  $ cp /var/lib/kagemai/project/custom/reporttype.xml my_template
+  $ cp -r /var/lib/kagemai/project/custom/template my_template
+  $ cp -r /var/lib/kagemai/project/custom/script my_template
+</pre>
+
+  <li>In reporttype.xml, edit the id and name of the ReportType element.  Also, edit the description element, inserting a description of the template.
+
+<pre>
+  $ head -7 reporttype.xml
+  &lt;?xml version="1.0" encoding="UTF-8"?&gt;
+
+  &lt;ReportType id="my_template" name="My template"&gt;
+    &lt;description&gt;
+      This is my customized template!
+    &lt;/description&gt;
+</pre>
+
+  <li>Load the project creation form and verify that the new template is listed as an option.
+
+</ul>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mail-command">Changing a report's status via e-mail</h2>
+
+<p>If you are submitting reports and replies via e-mail and have set the global setting <var>allow_mail_body_command</var> to be true, you can change field values such as the status within the body of e-mails.</p>
+
+<p>To do this, begin a line with "# kagemai : ", then enter the name of the field and the new value, separated by an equals sign.</p>
+
+<pre>
+  # kagemai : Status = Accepted
+</pre>
+
+<p>You can also specify the field by its ID.</p>
+
+<pre>
+  # kagemai : status = Accepted
+</pre>
+
+<p>Lines that are recognized as field changing commands will be deleted from the message when it is received.</p>
+
+<p>Currently, anyone can change the values of fields via e-mail; Kagemai does not distinguish who the user is.  In addition, it is possible to end up setting a field to a value that is not a valid choice.  (For example, even if "New", "Fixed", and "Resolved" are the only selections for "Status", it is possible to set "Status" to "Accepted" via e-mail.)  If these limitations are a problem, set <var>allow_mail_body_command</var> to false.</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mrtg">Graphing with MRTG</h2>
+
+<p>Kagemai has an action that will return the number of unresolved and unresolved bugs in plain-text format so that you can graph trends using MRTG.</p>
+
+<p>If you have a project with an id of "test" and access guest.cgi with "mrtg" specified as the action (example: 
+<em>http://www.example.net/kagemai/guest.cgi?project=test&action=mrtg&t=2</em>
+), it will return a plain-text document with the number of unresolved bugs on the first line and the number of resolved bugs on the second line.</p>
+
+<p>Refer to the mrtg_en/mrtg.cfg file in this distribution for
+information on MRTG configuration.   (You will have to move the mrtg_en
+folder to mrtg to display graphs in English; the default mrtg directory
+is for Japanese users.)
+Using these numbers, you can create <a href="http://www.daifukuya.com/kagemai/mrtg/kagemai-t2.html">graphs like this</a> (Japanese).</p>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="multi">Using Kagemai for multiple bug tracking systems</h2>
+
+<p>
+You can use a single installation of Kagemai for multiple bug tracking systems.
+</p>
+
+<p>First, create a Web-accessible directory, and copy guest.cgi, user.cgi, and admin.cgi to it.  Copy kagemai.css and wallpaper.gif as well, if needed.</p>
+
+<pre>
+  $ mkdir public_html/my_bts
+  $ cp /var/www/html/kagemai/*.cgi public_html/my_bts
+  $ cp /var/www/html/kagemai/kagemai.css public_html/my_bts
+  $ cp /var/www/html/kagemai/wallpaper.gif public_html/my_bts
+</pre>
+
+<p>Next, edit the <var>config_file</var> setting in guest.cgi.</p>
+
+<pre>
+  $ vi guest.cgi
+  $ grep 'config_file' guest.cgi
+  config_file  = '/home/fukuoka/public_html/my_bts/kagemai.conf'
+</pre>
+
+<p>Access admin.cgi and change the global setting <var>project_dir</var>.  Then, it will be possible to use Kagemai for a separate bug tracking system.</p>
+
+<hr>
+
+<div class="footer">
+  <a href="http://www.daifukuya.com/kagemai/">Kagemai</a> bug tracking system
+</div>
+<div class="footer">
+  Copyright(C) 2002-2005
+  <a href="mailto:fukuoka@daifukuya.com">Tomoyuki Fukuoka</a>. All rights reserved. 
+</div>
+<div class="footer">
+  $Id: guide.html 234 2008-02-04 14:43:26Z fukuoka $
+</div>
+
+</body>
+</html>

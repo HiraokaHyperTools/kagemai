@@ -1,0 +1,56 @@
+<%
+  params = {
+    :mode     => mode,
+    :bts      => bts,
+    :ttype    => ttype,
+    :projects => projects,
+    :keyword  => keyword,
+    :case_insensitive => case_insensitive,
+  }
+%>
+
+<%= eval_template('csearch_form.rhtml', params) %>
+
+<div class="day">
+<h2><span class="title">Search results (number of results: <%= total %>)</span></h2>
+<div class="body">
+<div class="section">
+
+<% if total > 0 then %>
+
+<table>
+  <tr>
+    <th>Project</th>
+    <th>ID</th>
+    <th>Title</th>
+    <th>Last modified</th>
+  </tr>
+
+<% bts.each_project do |project| %>
+<%  Thread.current[:Project] = project %>
+<%  result = results[project.id] %>
+<%  hide_title = project.report_type['title']['hide_from_guest'] && Mode::GUEST.current? %>
+<%  result.reports.each do |report| %>
+  <% title = report.element('title').html_value(true) %>
+  <% title = "[hide for guest]" if hide_title %>
+  <% title_href = report.href(title, {}, '', nil, {}, project) %>
+  <tr>
+    <td><%= project.href() %></td>
+    <td><%= report.id.html_value %></td>
+    <td><%= title_href %></td>
+    <td><%= report.modify_time.html_value() %></td>
+  </tr>
+<%  end %>
+<% end %>
+
+</table>
+
+<% else %>
+
+<p>No reports were found that matched your criteria.</p>
+
+<% end %>
+
+</div> <!-- section -->
+</div> <!-- body -->
+</div> <!-- day -->

@@ -1,0 +1,50 @@
+<%# requirements: mode, project, etype, options, choices, next_stage %>
+
+<p>You can give a description for each selection if necessary.</p>
+
+<p>If "display on the top page" is not selected for the field, then selecting "display on the top page" here will have no effect.
+
+<form action="<%= mode.url %>" method="POST">
+
+<% etype.each_with_index do |choice, i| %>
+  <h3><%= choice.id %></h3> 
+
+  <table>
+    <tr>
+      <th>Short description</th>
+      <td><input type="text" 
+                 name="<%= "c#{i}_sdesc" %>" size="20" value="<%= choice.sdesc %>"></td>
+    </tr>
+    <tr>
+      <th>Long description</th>
+      <td>
+        <textarea name=<%= "c#{i}_description" %> cols="40" rows="4"><%= choice.description %></textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Display on the top page?</th>
+      <td><input type="checkbox" name="<%= "c#{i}_show_topics" %>" 
+                 <%= choice.show_topics ? 'checked="checked"' : '' %>> Display on the top page</td>
+    </tr>
+  </table>
+<% end %>
+
+  <p>
+    <% options.each do |key, value| %>
+    <input type="hidden" name="<%= key %>" value="<%= value %>">
+    <% end %>
+
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="action" value="config_field">
+    <input type="hidden" name="s" value="<%= next_stage %>">
+    <input type="hidden" name="f" value="<%= etype_id %>">
+    <input type="hidden" name="choices" value="<%= choices.join(',') %>">
+    <input type="hidden" name="config_choice" value="yes">
+
+    <% if project.lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="Æü">
+    <% end %>
+    <input type="submit" value="Set selection">
+  </p>
+</form>

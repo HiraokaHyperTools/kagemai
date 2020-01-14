@@ -1,0 +1,102 @@
+<%# requirements: mode, project, summary, month %>
+
+<h2><%= month.gsub(/-/, '/') %> ¤Î¥µ¥Þ¥ê</h2>
+
+<% 
+if project.size > 0 then
+  week = 1
+  week_new = week_reply = week_close = 0
+  td_class_l = ''
+  td_class_d = 'class="d"'
+  td_class = td_class_d
+  
+  sun_re = /\(#{Time.week_of_day(0)}\)/
+  sat_re = /\(#{Time.week_of_day(6)}\)/
+  summary.each do |day, item|
+    begin_of_week = sun_re =~ day || day == summary.first[0]
+    end_of_week   = sat_re =~ day || day == summary.last[0]
+    
+    day_color = "black"
+    case day
+    when /\(Sat\)$/ then
+      day_color = "blue"
+    when /\(Sun\)$/ then
+      day_color = "red"
+    end
+    day_style = "text-decoration : none; color: #{day_color}"
+    
+    td_class = (td_class == td_class_l) ? td_class_d : td_class_l
+    
+    sy, sm, sd = day.scan(/\d+/)
+    search_param = {
+       'action'  => SearchReport.name(),
+       'project' => project.id,
+       'search_type' => 'search',
+       'jp_enc_test' => 'Æü',
+       'search_op' => 'and_all',
+       'period_type' => 'other',
+       'b_year'  => sy,
+       'b_month' => sm,
+       'b_day'   => sd,
+       'e_year'  => sy,
+       'e_month' => sm,
+       'e_day'   => sd
+    }
+    
+    search_href_param = search_param.collect{|k, v| k + '=' + v}.join('&')
+    search_href = "#{mode.url}?#{search_href_param}"
+%>
+  
+  <% if begin_of_week then %>
+    <% week_new = week_reply = week_close = 0 %>
+    <h3><%= week %>½µÌÜ</h3>
+    <table>
+      <tr>
+        <th>Ç¯/·î/Æü(ÍËÆü)</th>
+        <th>¿·µ¬</th>
+        <th>¥ê¥×¥é¥¤</th>
+        <th>½ªÎ»</th>
+        <th>ÎßÀÑÌ¤½ªÎ»</th>
+        <th>ÎßÀÑ½ªÎ»</th>
+        <th>¹ç·×</th>
+      </tr>
+  <% end %>
+  
+  <%
+    week_new   += item.new
+    week_reply += item.reply
+    week_close += item.close
+  %>
+      <tr class="right_align">
+        <td <%= td_class %> style="text-align: center; color:<%= day_color %>">
+          <a href="<%= search_href %>" style="<%= day_style %>"><%= day %></a>
+        </td>
+        <td <%= td_class %>><%= item.new.to_s %></td>
+        <td <%= td_class %>><%= item.reply.to_s %></td>
+        <td <%= td_class %>><%= item.close.to_s %></td>
+        <td <%= td_class %> ><%= item.opened.to_s %></td>
+        <td <%= td_class %> ><%= item.closed.to_s %></td>
+        <td <%= td_class %> ><%= item.total.to_s %></td>
+      </tr>
+
+  <% if end_of_week then
+       week += 1 
+       td_class = (td_class == td_class_l) ? td_class_d : td_class_l 
+       num_style = '' # 'style="border-top: 1px solid black"'
+  %>
+      <tr class="right_align" style="font-weight:bold">
+        <td <%= td_class %> style="text-align: center">½µ·×</td>
+        <td <%= td_class %> <%= num_style %>><%= week_new.to_s %></td>
+        <td <%= td_class %> <%= num_style %>><%= week_reply.to_s %></td>
+        <td <%= td_class %> <%= num_style %>><%= week_close.to_s %></td>
+        <td <%= td_class %> <%= num_style %>><%= item.opened.to_s %></td>
+        <td <%= td_class %> <%= num_style %>><%= item.closed.to_s %></td>
+        <td <%= td_class %> <%= num_style %>><%= item.total.to_s %></td>
+      </tr>
+    </table>
+  <% end %>
+  
+<%  
+  end # end of summary.each
+end   # end of if
+%>

@@ -1,0 +1,66 @@
+<%# requirements: mode, project %>
+
+<% if project.top_page_options['keyword_search_form'] then %>
+  <h2>簡易検索</h2>
+
+  <%= eval_template('keyword_search.rhtml', 
+                    {:mode => mode, 
+                     :project => project, 
+                     :keyword => '',
+	             :case_insensitive => false,
+                     :search_elements => Hash.new(true) }) %>
+<% end %>
+
+
+<% if project.top_page_options['search_form'] then %>
+  <h2>検索</h2>
+
+  <%
+    params = {
+      :mode => mode, 
+      :project => project, 
+      :and_op => true,
+      :period_begin => Time.now,
+      :period_end   => Time.now
+    }
+  %> 
+  <%= eval_template('search_form.rhtml', params) %>
+<% end %>
+
+<% if project.top_page_options['id_form'] then %>
+  <h2>IDを指定して表示</h2>
+  <form action="<%= mode.url %>" method="GET">
+    <p>
+      レポートID: 
+      <input type="text" name="id" size="5">
+      <input type="submit" value="表示">
+    </p>
+    <div>
+      <input type="hidden" name="project" value="<%= project.id %>">
+      <input type="hidden" name="action" value="view_report">
+    </div>
+  </form>
+<% end %>
+  
+
+<% 
+   etypes = project.report_type.find_all{|etype| 
+     etype.kind_of?(SelectElementType) && etype.show_topics
+   }
+%>
+
+<% if project.top_page_options['count'] then %>
+  <% etypes.each do |etype| %>
+    <h2><%= etype.name %>別レポート数</h2>
+    <p>
+      <%= eval_template('topics_count.rhtml', {:mode => mode, :project => project, :etype => etype}) %>
+    </p>
+  <% end %>
+<% end %>
+
+<% if project.top_page_options['list'] then %>  
+  <% etypes.each do |etype| %>
+    <h2><%= etype.name %>別インデックス</h2>
+    <%= eval_template('topics_collection.rhtml', {:project => project, :etype => etype}) %>  
+  <% end %>
+<% end %>

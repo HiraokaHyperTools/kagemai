@@ -1,0 +1,15 @@
+<%# requirements: bts %>
+
+<% count = 0 %>
+
+<ul>
+<% bts.each_project do |project| %>
+  <% count += 1 %>
+    <li><%= project.href() %>
+        [<%= project.id.escape_h %>] : <%= project.description.escape_h %></li>
+<% end %>
+</ul>
+
+<% if count == 0 %>
+  <p>現在、登録されているプロジェクトはありません。</p>
+<% end %>

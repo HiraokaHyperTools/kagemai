@@ -1,0 +1,60 @@
+<%
+  params = {
+    :mode     => mode,
+    :bts      => bts,
+    :ttype    => ttype,
+    :projects => projects,
+    :keyword  => keyword,
+    :case_insensitive => case_insensitive,
+  }
+%>
+
+<%= eval_template('csearch_form.rhtml', params) %>
+
+<div class="day">
+<h2><span class="title">検索結果 (ヒット数: <%= total %>)</span></h2>
+<div class="body">
+<div class="section">
+
+<% if total > 0 then %>
+
+<table>
+  <tr>
+    <th>プロジェクト</th>
+    <th>ID</th>
+    <th>タイトル</th>
+    <th>最終更新日</th>
+  </tr>
+
+<% bts.each_project do |project| %>
+<%  
+     Thread.current[:Project] = project
+     result = results[project.id]
+     next unless result
+     
+     hide_title = project.report_type['title']['hide_from_guest'] && Mode::GUEST.current?
+%>
+<%   result.reports.each do |report| %>
+  <%   title = report.element('title').html_value(true) %>
+  <%   title = "[hide for guest]" if hide_title %>
+  <%   title_href = report.href(title, {}, '', nil, {}, project) %>
+  <tr>
+    <td><%= project.href() %></td>
+    <td><%= report.id.html_value %></td>    
+    <td><%= title_href %></td>
+    <td><%= report.modify_time.html_value() %></td>
+  </tr>
+<%  end %>
+<% end %>
+
+</table>
+
+<% else %>
+
+<p>条件に一致するレポートはありません</p>
+
+<% end %>
+
+</div> <!-- section -->
+</div> <!-- body -->
+</div> <!-- day -->

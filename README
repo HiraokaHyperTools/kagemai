@@ -1,0 +1,61 @@
+= 影舞 README
+
+Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
+http://www.daifukuya.com/kagemai/
+
+影舞は、いわゆるバグトラッキングシステムです。
+設定と利用が簡単に行えるものを目指しています。
+
+== 特徴
+
+* 簡単にインストールできる
+* 簡単に使える
+  * プロジェクトの新規作成/削除/設定変更は WEB ベースで。
+  * メッセージの投稿/リプライも WEB ベースで。
+  * ステータスなどの管理も WEB ベースで。
+  * メールでのメッセージの配信、受付が可能。
+  * RSSの配信
+* 日本語がだいたい正しく扱える。
+
+
+== 動作環境
+
+Ruby が動作する環境であれば、おそらく動作すると思います。
+動作確認環境は以下のとおりです。
+
+* Fedora 7, Windows XP
+* Ruby 1.8.6
+* Apache 2.2.6
+* mod_ruby 1.2.6
+* PostgreSQL 8.2.6, 8.3.0 (+ ruby-postgres 0.7.1 + ruby-dbi 0.1.1)
+* MySQL 5.0.45, 5.1.11 (+ MySQL/Ruby 2.7.4 + ruby-dbi 0.1.1)
+
+* mod_ruby やデータベースはなくても動作します。
+
+
+== インストール
+
+インストールについては、doc/install.html をご覧ください。
+
+
+== ライセンス
+
+影舞の利用/変更/再配布は GPL に従ってください。
+ライセンスの詳細については COPYING および GPL をご覧ください。
+
+また、影舞の配布物には以下のライブラリが含まれています。
+これらのライブラリの再配布など関しては、各ライブラリの
+ライセンスに従ってください。
+
+* rubymail 0.10 <http://www.lickey.com/rubymail/>
+* xmlscan-snapshot-20011123 <http://www.blue.sky.or.jp/atelier/ruby/xmlscan/old/>
+
+
+== Acknowledgements
+
+* Akio Tajima (NCR Japan Ltd.)  : SQL Server patch and Win32 patch
+* Shingo Noguchi (difukuya.com) : MySQL patch
+* Steve Brumbaugh               : English documents and resources
+
+--
+FUKUOKA Tomoyuki <fukuoka@daifukuya.com> 

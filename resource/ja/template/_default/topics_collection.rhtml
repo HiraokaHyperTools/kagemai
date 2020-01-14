@@ -1,0 +1,20 @@
+<%# requirements: project, etype %>
+
+<% collection = project.collect_reports(etype.id) %>
+
+<% project.report_type[etype.id].each do |choice| %>
+<%  if choice.show_topics %>
+
+    <h3><%= choice.sdesc.to_s.empty? ? choice.id : choice.sdesc %></h3>
+
+    <p><%= choice.description.gsub(/\n/, "<br>") %></p>
+
+    <% reports = collection.fetch(choice.id, []) %>
+    <%= eval_template('report_index.rhtml', {:report_type => project.report_type,
+                                             :reports => reports,
+                                             :total  => reports.size,
+                                             :offset => 0,
+                                             :limit  => nil}) %>
+
+  <% end %>
+<% end %>

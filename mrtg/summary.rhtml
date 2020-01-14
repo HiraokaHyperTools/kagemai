@@ -1,0 +1,34 @@
+<%# requirements: mode, project, summary %>
+
+<h2>今週の累積・終了レポート数の推移</h2>
+
+<!--
+  mrtg/test.html, mrtg/test-week.png は必要に応じて適当に変更してください。
+-->
+
+<a href="mrtg/test.html">
+  <img width=530 height=135 src="mrtg/test-week.png" alt="mrtg"  style="border-style: none">
+</a>
+
+<p>
+  未終了レポート数: <%= summary.last[1].opened %>,
+  <span style="color:#00cc00">終了レポート数</span>: <%= summary.last[1].closed %>, 
+  <span style="color:#0000ff">累積レポート数</span>: <%= project.size %>,
+  <span style="color:#ef8f4f">終了度</span>: <%= "%.2f" % (summary.last[1].closed.to_f / project.size.to_f * 100) %>%
+</p>
+
+
+<% 
+   etypes = project.report_type.find_all{|etype| 
+     etype.kind_of?(SelectElementType)
+   }
+%>
+
+<% if project.top_page_options['count'] then %>
+  <% etypes.each do |etype| %>
+    <h2><%= etype.name %>別レポート数</h2>
+    <p>
+      <%= eval_template('topics_count.rhtml', {:mode => mode, :project => project, :etype => etype}) %>
+    </p>
+  <% end %>
+<% end %>

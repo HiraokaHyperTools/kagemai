@@ -1,0 +1,50 @@
+<%# requirements: mode, project, etype, options, choices, next_stage %>
+
+<p>必要であれば、各選択肢に説明をつけることができます。</p>
+<p>「トップページへの表示」は、フィールドの「トップページで取り上げる」が
+    on になっていなければ効果を持ちません。</p>
+
+<form action="<%= mode.url %>" method="POST">
+
+<% etype.each_with_index do |choice, i| %>
+  <h3><%= choice.id %></h3> 
+
+  <table>
+    <tr>
+      <th>短い説明</th>
+      <td><input type="text" 
+                 name="<%= "c#{i}_sdesc" %>" size="20" value="<%= choice.sdesc %>"></td>
+    </tr>
+    <tr>
+      <th>長い説明</th>
+      <td>
+        <textarea name=<%= "c#{i}_description" %> cols="40" rows="4"><%= choice.description %></textarea>
+      </td>
+    </tr>
+
+    <tr>
+      <th>トップページへの表示</th>
+      <td><input type="checkbox" name="<%= "c#{i}_show_topics" %>" 
+                 <%= choice.show_topics ? 'checked="checked"' : '' %>>トップページに表示する</td>
+    </tr>
+  </table>
+<% end %>
+
+  <p>
+    <% options.each do |key, value| %>
+    <input type="hidden" name="<%= key %>" value="<%= value %>">
+    <% end %>
+
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="action" value="config_field">
+    <input type="hidden" name="s" value="<%= next_stage %>">
+    <input type="hidden" name="f" value="<%= etype_id %>">
+    <input type="hidden" name="choices" value="<%= choices.join(',') %>">
+    <input type="hidden" name="config_choice" value="yes">
+
+    <% if project.lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+    <input type="submit" value="選択肢を設定">
+  </p>
+</form>

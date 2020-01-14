@@ -1,0 +1,27 @@
+<%# requirements: mode, project, keyword, case_insensitive, search_elements %>
+
+<form action="<%= mode.url %>" method="<%= Config[:search_form_method] %>">
+
+  全文検索: <input type="text" name="keyword" size="20" value="<%= keyword.escape_h %>"> 
+            <input type="submit" value="検索">
+
+  <div style="margin-left:5em">
+    <% project.report_type.find_all{|etype| etype.keyword_search?}.each do |etype| %>
+      <!-- search_elements[<%= etype.id %>] = <%= search_elements[etype.id] %> -->
+      <% checked = search_elements[etype.id] ? 'checked="checked"' : '' %>
+      <input type="checkbox" name="<%= etype.id %>" <%= checked %>><%= etype.name %>
+    <% end %>
+    <br>
+    <% checked = case_insensitive ? 'checked="checked"' : '' %>
+    <input type="checkbox" name="case_insensitive" <%= checked %>> 大文字小文字を区別しない。
+  </div>
+
+  <div>
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <input type="hidden" name="action" value="search">
+    <input type="hidden" name="search_type" value="keyword">
+    <% if @lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+  </div>
+</form>

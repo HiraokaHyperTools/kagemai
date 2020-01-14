@@ -1,0 +1,193 @@
+<%# requirements: mode, bts, project, errors, 
+  #               values, store, notify_address, top_page_options %>
+
+<% 
+  # id to name map
+  items = {
+    'project_name'       => 'Name',
+    'description'        => 'Description',
+    'admin_address'      => 'Admin address',
+    'post_address'       => 'Submission address',
+    'notify_addresses'   => 'Notification address',
+    'fold_column'        => 'Line wrap width',
+    'subject_id_figure'  => 'Bug ID padding',
+    'use_filter'         => 'Use spam filter',
+    'store'              => 'Save format',
+    'template'           => 'Template',
+  }
+%>
+
+<% unless errors.empty? then %>
+  <p>The following errors occurred:</p>
+
+  <ul>
+  <% errors.each do |key, value| %>
+    <li><%= MessageBundle[key] %></li>
+    <ul>
+      <% value.each do |e| %>
+      <li><%= items[e] %></li>
+      <% end %>
+    </ul>
+  <% end %>
+  </ul>
+
+  <p>Please correct these errors and resubmit.</p>
+
+<% end %>
+
+<form action="<%= mode.url %>" method="POST">
+  <table>
+    <tr>
+      <th <%= errors.tag_class('project_id') %>>ID</th>
+      <td colspan="2"><%= project.id %></td>
+    </tr>
+    <tr>
+      <th <%= errors.tag_class('project_name') %>>Name*</th>
+      <td colspan="2">
+        <input name="name" 
+               type="text" value="<%= values.get_param('name').to_s.escape_h %>"> <br>
+        <span>Enter a display name for the project.</span>
+      </td>
+    </tr>
+    <tr>
+      <th <%= errors.tag_class('description') %>>Description*</th>
+      <td colspan="2">
+        <input name="description" type="text" size="50" 
+               value="<%= values.get_param('description').to_s.escape_h %>"> <br>
+        <span>Enter a brief description of the project for the project list.</span>
+      </td>
+    </tr>
+    <tr>
+      <th <%= errors.tag_class('admin_address') %>>Admin e-mail</th>
+      <td colspan="2">
+        <input name="admin_address" 
+               type="text" size="30" value="<%= values.get_param('admin_address').to_s.escape_h %>"> <br>
+	<span>If you are using Kagemai's e-mail functions, enter the e-mail address of the project administrator.</span>
+      </td>
+    </tr>
+    <tr>
+      <th <%= errors.tag_class('post_address') %>>Submission address</th>
+      <td colspan="2">
+        <input name="post_address" type="text" 
+               size="30"  value="<%= values.get_param('post_address').to_s.escape_h %>"> <br>
+	<span>Enter an e-mail address where bug reports can be submitted.</span>
+      </td>
+    </tr>
+    <tr>
+      <th <%= errors.tag_class('notify_addresses') %>>Notification address</th>
+      <td colspan="2">
+        <textarea name="notify_addresses" 
+	          cols="60" rows="5"><%= notify_addresses %></textarea><br>
+	<span>If you wish to be notified of new bug reports and status changes, enter destination e-mail addresses, separated by carriage returns or commas.</span>
+      </td>
+    </tr>
+
+    <tr>
+      <th <%= errors.tag_class('fold_column') %>>Line wrap width</th>
+      <td colspan="2">
+        <input name="fold_column" 
+               type="text" size="5" value="<%= values.get_param('fold_column').to_s.escape_h %>"> <br>
+	<span>Maximum number of characters for a line. Lines longer than this will be wrapped.</span>
+      </td>
+    </tr>
+
+    <tr>
+      <th <%= errors.tag_class('subject_id_figure') %>>Bug ID padding</th>
+      <td colspan="2">
+        <input name="subject_id_figure" 
+               type="text" size="5" value="<%= values.get_param('subject_id_figure').to_s.escape_h %>"> <br>
+	<span>Specify the number of padding digits for bug IDs displayed in the subject line of notification e-mails. If you specify 4 digits, the ID will be displayed in the form "[ProjectID:0000]".</span>
+      </td>
+    </tr>
+
+    <tr>
+      <th <%= errors.tag_class('use_filter') %>>Use spam filter</th>
+      <td colspan="2">
+        <select name="use_filter">
+          <% if values.get_param('use_filter') then %>
+            <option value="true" selected>enable</option>
+            <option value="false">disable</option>
+          <% else %>
+            <option value="true">enable</option>
+            <option value="false" selected>disable</option>
+          <% end %>
+        </select><br>
+        <span>Enable spam filter or not.</span>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Stylesheet URL</th>
+      <td colspan="2">
+        <input name="css_url" 
+               type="text" size="30" value="<%= values.get_param('css_url').to_s.escape_h %>"> <br>
+        <span>Indicate the URL for the stylesheet this project will use.</span>
+      </td>
+    </tr>
+
+    <% 
+      scount = bts.count_store()
+      scount += 1 if store.obsolete?
+    %>
+
+    <% th_str = %Q!<th rowspan="#{scount}">Save format</th>! %>
+    <% bts.each_store() do |s| %>
+    <%   next if s.obsolete? && s != store %>
+    <tr>
+        <%= th_str %>
+        <td style="white-space: nowrap;">
+          <% check_str = (store == s) ? 'checked="checked"' : '' %>
+          <input name="store" 
+                 type="radio" value="<%= s.name %>" <%= check_str %>> <%= s.disp_name %>
+        </td>
+        <td>
+          <%= s.description %>
+        </td>
+    </tr>
+    <% th_str = '' %>
+    <% end %>
+
+    <tr>
+      <th>Top page</th>
+      <td colspan="2">
+        <input type="checkbox" name="top_page_count" 
+               <%= top_page_options['count'] ? 'checked="checked"' : '' %>> Bug count<br>
+        <input type="checkbox" name="top_page_list"
+               <%= top_page_options['list'] ? 'checked="checked"' : '' %>> Bug list<br>
+        <input type="checkbox" name="top_page_id_form"
+               <%= top_page_options['id_form'] ? 'checked="checked"' : '' %>>Search by ID form<br>
+        <input type="checkbox" name="top_page_keyword_search_form"
+               <%= top_page_options['keyword_search_form'] ? 'checked="checked"' : '' %>> Simple search form<br>
+        <input type="checkbox" name="top_page_search_form"
+               <%= top_page_options['search_form'] ? 'checked="checked"' : '' %>> Search form<br>
+      </td>
+    </tr>
+
+    <tr>
+      <th>Language</th>
+      <td colspan="2"><%= project.lang %></td>
+    </tr>
+
+    <tr>
+      <th>Encoding</th>
+      <td colspan="2"><%= project.charset %></td>
+    </tr>
+  </table>
+
+  <ul>
+    <li>Items marked with an asterisk are required.</li>
+    <li>The ID, language, and encoding cannot be changed.</li>
+	<li><span style="color:red;">Caution: </span>Changes to the save format may take a while to process.<br>
+	If there is a lot of data, please convert it using convert.rb.</li>
+  </ul>
+
+  <div>
+    <input type="hidden" name="action" value="config_project">
+    <input type="hidden" name="s" value="2">
+    <input type="hidden" name="project" value="<%= project.id %>">
+    <% if project.lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="Æü">
+    <% end %>
+    <input type="submit" value="Change settings">
+  </div>
+</form>

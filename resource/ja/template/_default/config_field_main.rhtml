@@ -1,0 +1,56 @@
+<%# requirements: mode, project, edit_p, order_p, delete_p, up_p, down_p %>
+
+<h2>フィールドの編集/削除</h2>
+
+<table>
+  <tr>
+    <th>タイプ</th>
+    <th>ID</th>
+    <th>表示名</th>
+    <th>説明文</th>
+    <th>操作</th>
+    <th>表示順</th>
+  </tr>  
+  <% project.report_type.each do |etype| %>
+  <% 
+       edit_p['f'] = etype.id; delete_p['f'] = etype.id
+       up_p['f'] = etype.id; down_p['f'] = etype.id
+       op_delete = '/削除不可'
+       if etype.can_delete? then
+         op_delete = '/' + '削除'.href(mode.url, delete_p)
+       end
+  %>
+  <tr>
+    <td style="white-space: nowrap;"><%= etype.class.name %></td>
+    <td style="white-space: nowrap;"><%= etype.id %></td>
+    <td style="white-space: nowrap;"><%= etype.name %></td>
+    <td><%= etype.description %></td>
+    <td style="white-space: nowrap;"><%= '編集'.href(mode.url, edit_p) %><%= op_delete %></td>
+    <td style="white-space: nowrap;"><%= '上'.href(mode.url, up_p) %>/<%= '下'.href(mode.url, down_p) %></td>
+  </tr>
+  <% end %>
+</table>
+
+<ul>
+  <li>テンプレートで削除不可に設定されているフィールドは削除できません。</li>
+  <li>フィールド削除では、いちいち確認せずに削除されます。</li>
+</ul>
+
+<h2>フィールドの追加</h2>
+
+<p>追加するフィールドの種類を選択してください。</p>
+
+<table>
+  <tr>
+    <th>タイプ</th>
+    <th>説明</th>
+  </tr>
+
+  <% ElementType.each_children() do |etype_class| %>
+  <tr>
+    <% add_p['f'] = etype_class.to_s %>
+    <td><%= etype_class.name.href(mode.url, add_p) %></td>
+    <td><%= etype_class.description %></td>
+  </tr>
+  <% end %>
+</table>

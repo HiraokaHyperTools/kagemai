@@ -1,0 +1,36 @@
+<%# requirements : cgi %>
+
+<% if false then %>
+  <hr>
+  <h2>CGIパラメータ一覧</h2>
+
+  <table>
+  <% cgi.params.each_key do |k| %>
+    <tr>
+      <th><%= k %></th>
+      <td><%= cgi.get_param(k, '(nil)') %></td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>
+
+<hr>
+
+<%
+  if Kagemai::VERSION.empty? then
+    version = "(#{Kagemai::CODENAME})"
+  else
+    version = %Q|<span class="version">#{Kagemai::VERSION}</span>|
+  end
+%>
+
+<div style="text-align:right">
+  Bug Tracking System <%= '影舞'.href(Kagemai::URL) %> <%= version %>
+</div>
+<div style="text-align:right">
+  Powered by <%= 'Ruby'.href('http://www.ruby-lang.org/') %> 
+  <span class="version"><%= RUBY_VERSION %></span>
+<% if defined?(MOD_RUBY) %>
+<!-- mod_ruby:  <%= MOD_RUBY.scan(/[\d.]+/)[0] %> -->
+<% end %>
+</div>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="EUC-JP"?>
+
+<ReportType id="simple" name="シンプルBTS">
+  <description>
+    小規模向けのシンプルなバグレポートを扱います。
+    バグレポートは送信者、タイトル、状態、カテゴリのフィールドを持ち、ファイルを添付することもできます。
+  </description>
+
+<!-- 
+  == 通常の Element の属性 ==
+
+  * name が無いときは、id の値が設定されているものとして扱われます。
+  * default が定義されていない要素は必須項目になります。
+  * use_cookie が true の項目は cookie を用いて保存されます。
+  * email_check が true の項目は、email アドレスとして
+    正しいかどうかチェックされます。
+  * report_attr が true の項目はレポートの詳細表示において
+    レポートの最新属性として表示されます。
+  * allow_guest はレポート属性の要素について、ゲストによる変更を許すかどうかです。
+  * show_topics はトピックスページに表示する情報として扱います。
+
+  * show_header
+  * show_header_line
+  * delete
+
+  == Choice の属性 ==
+  
+  * sdec は選択肢の短い説明です。
+  * show_topics はトピックスページに表示する情報として扱います。
+
+-->
+
+
+  <string id="email" name="送信者" use_cookie="true" email_check="true"  
+          delete="false"
+          show_header="true" show_header_line="true">
+    送信者のメールアドレスを入力してください。
+  </string>
+
+  <string id="title" name="概要"
+          report_attr="true" list_item="true" allow_guest="true" delete="false">
+    この報告の概要を簡潔・明瞭に書いてください。
+    「動きません」「わかりません」「質問です」などの題名は不適切です。
+  </string>
+
+  <select id="status" name="状態" default="新規" 
+          report_attr="true"
+          list_item="true"
+          delete="false"
+          show_topics="true"
+          show_header="true"
+          close_by="保留,完了">
+    <choice id="新規" sdesc="提案されているもの">新しく投稿されたバグです</choice>
+    <choice id="受付済" sdesc="受付済みのもの">受付済みのバグたちです</choice>
+    <choice id="修正済" sdesc="修正されたもの">修正されたバグたちです</choice>
+    <choice id="保留" sdesc="保留中のもの">保留されているものです</choice>
+    <choice id="却下" sdesc="却下されたもの">却下されたバグたちです</choice>
+    <choice id="完了" sdesc="完了したもの" show_topics="false">完了したバグたちです</choice>
+    この報告の現在の処理状況を選択してください。
+  </select>
+
+  <text id="body" name="内容" delete="false">
+    簡潔・明瞭にどうぞ。余分な引用や挨拶はいりません。
+  </text>
+
+  <file id="attachment" name="添付ファイル" default="">
+    ファイル名とファイルの種類を指定してください。日本語のファイル名はやめておいた方が無難です。
+  </file>
+</ReportType>

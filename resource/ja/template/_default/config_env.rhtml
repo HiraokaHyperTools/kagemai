@@ -1,0 +1,21 @@
+<%# requirements: mode, lang, config %>
+
+<form action="<%= mode.url %>" method="POST">
+  <table>
+    <% CONFIG_VAR_NAMES.each do |name| %>
+      <tr>
+        <th><%= name %></th>
+        <td><input name="<%= name %>" type="text" size="50" value="<%= config[name.intern] %>"></td>
+      </tr>
+    <% end %>
+  </table>
+
+  <div>
+    <input type="hidden" name="action" value="config_env">
+    <input type="hidden" name="s" value="1">
+    <% if lang == 'ja' %>
+    <input type="hidden" name="jp_enc_test" value="日">
+    <% end %>
+    <input type="submit" value="設定を変更">
+  </div>
+</form>

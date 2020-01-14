@@ -1,0 +1,38 @@
+Options +ExecCGI -Indexes
+# DirectoryIndex index.html guest.cgi
+
+<Files *.conf>
+  deny from all
+</Files>
+
+### for cgi
+# AddHandler cgi-script cgi
+
+### for mod_ruby
+# <Files *.cgi>
+#   SetHandler ruby-object
+#   RubyHandler Apache::RubyRun.instance
+# </Files>
+
+### for fastcgi
+# <Files *.fcgi>
+#   SetHandler fastcgi-script
+#   allow from all
+# </Files>
+<Files *.fcgi>
+  deny from all
+</Files>
+
+<Files user.cgi>
+  AuthName      Kagemai-User
+  AuthType      Basic
+  AuthUserFile  /etc/kagemai/user.passwd
+  Require       valid-user
+</Files>
+
+<Files admin.cgi>
+  AuthName      Kagemai-Administrator
+  AuthType      Basic
+  AuthUserFile  /etc/kagemai/admin.passwd
+  Require       valid-user
+</Files>

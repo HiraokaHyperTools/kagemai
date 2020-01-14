@@ -1,0 +1,37 @@
+<%# requirements : cgi %>
+
+<% if false then %>
+  <hr>
+  <h2>CGI parameter listing</h2>
+
+  <table>
+  <% cgi.params.each_key do |k| %>
+    <tr>
+      <th><%= k %></th>
+      <td><%= cgi.get_param(k, '(nil)') %></td>
+    </tr>
+  <% end %>
+  </table>
+<% end %>
+
+<hr>
+
+<%
+  if Kagemai::VERSION.empty? then
+    version = "- #{Kagemai::CODENAME}"
+  else
+    version = %Q| <span class="version">#{Kagemai::VERSION}</span>|
+  end
+%>
+
+<div style="text-align:right">
+  <%= 'Kagemai'.href(Kagemai::URL) %> bug tracking system <%= version %>
+</div>
+<div style="text-align:right">
+  Powered by <%= 'Ruby'.href('http://www.ruby-lang.org/') %> 
+  <span class="version"><%= RUBY_VERSION %></span>
+<% if defined?(MOD_RUBY) %>
+  + <%= 'mod_ruby'.href('http://modruby.net/') %>
+  <span class="version"><%= MOD_RUBY.scan(/[\d.]+/)[0] %></span>
+<% end %>
+</div>

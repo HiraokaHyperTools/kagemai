@@ -1,0 +1,204 @@
+### Kagemai message resources. 
+### Encoding: EUC-JP
+###
+### $Id: messages 409 2008-02-23 14:07:23Z fukuoka $
+
+### Navigation
+navi_home = Home
+
+### Actions
+action_projects      = Project list
+action_top           = Project home
+action_new_report    = New report
+action_search_report = Search
+action_summary       = Summary
+action_admin         = Admin
+action_split_report  = Split report
+action_csearch       = Search all projects
+action_rssall        = RSS feed(all projects)
+
+### Modes
+mode_guest = Logout
+mode_user  = Login
+mode_admin = Administrator
+
+### Page titles
+title_projects = Project list
+title_top      = %s
+
+title_admin = Kagemai administration
+
+title_new_report = New bug report
+title_new_report_e = Error creating a new bug report
+title_new_report_added = New bug report sent
+
+title_add_message_e = Message submission error
+title_add_message   = Message sent
+
+title_search_form = Search
+title_search_result = Search results
+
+title_summary = Summary
+
+title_config_env = Global settings
+
+title_config_choice = Edit choices
+title_field_add     = Add a %s field
+title_field_edit    = Edit "%s" field
+title_field_select  = Customize project report fields
+title_field_main    = Customize project report fields
+title_config_choice = Edit choices
+
+title_config_project_select = Change project settings
+title_config_project        = Change project settings (%s)
+title_config_project_done   = Project settings changed (%s)
+
+title_create_project      = Create a new project
+title_create_project_done = Project created
+
+title_delete_project = Delete a project
+title_delete_project_confirm = Confirm project deletion
+title_delete_project_delete = Project deleted
+
+title_split_done = Report split
+
+title_csearch_form   = Search all projects
+title_csearch_result = Search results
+title_spam_error     = Posting failed
+title_post_error     = Posting failed
+
+### Search
+
+search_cond_include = %s includes %s
+search_cond_equal   = %s and %s are equal
+
+search_cond_case_insensitive = Case-insensitive
+
+search_select_any = Any
+
+search_keyword_include_all     = Include phrase
+search_keyword_include_any     = Include words
+search_keyword_not_include_all = Exclude phrase
+search_keyword_not_include_any = Exclude words
+search_keyword_regexp          = Regular-expression search
+
+search_multi_equal       = Exact match
+search_multi_include_all = Include all selections
+search_multi_include_any = Include any selection
+
+
+# Search periods
+search_period_all        = Any time
+search_period_last_year  = In the last year
+search_period_last_month = In the last month
+search_period_last_week  = In the last week
+search_period_last_day   = In the last day
+search_period_other      = In the specified period
+
+### Summaries
+
+summry_legend_new        = New
+summry_legend_reply      = Replies
+summry_legend_close      = Closed
+summry_legend_cumm_open  = Opened (cumulative)
+summry_legend_cumm_close = Closed (cumulative)
+summry_legend_total      = Total
+
+### Form strings
+StringElementType_opt_size = Size
+TextElementType_opt_cols  = Columns
+TextElementType_opt_rows  = Rows
+TextElementType_opt_quote_mark = Add quotation markers when quoting
+TextElementType_opt_quote = Quote the previous material when replying
+
+ElementType_opt_use_cache        = Cache this value
+ElementType_opt_use_cookie       = Save the value of this field in a cookie
+ElementType_opt_email_check      = Check e-mail address
+ElementType_opt_report_attr      = Make this field a report property
+ElementType_opt_allow_guest      = Allow guests to change this field
+ElementType_opt_allow_user       = Allow users to change this field
+ElementType_opt_list_item	 = Display as a report index item
+ElementType_opt_show_header      = Display in log message headers
+ElementType_opt_show_header_line = Display on a separate line in log message headers
+ElementType_opt_hide_from_guest  = Hide from guests
+
+SelectElementType_opt_show_topics = Use as an index on the home page
+SelectElementType_opt_radio       = Display as a radio button
+SelectElementType_opt_close_by    = Close by
+
+SelectElementType_opt_close_by_desc  = Enter a list of choices, separated by commas.<br />If any of these choices are selected, the report will be closed.<br />If multiple fields have "Close by" choices set, all of those fields will have to be closed for the report to be closed.
+
+MultiSelectElementType_opt_show_topics = Display on the project home page
+MultiSelectElementType_opt_checkbox    = Display as a checkbox
+
+Choice_opt_show_topics = Display on the project home page
+
+cached_attachment = %s (%d bytes) is cached.<br />
+
+no_values = none
+
+### Store type description
+FileStore     = Save messages in individual files
+XMLFileStore  = Save reports in individual files
+PStore        = Save reports using PStore
+PostgresStore = Save reports using PostgreSQL
+MySQLStore    = Save reports using MySQL
+MSSqlStore    = Save reports using SQL*Server
+
+### ElementType name
+Kagemai::StringElementType      = String
+Kagemai::SelectElementType      = Single-selection box
+Kagemai::MultiSelectElementType = Multiple-selection box
+Kagemai::TextElementType        = Text box
+Kagemai::BooleanElementType     = Checkbox
+Kagemai::FileElementType        = File attachment
+
+Kagemai::StringElementType_desc       = One-line string
+Kagemai::SelectElementType_desc       = Can select a single value among multiple candidates
+Kagemai::MultiSelectElementType_desc  = Can select multiple values among multiple candidates
+Kagemai::TextElementType_desc         = Multiple-line text box
+Kagemai::BooleanElementType_desc      = Takes the value "on" or "off"
+Kagemai::FileElementType_desc         = Field for entering a file attachment
+
+### Error messages
+err_no_such_project   = There is no project named "%s."
+err_invalid_report_id = There is no report with the ID "%s."
+err_invalid_split     = The original and split reports both require at least one message.
+err_spam = Posting failed
+
+### Form errors
+err_exist_id = You cannot specify an ID that already exists.
+err_required = You must enter the following required fields:
+err_exist_project = You cannot specify a project ID that already exists.
+err_invalid_email_address = You must specify a valid e-mail address in the fields below.
+err_limit_cvs = You cannot use "CVS" for a project ID.
+err_ascii_only = You can only use alphanumeric characters for the project ID.
+err_subject_tag_figure = Please specify a number from 0 to 7 for the bug ID padding.
+err_invalid_int_value = Please enter an integer value.
+err_exceed_max_size = too long input string
+
+err_config_field_default = Since reports have already been submitted for this project, you cannot set the default value for this field to "nil" to make it required.
+err_config_field_default2 = If you create a field that is part of a bug report and that guests cannot alter, you must specify a default value for it. 
+
+err_no_mime_type = The MIME type was not specified.
+err_attachment_size = The attachment exceeds the size limit.
+
+err_double_post = It seems double posting.
+
+### Days of the week
+wod_sun = Sun
+wod_mon = Mon
+wod_tue = Tue
+wod_wed = Wed
+wod_thu = Thu
+wod_fri = Fri
+wod_sat = Sat
+
+### Misc
+m_max_size     = (up to %d KB)
+mime_type_auto = Determine file type automatically
+
+### CSV
+csv_author = Original reporter
+csv_ctime  = Created
+csv_mtime  = Last Modified
