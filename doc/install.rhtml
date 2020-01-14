@@ -1,0 +1,890 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="stylesheet" type="text/css" href="kagemai_doc.css">
+  <title>インストール方法</title>
+</head>
+<body>
+
+<h1>影舞のインストール方法</h1>
+
+<p>ここでは、影舞のインストール方法について記述します。</p>
+
+<p>影舞が動作するためには、Webサーバ と Ruby が必要ですが、
+それらのインストール方法などについては、ここでは基本的に解説しません。
+また、Webサーバの設定についての記述については、 Apache をベースにしていますので、
+利用する環境に応じて適時読み替えてください。</p>
+
+<h2 id="toc">目次</h2>
+
+<p class="toc">
+<!-- 目次は自動生成です。-->
+<%
+  IO.foreach("install.rhtml") do |line|
+    case line
+    when /<h2 id=\"(.*)\">(.*)<\/h2>/
+      next if $1 == 'toc'
+      _erbout.concat "<a href=\"\##{$1}\">#{$2}</a><br>\n"
+    when /<h3 id=\"(.*)\">(.*)<\/h3>/
+      _erbout.concat %Q!<a style="margin-left:1.5em" href=\"\##{$1}\">#{$2}</a><br>\n!
+    end
+  end
+%>
+</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="quick-start">Quick Start</h2>
+
+<p>ここでは、影舞をとりあえず動作させて試すための方法を記述します。</p>
+
+<ol>
+
+<li>影舞のアーカイブを Web アクセス可能な場所に、展開する
+
+<pre>
+  $ cd /home/fukuoka/public_html
+  $ tar xfvz kagemai-0.9.0.tar.gz
+  $ mv kagemai-0.9.0 kagemai
+</pre>
+
+<li>guest.cgi がある場所に、Web サーバが書き込めるように適切にパーミッションを変更する
+
+<div>4で、Web サーバによって kagemai.conf という設定ファイルが作成されます。
+su_exec などが有効になっていれば、必要ないかもしれません。</div>
+
+<li>html/guest.cgi に Web ブラウザからアクセスする
+
+<div>
+   http:/www.example.net/~fukuoka/kagemai/html/guest.cgi など。
+</div>
+<div>
+   *.cgi ファイルが CGI プログラムとして扱われない場合には、
+   .htaccess などを設定してください。</div>
+
+<pre>
+  $ cat html/.htaccess
+  Options +ExecCGI
+  AddHandler cgi-script .cgi
+</pre>
+
+<li>"管理" -> "全体の設定変更" で、以下の部分を適当に変更する
+
+<table style="padding:1ex 0 0 0">
+  <tr class="even">
+   <th>home_url</th><td>サイトのトップなど</td>
+  </tr>
+  <tr class="odd">
+   <th>project_dir</th><td>プロジェクトのデータを保存する場所</td>
+  </tr>
+</table>
+
+<li>project_dir で指定したディレクトリが存在しないなら、
+Web サーバがそのディレクトリを作成できるようにパーミッションを変更しておく。
+
+<div>あるいは、そのディレクトリをあらかじめ作成し、
+Web サーバが書き込み権限を持つようにパーミッションを設定してください。</div>
+
+<li>"管理" -> "プロジェクトの作成" で、プロジェクトを作成してみる
+
+<li>user.cgi, admin.cgi などに、必要に応じてアクセス制限をかける。<br>
+   html/dot.htaccess を参考にしてください。
+
+<pre>
+  $ cat html/.htaccess
+  &lt;Files "*.conf*"&gt;
+    deny from all
+  &lt;/Files&gt;
+   
+  &lt;Files user.cgi&gt;
+    AuthName      Kagemai-User
+    AuthType      Basic
+    AuthUserFile  /etc/kagemai/user.passwd
+    Require       valid-user
+  &lt;/Files&gt;
+   
+  &lt;Files admin.cgi&gt;
+    AuthName      Kagemai-Administrator
+    AuthType      Basic
+    AuthUserFile  /etc/kagemai/admin.passwd
+    Require       valid-user
+  &lt;/Files&gt;
+</pre>
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="install_ja_rb">install_ja.rb を用いたインストール</h2>
+
+<p>ここでは、install_ja.rb を用いたインストールについて説明します。</p>
+
+<ol>
+
+<li>kagemai グループの作成
+
+<div>
+Web ブラウザからの利用の他に、メールでのデータの受付を行う場合には、
+影舞のデータへのアクセス用のグループを作成しておきます。
+</div>
+
+<pre>
+  # groupadd kagemai
+</pre>
+
+<div>
+そして、とりあえず Web サーバのユーザ(例えば apache)を作成したグループに追加します。
+</div>
+
+<pre>
+  # gpasswd -a apache kagemai
+</pre>
+
+
+<li>install_ja.rb の編集
+
+<div>
+instann_ja.rb 内の、以下の変数を必要に応じて編集してください。
+</div>
+
+<table>
+  <tr class="even">
+    <th>$user</th>
+    <td>データ用ディレクトリのユーザのID。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>$group</th>
+    <td>データ用ディレクトリのグループのID。</td>
+  </tr>
+
+  <tr class="even">
+    <th>$root_dir</th>
+    <td>影舞のライブラリ、リソースなどのディレクトリ</td>
+  </tr>
+
+  <tr class="odd">
+    <th>$html_dir</th>
+    <td>Web からアクセス可能な、CGI スクリプトなどを置くディレクトリ</td>
+  </tr>
+
+  <tr class="even">
+    <th>$data_dir</th>
+    <td>プロジェクトのデータを保存するディレクトリ</td>
+  </tr>
+
+  <tr class="odd">
+    <th>$passwd_dir</th>
+    <td>.htaccess での認証用のパスワードを置くディレクトリ</td>
+  </tr>
+</table>
+
+<div>
+$user, $gorup は指定する必要がなければ、それぞれコメントアウトしてください。
+</div>
+
+<div>$user を指定して、$group を指定しない場合には、データ用ディレクトリと、
+そこに置かれるファイルのパーミッションは、それぞれ、0755, 0644 になります。
+それ以外では、ディレクトリは 02775, ファイルは 0664 になります。</div>
+
+<li>install_ja.rb の実行
+
+<div>
+編集が終わったら、install_ja.rb を実行します。（必要なら root になって。）
+</div>
+
+<pre>
+  # ruby install_ja.rb
+</pre>
+
+<li>動作の確認
+
+<div>
+guest.cgi にアクセスして、正しく表示されるか確認します。
+</div>
+
+<div>正しく表示されるようであれば、
+"管理" -> "プロジェクトの作成" で、プロジェクトを作成してみます。
+プロジェクトが作成できるなら、そのプロジェクトでレポートを投稿してみます。
+</div>
+
+</ol>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mod-ruby">mod_ruby の利用</h2>
+
+<p>影舞 0.8.0 以降から、<a href="http://modruby.net">mod_ruby</a> で動作させることが可能になりました。
+dot.htaccess を参考に、guest.cgi, user.cgi, admin.cgi がそれぞれ、
+mod_ruby で起動するように設定してください。</p>
+
+<p>*.cgi の拡張子をたとえば、.rbx に変更する場合には、例えば
+以下のようにしてください。</p>
+
+<ol>
+<li>guest.cgi, user.cgi, admin.cgi をそれぞれ *.rbx としてコピー
+
+<pre>
+  $ cp -p guest.cgi guest.rbx
+  $ cp -p user.cgi user.rbx
+  $ cp -p admin.cgi admin.rbx
+</pre>
+
+<li> admin.cgi にアクセスして、"全体の設定" から以下の項目を変更する
+
+<pre>
+  guest_mode_cgi : guest.rbx
+  user_mode_cgi  : user.rbx
+  admin_mode_cgi : admin.rbx
+</pre>
+
+<li> guest.rbx でアクセスしてみる
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="fastcgi">FastCGI の利用</h2>
+
+<p>影舞 0.8.7 から、FastCGI 環境で動作させることが可能になりました。
+guest.fcgi, user.fcgi, admin.fcgi を利用してください。</p>
+<p>以下、Linux(Fedora7) でのセットアップ例です。</p>
+
+<ol>
+
+<li>FastCGIのライブラリをインストールする
+<div><a href="http://www.fastcgi.com/">FastCGI</a> のサイトからダウンロードしてインストールします。</div>
+
+<pre>
+$ wget http://www.fastcgi.com/dist/fcgi-2.4.0.tar.gz
+$ tar xfvz fcgi-2.4.0.tar.gz 
+$ cd fcgi-2.4.0
+$ ./configure
+$ make
+$ su
+# make isntall
+</pre>
+
+<li>ruby の fcgi ライブラリをインストールする
+
+<pre>
+# gem install fcgi
+</pre>
+
+<li>mod_fcgid もしくは mod_fastcgi をインストールする
+<div>Fedoraの場合であれば、yum でインストールできます。</div>
+<pre>
+# yum install mod_fcgid
+</pre>
+
+<li>mod_fcgid もしくは mod_fastcgi の設定
+<div>httpd.conf などに設定を追加します。パッケージとしてインストールした場合には、
+必要ないかもしれません。(Fedora の場合であれば、/etc/httpd/conf.d/fcgid.conf として追加されています。)</div>
+
+<pre>
+LoadModule fcgid_module modules/mod_fcgid.so
+&lt;IfModule !mod_fastcgi.c&gt;
+    AddHandler fcgid-script fcgi
+&lt;/IfModule&gt;
+</pre>
+
+<li>FastCGI の動作確認
+<div>この段階で、FastCGI が正しく動作するか確認しておきます。
+たとえば、以下のようなスクリプトを hello.fcgi として作成して動作を確認してください。</div>
+<pre>
+#!/usr/bin/ruby
+
+require 'rubygems'
+require 'fcgi'
+
+FCGI.each_cgi {|cgi|
+  print "Content-type: text/plain; charset=iso-8859-1\n\n";
+  print "hello world\n"
+}
+</pre>
+
+<li> admin.cgi にアクセスして、"全体の設定" から以下の項目を変更する
+
+<pre>
+  guest_mode_cgi : guest.fcgi
+  user_mode_cgi  : user.fcgi
+</pre>
+
+<li> .htaccess の *.fcgi を拒否する設定を削除する
+<div>影舞の配布ファイルに含まれる dot.htaccess を .hatccess として利用している場合には、
+     *.fcgi を拒否する設定になっているため、以下の設定を削除します。
+
+<pre>
+&lt;Files *.fcgi&gt;
+  deny from all
+&lt;/Files&gt;
+</pre>
+
+<li>guest.fcgiでアクセスしてみる。
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="fastcgi-win">FastCGI の利用 (Windows/Apache2.2の場合)</h2>
+
+<p>ここでは、Windows 上の Apache 2.2 で影舞を FastCGI で動かす方法を説明します。</p>
+
+<ol>
+<li>One-Click Installer 版の Ruby を入れる
+<div><a href="http://rubyforge.org/projects/rubyinstaller/">http://rubyforge.org/projects/rubyinstaller/</a> からダウンロードしてインストールしてください。One-Click Installer 版の Ruby ではなくてもかまいませんが、FastCGI で動かすために fcgi.so が必要になります。(One-Click Installer 版には含まれています。)</div>
+
+<li>影舞の CGI での動作を確認する
+<div>FastCGI で動かす前に CGI で動作することを確認しておいてください。</div>
+
+<li>mod_fastcgi をインストールする
+<div><a href="http://www.fastcgi.com/">FastCGI</a> のサイトから、Apache-Win32 用の DLL をダウンロードします(2008-03-01 時点での最新は mod_fastcgi-2.4.6-AP22.dll)。
+ダウンロードした DLL の名前を mod_fastcgi.dll へと変更して、Apache の modules ディレクトリに入れます。
+
+<li>mod_fastcgi 用の設定を httpd.conf に追加する
+<div>httpd.conf に以下のような設定を追加してください。</div>
+<pre>
+LoadModule fastcgi_module modules/mod_fastcgi.dll
+AddHandler fastcgi-script fcgi
+FastCgiConfig -startDelay 30
+</pre>
+
+<div>PostgreSQL や MySQL でのデータ保存を予定している場合には、FastCgiConfig ディレクティブで PostgreSQL や MySQL の DLL がインストールされているディレクトリの情報を環境変数 PATH として渡す必要があります。</div>
+<pre>
+FastCgiConfig -initial-env PATH=C:\MySQL\bin
+</pre>
+
+<div>FastCgiConfig -initial-env では、空白の入ったパスをうまく扱えないようです。
+C:\Program Files 以下に MySQL などをインストールしている場合には、
+必要な DLL (libmySQL.dllなど)をパスに空白のないディレクトリにコピーするか、
+以下のように Apache の環境変数 PATH すべてを渡す設定を試してみてください。
+
+<pre>
+FastCgiConfig -initial-env PATH
+</pre>
+
+<li>FastCGI の動作確認
+<div>この段階で、FastCGI が正しく動作するか確認しておきます。
+たとえば、以下のようなスクリプトを hello.fcgi として作成して動作を確認してください。</div>
+<pre>
+#!C:/ruby/bin/ruby.exe
+
+require 'rubygems'
+require 'fcgi'
+
+FCGI.each_cgi {|cgi|
+  print "Content-type: text/plain; charset=iso-8859-1\n\n";
+  print "hello world\n"
+}
+</pre>
+
+<li> admin.cgi にアクセスして、"全体の設定" から以下の項目を変更する
+
+<pre>
+  guest_mode_cgi : guest.fcgi
+  user_mode_cgi  : user.fcgi
+</pre>
+
+<li>guest.fcgi, user.fcgi の先頭の ruby のパスを書き換える
+
+<pre>
+#!/usr/bin/ruby
+</pre>
+をたとえば以下のように変更。
+<pre>
+#!C:/ruby/bin/ruby.exe
+</pre>
+
+<li> .htaccess の *.fcgi を拒否する設定を削除する
+<div>影舞の配布ファイルに含まれる dot.htaccess を .hatccess として利用している場合には、
+     *.fcgi を拒否する設定になっているため、以下の設定を削除します。
+
+<pre>
+&lt;Files *.fcgi&gt;
+  deny from all
+&lt;/Files&gt;
+</pre>
+
+<li>guest.fcgiでアクセスしてみる。
+
+</ol>
+   
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="postgres">PostgreSQL の利用</h2>
+
+<p>ここでは、
+PostgreSQL を用いてデータ保存を行うために必要な設定について説明します。
+ただし、PostgreSQL 自体のインストールについては説明しません。また、
+PostgreSQL を用いたデータの保存を行わない場合には、以下の設定は必要ありません。
+</p>
+
+<ol>
+<li>Ruby/Postgres を入れる
+
+<div>
+<a href="http://www.postgresql.jp/interfaces/ruby/index-ja.html">http://www.postgresql.jp/interfaces/ruby/index-ja.html</a> からダウンロードするか、gem でインストールします。
+</div>
+
+<pre>
+   # gem install postgres
+</pre>
+
+<li id="ruby-dbi">Ruby/DBI を入れる
+
+<div>
+<a href="http://rubyforge.org/projects/ruby-dbi/">http://rubyforge.org/projects/ruby-dbi/</a> からダウンロードしてインストールします。
+</div>
+
+<pre>
+  $ tar xfvz dbi-0.1.1.tar.gz.tar.gz
+  $ cd ruby-dbi
+  $ ruby setup.rb config --with=dbi,dbd_pg,dbd_mysql
+  $ ruby setup.rb setup
+  $ su
+  # ruby setup.rb install
+</pre>
+
+<li>影舞用のデータベースを作成する
+
+<div>
+エンコーディングとして UTF8 を指定してください。
+</div>
+
+<pre>
+  $ createdb --encoding UTF8 kagemai
+</pre>
+   
+<li>PostgreSQL に影舞用のアカウントを作成する
+
+<pre>
+  $ createuser kagemai
+  Shall the new role be a superuser? (y/n) n
+  Shall the new role be allowed to create databases? (y/n) n
+  Shall the new role be allowed to create more new roles? (y/n) n
+  CREATE ROLE
+</pre>
+
+<li>"全体の設定の変更" で、enable_postgres を true にする
+
+<div>また、以下の項目を設定する。</div>
+
+<table>
+  <tr class="even">
+    <th>postgres_host</th>
+    <td>PostgreSQL が動作しているホスト名。Unix ドメインソケットを利用している場合には、PostgreSQL で設定したディレクトリを指定。デフォルトは、/tmp。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>postgres_port</th>
+    <td>TCP で接続する場合のポート番号</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_user</th>
+    <td>PostgreSQL アカウントのユーザ名</td>
+  </tr>
+
+  <tr class="odd">
+    <th>postgres_pass</th>
+    <td>PostgreSQL アカウントのパスワード</td>
+  </tr>
+
+  <tr class="even">
+    <th>postgres_dbname</th>
+    <td>PostgreSQLの影舞用のデータベース名</td>
+  </tr>
+</table>
+
+<li>プロジェクトの作成で、データの保存形式として、
+    PostgresStore4 が選択可能になっていることを確認する
+
+<li>データの保存形式として PostgresStore4 を選んでプロジェクトを作成してみる
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h2 id="mysql">MySQL の使用</h2>
+
+<p>ここでは、MySQL を用いてデータ保存を行うために必要な設定について説明します。</p>
+
+<ol>
+<li>MySQL/Rubyを入れる
+
+<div>
+<a href="http://www.tmtm.org/mysql/ruby/">http://www.tmtm.org/mysql/ruby/</a> からダウンロードするか、gem でインストールします。</div>
+<!--
+<div>
+Windows の場合には <a href="http://rubyforge.org/projects/mysql-win/">mysql-win</a> を試してみてください。
+</div>
+-->
+<pre>
+   # gem install mysql
+</pre>
+
+
+
+<li>PostgreSQL 用の設定と同じように <a href="#ruby-dbi">Ruby/DBI を入れる</a> 
+
+<li>MySQL に影舞用のデータベースを作成する
+
+<pre>
+  $ mysql -u root -p
+  mysql> create database kagemai;
+</pre>
+
+<li>MySQL に影舞用のユーザを作成する
+
+<div>影舞用のデータベースにアクセスできるユーザーを作成します。</div>
+
+<pre>
+  mysql> grant all on kagemai.* to kagemai@localhost;
+</pre>
+
+<div>必要に応じて、パスワードも設定してください。</div>
+
+<li>"全体の設定の変更" で、enable_mysql を true にする
+<div>また、以下の項目を設定する。</div>
+
+<table>
+  <tr class="even">
+    <th>mysql_host</th>
+    <td>MySQLが動作しているホスト名。デフォルトは、'localhost'。</td>
+  </tr>
+
+  <tr class="odd">
+    <th>mysql_port</th>
+    <td>MySQLのポート番号。デフォルトは 3306。</td>
+  </tr>
+
+  <tr class="even">
+    <th>mysql_user</th>
+    <td>MySQLのユーザ名</td>
+  </tr>
+
+  <tr class="odd">
+    <th>mysql_pass</th>
+    <td>MySQLのパスワード</td>
+  </tr>
+
+  <tr class="even">
+    <th>mysql_dbname</th>
+    <td>MySQLの影舞用のデータベース名</td>
+  </tr>
+</table>
+
+<li>プロジェクトの作成で、データの保存形式として、
+     MySQLStore4 が選択可能になっていることを確認する
+
+<li>データの保存形式として MySQLStore4 を選んでプロジェクトを作成してみる
+
+</ol>
+
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h2 id="mssql">SQL Server の使用</h2>
+
+<p>ここでは、SQL Server を用いてデータ保存を行うために必要な設定について説明します。</p>
+
+<ol>
+<li>PostgreSQL 用の設定と同じように Ruby/DBI を入れる
+    <div>config の設定で、--width=dbi,dbd_ado を指定します。</div>
+   
+<pre>
+  > tar xfvz dbi-0.1.1.tar.gz.tar.gz
+  > cd ruby-dbi
+  > ruby setup.rb config --with=dbi,dbd_ado
+  > ruby setup.rb setup
+  > ruby setup.rb install
+</pre>
+
+<li>SQL Server に影舞用のユーザを作成する
+<li>SQL Server に影舞用のデータベースを作成する
+
+<li>"全体の設定の変更" で、enable_mssql を true にする
+<div>また、以下の項目を設定する。</div>
+
+<table>
+  <tr class="odd">
+    <th>mssql_dsn</th>
+    <td>SQL Server のデータベースの指定。デフォルトは、"Provider=SQLOLEDB;Server=.\SQLEXPRESS;Database=kagemai" になっています。
+    <dvi>Server にSQL Server のサーバ\インスタンス名（上の例では、ローカルホスト上のSQL Server Expressのデフォルト名）、Databaseにデータベースの名前を指定します。Providerは通常 SQLOLEDEB のままです。</div>
+    </td>
+  </tr>
+
+  <tr class="even">
+    <th>mssql_user</th>
+    <td>SQL Serverのユーザ名</td>
+  </tr>
+
+  <tr class="odd">
+    <th>mssql_pass</th>
+    <td>SQL Server のパスワード</td>
+  </tr>
+</table>
+
+<li>プロジェクトの作成で、データの保存形式として、
+    MSSqlStore4 が選択可能になっていることを確認する
+
+<li>データの保存形式として MSSqlStore4 を選んでプロジェクトを作成してみる
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h2 id="captcha">RMagickを用いた画像認証</h2>
+
+<p>RMagick をインストールすることで、ゲストによる投稿に画像認証をかけることができます。</p>
+
+<ol>
+<li>RMagick をいれる
+
+<pre>
+  # gem install RMagick
+</pre>
+
+<div>ImageMagick をインストールしていない場合には、先に ImageMagick をインストールしてください。</div>
+
+<li>captcha_font, captcha_char_length の設定
+<div>影舞の全体の設定で、captch_font に画像認証に使用する TrueType フォントのパスを設定してください。
+     また、captcha_char_length に画像認証で表示するの文字の長さを設定してください（1以上）。</div>
+
+<li>動作の確認
+<div>ゲストで新規投稿とリプライのフォームを開いて、それぞれ画像認証が追加されていることを確認します。</div>
+
+</ol>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+<h2 id="gd">GD, GDChart を用いたグラフの作成</h2>
+
+<% 
+  daifukuya = 'http://www.daifukuya.com/'
+  summary = "#{daifukuya}kagemai/guest.rbx?project=kagemai&action=summary"
+%>
+
+<p>GD と GDChart をインストールすれば、レポート数の累積グラフを表示できます。
+グラフが必要なければ、以下の設定を行う必要はありません。
+</p>
+<p>以下の説明でインストールするライブラリは、
+<a href="http://www.daifukuya.com/archive/kagemai/lib/">http://www.daifukuya.com/archive/kagemai/lib/</a>
+にも置いてあります。影舞の動作確認に使用したバージョンが置いてありますが、
+各ライブラリは最新のものでは無いかもしれません。</a>
+
+<ol>
+
+<% gd_url = 'http://www.boutell.com/gd/' %>
+<li>GD を入れる
+必要に応じて、<a href="<%= gd_url %>"><%= gd_url %></a> からダウンロードしてインストールします。
+</div>
+<div>PNG と TrueType フォントを有効にするためには、libpng, zlib, FreeType 
+があらかじめインストールされている必要があります。(少なくとも、GD 2.0.15 では configure
+スクリプトを走らせれば、それぞれのライブラリを使用できるかどうか表示されます。)
+</div>
+<pre>
+  $ tar xfvz gd-2.0.15.tar.gz
+  $ cd gd-2.0.15
+  $ CFLAGS="-g -O2 -DJISX0208" ./configure
+  ...(snip)...
+  ** Configuration summary for gd 2.0.15:
+
+   Support for PNG library:          yes
+   Support for JPEG library:         yes
+   Support for Freetype 2.x library: yes
+   Support for Xpm library:          yes
+  ...(snip)...
+  $ make
+  $ sudo make install
+</pre>
+
+
+<li>Ruby/GD を入れる
+<% ruby_gd_url = 'http://raa.ruby-lang.org/project/ruby-gd' %>
+
+<div><a href="<%= ruby_gd_url %>"><%= ruby_gd_url %></a>
+からダウンロードしてインストールします。
+</div>
+<div>
+--with-ttf, --with-freetype を configure 時に指定する必要があります。</div>
+<pre>
+  $ tar xfvz ruby-GD-0.7.4.tar.gz
+  $ cd ruby-GD-0.7.4
+  $ ruby extconf.rb --with-ttf --with-freetype
+  $ make
+  $ sudo make install
+</pre>
+
+<li>Ruby/GDChart を入れる
+<% ruby_gdchart_url = 'http://sourceforge.jp/projects/ruby-gdchart/' %>
+
+<div>
+<a href="<%= ruby_gdchart_url %>"><%= ruby_gdchart_url %></a>
+からダウンロードしてインストールします。(Ruby/GDChart は 
+<a href="http://www.fred.net/brv/chart/">GDChart</a> の拡張ライブラリですが、
+GDChart は Ruby/GDChart のアーカイブに含まれています。)
+</div>
+
+<pre>
+  $ tar xfvz ruby-gdchart-0.0.9-beta.tar.gz 
+  $ cd ruby-gdchart-0.0.9-beta
+  $ ruby extconf.rb
+  $ make
+  $ sudo make install
+</pre>
+
+<li>enable_gdchart, gd_font, gd_charset の設定
+<div>
+影舞の<a href="guide.html#global-config">全体の設定</a>で、enable-gdchart オプションを
+true に設定します。そして、gd-font に、日本語の TrueType フォントのパスを指定します。
+</div>
+<div>
+また、GD が -DJISX0208 オプションつきでコンパイルされていない場合は、gd_chasert を UTF-8 
+に設定してください。
+</div>
+
+<li>動作の確認
+<div>
+レポートが１つ以上投稿されているプロジェクトの統計ページを開いて、
+グラフが表示されることを確認します。
+</div>
+<div>
+統計ページはキャッシュされるため、レポートやリプライの投稿を行うか、
+プロジェクトディレクトリの cache/cache.pstore 
+ファイルを削除しないと変更が反映されないかもしれません。
+</div>
+</ol>
+    
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="mail-if">メールインタフェースの設定</h2>
+
+<p>メールインタフェースを使用するには、まず、mailif.rb 中の 
+kagemai_root, config_file, $LOGFILE 
+の３つの変数が適切に設定されている必要があります。
+(install_ja.rb でインストールした場合には、
+インストールした時点で自動的に適切な値に設定されます。)</p>
+
+<p>プロジェクトを作成すると、そのプロジェクト用に、
+sendmail などで使用可能な include ファイルが作成されます。
+これは、例えば以下のような内容になっています。</p>
+
+<pre>
+  $ cat /var/lib/kagemai/project/test/include
+  "|/usr/bin/ruby /usr/local/kagemai/bin/mailif.rb test"
+</pre>
+
+<p>ここで、'test' はプロジェクトの ID です。</p>
+
+<p>sendmail であれば、このファイルを呼び出すように /etc/aliases を編集して、
+/etc/aliases.db を更新します。</p>
+
+<pre>
+  # grep 'test-bugs' /etc/aliases
+  test-bugs: :include:/var/lib/kagemai/project/test/include
+  # /usr/bin/newaliases
+</pre>
+
+<p>include はデフォルトでは group writable なディレクトリに置かれます。
+必要に応じて別のディレクトリに移動させて使用してください。</p>
+
+<p>デフォルトのメールテンプレートでは、投稿されたレポートに対応した BTS 上の
+URL が挿入されますが、正しい URL を入れるためには、"全体の設定の変更" で、
+base_url を適切に設定してください。base_url は、guest.cgi がある場所まで
+の URL です。
+
+例えば、guest.cgi が 'http://www.example.net/kagemai/guest.cgi' にある場合には、
+base_url は 'http://www.example.net/kagemai/' に設定します。</p>
+
+<p>また、投稿されたメールが新規のレポートなのか、
+既存のレポートへのリプライなのかは、
+そのメールの 'Subject', 'In-Reply-To' ヘッダを用いて自動的に判定されます。</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+<h2 id="manual-install">手動でのインストール例</h2>
+
+<p>ここでは、すべての設定を手動で行った場合のインストール例を示します。</p>
+
+<ol>
+
+<li>インストールするディレクトリの決定
+
+<pre>
+  影舞のライブラリなど : /usr/local/kagemai
+  CGI スクリプトなど   : /var/www/html/kagemai
+  データ用ディレクトリ : /var/lib/kagemai
+</pre>
+
+<div>また、/var/www/html/kagemai に置かれたファイルは、
+  http://www.example.net/kagemai/ という URL でアクセス可能であるとします。</div>
+
+<li>ディレクトリの作成と、ファイルのコピー
+
+<pre>
+  $ tar xfvz kagemai-0.8.7.tar.gz
+  $ cd kagemai-0.8.7
+
+  $ su
+  # mkdir /usr/local/kagemai
+  # mkdir /var/www/html/kagemai
+  # mkdir /var/lib/kagemai
+  # mkdir /var/lib/kagemai/project
+
+  # cp -pr bin /usr/local/kagemai
+  # cp -pr lib /usr/local/kagemai
+  # cp -pr resource /usr/local/kagemai
+  # cp -p html/* /var/www/html/kagemai
+</pre>
+
+<li>ファイル中のパスの編集
+
+<div>以下のファイルの、(a) 先頭の ruby のパス, (b) kagemai_root,
+(c) config_file を修正する。</div>
+
+<ul>
+  <li> /usr/local/kagemai/bin/convert.rb
+  <li> /usr/local/kagemai/bin/mailif.rb
+  <li> /usr/local/kagemai/bin/migrate.rb
+  <li> /var/www/html/kagemai/guest.cgi
+  <li> /var/www/html/kagemai/user.cgi
+  <li> /var/www/html/kagemai/admin.cgi
+</ul>
+
+<div>ここでは、kagemai_root は、'/usr/local/kagemai' に、
+config_file は、'/var/www/html/kagemai/kagemai.conf' とする。</div>
+
+<div>また、mailif.rb 中の $LOGFILE を、'/var/lib/kagemai/mailif.log' にする。</div>
+
+
+<li>kagemai グループの追加とパーミッションの設定
+
+<pre>
+  # groupadd kagemai
+  # cd /var/lib
+  # chgrp -R kagemai kagemai
+  # chmod -R 02770 kagemai
+</pre>
+
+<div>また、apache を kagemai group に追加します。</div>
+
+<pre>
+  # gpasswd -a apache kagemai
+</pre>
+
+<li>全体の設定で以下の変数を修正
+
+<pre>
+  project_dir : /var/lib/kagemai
+  base_url    : http://www.example.net/kagemai/
+</pre>
+
+</ol>
+
+<p>以上。</p>
+
+<!-- +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+
+
+<%= open('footer') {|file| file.read } %>
+</body>
+</html>

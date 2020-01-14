@@ -3,43 +3,24 @@
   
   Copyright(C) 2008 FUKUOKA Tomoyuki.
   Copyright(C) 2004, NOGUCHI Shingo
-  
-  This file is part of KAGEMAI.  
-  
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  
-  $Id: mysqlstore3.rb 423 2008-02-24 15:10:28Z fukuoka $
 =end
 
-require 'kagemai/store'
 require 'kagemai/dbistore3'
 require 'kagemai/util'
 require 'time'
 
 module Kagemai  
-  class MySQLStore3 < Store
-    include BaseDBIStore3
-    
+  class MySQLStore3 < BaseDBIStore3
     DBI_DRIVER_NAME = 'Mysql'
     
     SQL_TYPES = {
       'serial'    => SQLType.new('int auto_increment'),
+      'int'       => SQLType.new('int'),
       'boolean'   => SQLType.new('tinyint(1)'),
       'varchar'   => SQLType.new('varchar', 'binary'),
       'text'      => SQLType.new('text'),
       'timestamp' => SQLType.new('datetime'),
+      'date'      => SQLType.new('date'),
       'blob'      => SQLType.new('longblob'),
     }
     
@@ -49,29 +30,18 @@ module Kagemai
       'regexp' => 'regexp',
     }
     
+    def self.obsolete?()
+      true
+    end
+    
     def self.disp_name()
-      'MySQLStore3'
+      'MySQLStore3 (EUC, obsolete)'
     end
     
     def self.description()
       MessageBundle[:MySQLStore]
     end
-    
-    def self.database_args()
-      args = {}
-      args['host'] = Config[:mysql_host] unless Config[:mysql_host].to_s.empty?
-      args['port'] = Config[:mysql_port] unless Config[:mysql_port].to_s.empty?
-      args
-    end
-    
-    def self.create(dir, project_id, report_type, charset)
-      BaseDBIStore3.create(self, dir, project_id, report_type, charset)
-    end
-    
-    def self.destroy(dir, project_id)
-      BaseDBIStore3.destroy(self, dir, project_id)
-    end
-    
+        
     def initialize(dir, project_id, report_type, charset)
       super(dir, project_id, report_type, charset)
       @has_transaction = false
@@ -79,22 +49,18 @@ module Kagemai
                Config[:mysql_dbname], 
                Config[:mysql_user], 
                Config[:mysql_pass], 
-               self.class.database_args())
+               database_args())
       check_version()
       check_timezone()
     end
-
-    def sql_types()
-      SQL_TYPES
-    end
     
-    def sql_op(key)
-      SQL_SEARCH_OP[key]
+    def database_args()
+      args = {}
+      args['host'] = Config[:mysql_host] unless Config[:mysql_host].to_s.empty?
+      args['port'] = Config[:mysql_port] unless Config[:mysql_port].to_s.empty?
+      args
     end
-    
-    def sql_search_op()
-      SQL_SEARCH_OP
-    end
+    private :database_args
     
     def table_opt()
       opt =  "type = innodb"
@@ -151,6 +117,15 @@ module Kagemai
         time.utc.format()
       end
     end    
+
+    def load_time(value)
+      time = value.to_time()
+      if time.utc? && @local_time then
+        Time.local(*time.to_a)
+      else
+        time
+      end
+    end
     
   end
 end

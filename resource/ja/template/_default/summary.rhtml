@@ -1,6 +1,6 @@
 <%# requirements: mode, project, summary, summary_by_month, chart_url %>
 
-<h2>���̥��ޥ�</h2>
+<h2>月別サマリ</h2>
 
 <% if chart_url %>
   <img src="<%= chart_url %>" alt="summary graph">
@@ -9,13 +9,13 @@
 <% if project.size > 0 then %>
 <table>
   <tr>
-    <th>ǯ/��</th>
-    <th>����</th>
-    <th>��ץ饤</th>
-    <th>��λ</th>
-    <th>����̤��λ</th>
-    <th>���ѽ�λ</th>
-    <th>���</th>
+    <th>年/月</th>
+    <th>新規</th>
+    <th>リプライ</th>
+    <th>終了</th>
+    <th>累積未終了</th>
+    <th>累積終了</th>
+    <th>合計</th>
   </tr>
 
   <% summary_by_month.each do |month, item| %>
@@ -37,10 +37,10 @@
   </tr>
   <% end %>
 </table>
-<!-- [<a href="mrtg/test.html">MRTG�ˤ���ݡ��ȿ��ο��</a>] -->
+<!-- [<a href="mrtg/test.html">MRTGによるレポート数の推移</a>] -->
 
 <% else %>
-  <p>��ݡ��Ȥ���Ƥ���Ƥ��ʤ��Τǡ����ޥ�⤢��ޤ���</p>
+  <p>レポートが投稿されていないので、サマリもありません。</p>
 <%end %>
 
 <% 
@@ -51,7 +51,7 @@
 
 <% if project.top_page_options['count'] then %>
   <% etypes.each do |etype| %>
-    <h2><%= etype.name %>�̥�ݡ��ȿ�</h2>
+    <h2><%= etype.name %>別レポート数</h2>
     <p>
       <%= eval_template('topics_count.rhtml', {:mode => mode, :project => project, :etype => etype}) %>
     </p>

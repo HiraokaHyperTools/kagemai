@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ReportType>
+  <string id="email" name="送信者">
+  </string>
+
+  <string id="status" name="状態">
+  </string>
+
+  <text id="body" name="内容">
+  </text>
+
+  <file id="attachment" name="添付ファイル">
+  </file>
+</ReportType>

@@ -8,13 +8,13 @@
     prev_offset = result.offset - result.limit
     prev_offset = 0 if prev_offset < 0
     params['offset'] = prev_offset.to_s
-    navi << 'Á°¤Î¥Ú¡¼¥¸'.href(mode.url, params)
+    navi << 'å‰ã®ãƒšãƒ¼ã‚¸'.href(mode.url, params)
   end
 
   if result.offset + result.reports.size < result.total then
     next_offset = result.offset + result.reports.size
     params['offset'] = next_offset.to_s
-    navi << '¼¡¤Î¥Ú¡¼¥¸'.href(mode.url, params)
+    navi << 'æ¬¡ã®ãƒšãƒ¼ã‚¸'.href(mode.url, params)
   end
 
 %>

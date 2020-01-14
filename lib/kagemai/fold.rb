@@ -1,86 +1,148 @@
 =begin
-  Fold - Ê¸»ú¤ÎÀÞ¤ê¾ö¤ß½èÍý(EUCÀìÍÑ¡¢¤¤¤Á¤ª¤¦¶ØÂ§½èÍýÉÕ¤­)
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
+  Fold - Folding string (UTF-8 version)
+  
+  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
+  
   This file is part of KAGEMAI.  
-
+  
   KAGEMAI is free software; you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
   the Free Software Foundation; either version 2 of the License, or
   (at your option) any later version.
-
+  
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
-
+  
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 module Kagemai
-
   module Fold
-    $KCODE = 'EUC-JP'
-
-    # EUC ¤Î 1byte, 2byte ÌÜ
-    EUC_FIRST_CHAR  = /[\xa1-\xfe]/no
-    EUC_SECOND_CHAR = /[\xa1-\xfe]/no
-
-    # ¹ÔÆ¬¡¢¹ÔËö¶ØÂ§Ê¸»ú
-    HEAD_PROHIBIT_REXP = /[¡£¡¥¡¢,¡¤¡©¡ª¡Ë¡ä¢ä¡Ù¡×¡É¡Ç¤¡¤£¤¥¤§¤©¤ã¤å¤ç¤Ã]/o
-    TAIL_PROHIBIT_REXP = /[¡Ê¡ã¢ã¡Ê¡È¡Æ]/o
-
-    # ASCII ¤Ç¤ÎÀÞ¤ê¾ö¤ß²ÄÇ½°ÌÃÖ
-    FOLDING_REXP = /[- \t]/
-
-    # str ¤ò limit ¤ÇÀÞ¤ê¾ö¤ß¡¢ÀÞ¤ê¾ö¤ßºÑ¤ß¤Î String ¤òÊÖ¤¹¡£
-    # ÀÞ¤ê¾ö¤ß¸å¤Î³Æ¹Ô¤ÎÄ¹¤µ¤Ï¡¢É¬¤º limit °Ê²¼¤Ë¤Ê¤ë¡£
+    # Width of Japanese multibyte character
+    JA_MBC_WIDTH = 2
+    
+    # è¡Œé ­ã€è¡Œæœ«ç¦å‰‡æ–‡å­—
+    JA_HEAD_PROHIBIT_RE = /[ã€‚ï¼Žã€,ï¼Œï¼Ÿï¼ï¼‰ï¼žâ‰«ã€ã€â€â€™ããƒã…ã‡ã‰ã‚ƒã‚…ã‚‡ã£]/o
+    JA_TAIL_PROHIBIT_RE = /[ï¼ˆï¼œâ‰ªï¼ˆâ€œâ€˜]/o
+    
+    # ASCII ã§ã®æŠ˜ã‚Šç•³ã¿å¯èƒ½ä½ç½®
+    FOLDING_RE = /[- \t]/
+    
+    # str ã‚’ limit ã§æŠ˜ã‚Šç•³ã¿ã€æŠ˜ã‚Šç•³ã¿æ¸ˆã¿ã® String ã‚’è¿”ã™ã€‚
+    # æŠ˜ã‚Šç•³ã¿å¾Œã®å„è¡Œã®é•·ã•ã¯ã€å¿…ãš limit ä»¥ä¸‹ã«ãªã‚‹ã€‚
     def Fold.fold(str, length = 70)
       lines = str.collect{|line| fold_line(line, length)}
       lines.join('')
     end
-
-    # line ¤òÀÞ¤ê¾ö¤à¡£line ¤Ë²þ¹Ô¤¬´Þ¤Þ¤ì¤Æ¤¤¤Æ¤Ï¤Ê¤é¤Ê¤¤¡£
-    # ÀÞ¤ê¾ö¤ßºÑ¤ß¤ÎÊ¸»úÎó¤òÊÖ¤¹¡£
+    
+    # line ã‚’æŠ˜ã‚Šç•³ã‚€ã€‚line ã«æ”¹è¡ŒãŒå«ã¾ã‚Œã¦ã„ã¦ã¯ãªã‚‰ãªã„ã€‚
+    # æŠ˜ã‚Šç•³ã¿æ¸ˆã¿ã®æ–‡å­—åˆ—ã‚’è¿”ã™ã€‚
     def Fold.fold_line(line, length)
-      if line.size > length
-        last_break_pos = line.size
-
-        # lookup break position
-        euc = false
-        0.upto(length) do |i|
-          if euc then
-            euc = false
-
-            # ¹ÔÆ¬/¹ÔËö¶ØÂ§½èÍý
-            next if i < line.size - 2 && HEAD_PROHIBIT_REXP =~ line[i + 1, 2] 
-            next if TAIL_PROHIBIT_REXP =~ line[i - 1, 2]
-
+      case Config[:language]
+      when 'ja'
+        fold_line_ja(line, length)
+      else
+        fold_line_m(line, length, 1)
+      end
+    end
+    
+    # æ—¥æœ¬èªžãŠã‚ŠãŸãŸã¿ï¼ˆç¦å‰‡å‡¦ç†ã¤ãï¼‰
+    def Fold.fold_line_ja(line, length)
+      mbc_line = line.scan(/.|\n/)
+      width = mbc_line.inject(0){|t, s| t + (is_first_multibyte_char?(s[0]) ? JA_MBC_WIDTH : 1)}
+      if width > length then
+        last_break_pos = mbc_line.size
+        width = 0
+        i     = 0
+        while (i < mbc_line.size) && (width <= length) do
+          if FOLDING_RE =~ mbc_line[i]
+            width += 1
             last_break_pos = i
-            next
+          elsif is_first_multibyte_char?(mbc_line[i][0])
+            width += JA_MBC_WIDTH
+            unless JA_HEAD_PROHIBIT_RE =~ mbc_line[i] ||
+                (i > 0 && JA_TAIL_PROHIBIT_RE =~ mbc_line[i - 1]) then
+              last_break_pos = i - 1
+            end
+          else
+            width += 1
           end
-          
-          if EUC_FIRST_CHAR =~ line[i, 1] then
-            euc = true
-            next
-          end
-
-          last_break_pos = i if FOLDING_REXP =~ line[i, 1]
+          i += 1
         end
-        
-        # break line
-        if last_break_pos <= length
-          line = 
-            line[0..last_break_pos] + "\n" + 
-            fold_line(line[(last_break_pos + 1)..line.size], length)
+        if last_break_pos > 0 && last_break_pos < mbc_line.size then
+          line = mbc_line[0..last_break_pos].join + "\n" + 
+            fold_line_ja(mbc_line[(last_break_pos + 1)..mbc_line.size].join, length)
         end
       end
       line
     end
-
+    
+    # æ—¥æœ¬èªžä»¥å¤–ã®æŠ˜ã‚ŠãŸãŸã¿
+    def Fold.fold_line_m(line, length, mbc_width)
+      mbc_line = line.scan(/.|\n/)
+      width = mbc_line.inject(0){|t, s| t + (is_first_multibyte_char?(s[0]) ? mbc_width : 1)}
+      if width > length then
+        last_break_pos = mbc_line.size
+        width = 0
+        i     = 0
+        while (i < mbc_line.size) && (width <= length) do
+          if FOLDING_RE =~ mbc_line[i]
+            width += 1
+            last_break_pos = i
+          elsif is_first_multibyte_char?(mbc_line[i][0])
+            width += mbc_width
+            last_break_pos = i - 1
+          else
+            width += 1
+          end
+          i += 1
+        end
+        line = mbc_line[0..last_break_pos].join + "\n" + 
+          fold_line_m(mbc_line[(last_break_pos + 1)..mbc_line.size].join, length, mbc_width)
+      end
+      line
+    end
+    
+    def Fold.is_first_multibyte_char?(ch)
+      (ch & 0xc0) ==  0xc0
+    end
+    
+    def Fold.mbc_width(str)
+      case Config[:language]
+      when 'ja'
+        mbc_width = JA_MBC_WIDTH
+      else
+        mbc_width = 1
+      end
+      mbc_line = str.scan(/.|\n/)
+      mbc_line.inject(0){|t, s| t + (is_first_multibyte_char?(s[0]) ? mbc_width : 1)}
+    end
   end
 
+end
+
+# -Ku ã‚ªãƒ—ã‚·ãƒ§ãƒ³ã¤ãã§å®Ÿè¡Œã™ã‚‹ã“ã¨
+if $0 == __FILE__ then
+  module Kagemai
+    class Config
+      def self.[](key)
+        'ja'
+      end
+    end
+  end
+  
+  str = "ï¼‘ï¼’ï¼“ï¼”ï¼•ï¼–ï¼—ï¼˜ï¼™"
+  puts Kagemai::Fold.fold(str, 8)
+  
+  # è¡Œé ­ç¦å‰‡æ–‡å­—ãƒã‚§ãƒƒã‚¯
+  str = 'ãã‚‡ã†ã¯ã„ã„ã€å¤©æ°—ã§ã™ã€‚'
+  puts Kagemai::Fold.fold(str, 12)
+  
+  # è¡Œæœ«ç¦å‰‡æ–‡å­—ãƒã‚§ãƒƒã‚¯
+  str = 'ãã‚‡ã†ã¯ã„ã„ï¼ˆå¤©æ°—ï¼‰ã§ã™ã€‚'
+  puts Kagemai::Fold.fold(str, 14)
 end

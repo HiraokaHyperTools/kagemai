@@ -1,23 +1,5 @@
 =begin
   SearchReport
-
-  Copyright(C) 2002-2005 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'kagemai/cgi/action'
@@ -188,7 +170,9 @@ module Kagemai
                          @lang,
                          @charset)
       else
-        header = @project.report_type.collect{|etype| etype.report_attr ? etype.name : nil}.compact
+        header = @project.report_type.collect{|etype| 
+          (etype.report_attr && !hide_attr?(etype)) ? etype.name : nil
+        }.compact
         header.unshift('ID')
         header << MessageBundle[:csv_author]
         header << MessageBundle[:csv_ctime]
@@ -198,6 +182,7 @@ module Kagemai
         result.reports.each do |report|
           line = ['"' + report.id.to_s + '"'] 
           report.each_attr do |etype|
+            next if hide_attr?(etype)
             value = report[etype.id].to_s
             line << "\"" + value.gsub(/"/, '""') + "\""
           end
@@ -263,7 +248,11 @@ module Kagemai
       end
       raise ParameterError, "Invalid Element Type ID: #{etype_id}"
     end
-
+    
+    def hide_attr?(etype)
+      @mode.name == "mode_guest" && etype.hide_from_guest?
+    end
+    
     def self.href(base_url, project_id)
       param = {'action' => name(), 'project' => project_id}
       project_id ? MessageBundle[:action_search_report].href(base_url, param) : nil

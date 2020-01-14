@@ -1,0 +1,5 @@
+#!/usr/local/bin/ruby -w -Ke
+require 'kconv'
+open('/tmp/hoge', 'a') do |file|
+  file.print Kconv.toeuc($stdin.read)
+end

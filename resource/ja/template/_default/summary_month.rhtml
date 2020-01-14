@@ -1,6 +1,6 @@
 <%# requirements: mode, project, summary, month %>
 
-<h2><%= month.gsub(/-/, '/') %> ¤Î¥µ¥Þ¥ê</h2>
+<h2><%= month.gsub(/-/, '/') %> ã®ã‚µãƒžãƒª</h2>
 
 <% 
 if project.size > 0 then
@@ -32,7 +32,7 @@ if project.size > 0 then
        'action'  => SearchReport.name(),
        'project' => project.id,
        'search_type' => 'search',
-       'jp_enc_test' => 'Æü',
+       'jp_enc_test' => 'æ—¥',
        'search_op' => 'and_all',
        'period_type' => 'other',
        'b_year'  => sy,
@@ -49,16 +49,16 @@ if project.size > 0 then
   
   <% if begin_of_week then %>
     <% week_new = week_reply = week_close = 0 %>
-    <h3><%= week %>½µÌÜ</h3>
+    <h3><%= week %>é€±ç›®</h3>
     <table>
       <tr>
-        <th>Ç¯/·î/Æü(ÍËÆü)</th>
-        <th>¿·µ¬</th>
-        <th>¥ê¥×¥é¥¤</th>
-        <th>½ªÎ»</th>
-        <th>ÎßÀÑÌ¤½ªÎ»</th>
-        <th>ÎßÀÑ½ªÎ»</th>
-        <th>¹ç·×</th>
+        <th>å¹´/æœˆ/æ—¥(æ›œæ—¥)</th>
+        <th>æ–°è¦</th>
+        <th>ãƒªãƒ—ãƒ©ã‚¤</th>
+        <th>çµ‚äº†</th>
+        <th>ç´¯ç©æœªçµ‚äº†</th>
+        <th>ç´¯ç©çµ‚äº†</th>
+        <th>åˆè¨ˆ</th>
       </tr>
   <% end %>
   
@@ -85,7 +85,7 @@ if project.size > 0 then
        num_style = '' # 'style="border-top: 1px solid black"'
   %>
       <tr class="right_align" style="font-weight:bold">
-        <td <%= td_class %> style="text-align: center">½µ·×</td>
+        <td <%= td_class %> style="text-align: center">é€±è¨ˆ</td>
         <td <%= td_class %> <%= num_style %>><%= week_new.to_s %></td>
         <td <%= td_class %> <%= num_style %>><%= week_reply.to_s %></td>
         <td <%= td_class %> <%= num_style %>><%= week_close.to_s %></td>

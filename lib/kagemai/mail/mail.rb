@@ -1,26 +1,7 @@
 =begin
   mail/mail.rb - mail utilities
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
-require 'base64' if RUBY_VERSION < "1.9.0"
 require 'kagemai/kconv'
 require 'kagemai/config'
 require 'kagemai/project'
@@ -114,7 +95,7 @@ module Kagemai
                                  project.lang, 
                                  binding)
       if @lang == 'ja' then
-        @body = KKconv.conv(@body, KKconv::JIS, KKconv::EUC)
+        @body = KKconv.conv(@body, KKconv::JIS, KKconv::UTF8)
       end
     end
     
@@ -145,21 +126,25 @@ module Kagemai
 
     def make_message_detail(message)
       ignore = ['email', 'title', 'body']
-
+      
       max = 0
       message.type.each do |etype|
+        next if etype.hide_from_guest?
         next if ignore.include?(etype.id)
         next if message[etype.id].to_s.empty?
-        max = etype.name.size if etype.name.size > max
+        width = Fold.mbc_width(etype.name)
+        max = width if width > max
       end
-
+      
       detail = []
       message.type.each do |etype|
+        next if etype.hide_from_guest?
         next if ignore.include?(etype.id)
         next if message[etype.id].to_s.empty?
-
-        name = "%-#{max}s" % etype.name
-
+        
+        # note: 'name = "%-#{max}s" % etype.name' is not work correctly with UTF-8
+        name = etype.name + (' ' * (max - Fold.mbc_width(etype.name)))
+        
         unless etype.kind_of?(FileElementType) then
           detail << [name, message[etype.id].gsub(/,\n/, ', ')]
         else
@@ -175,15 +160,15 @@ module Kagemai
     end
 
 
-    PATTERN_EUC = '[\xa1-\xfe][\xa1-\xfe]'
+    PATTERN_UTF8  = '[\xc0-\xfd]'
     ENCODE_MARK_H = '=?ISO-2022-JP?B?'
     ENCODE_MARK_T = '?='
-
-    def self.b_encode(str, limit = nil)
+    
+    def self.m_encode(str, limit = nil)
       unless limit then        
-        pos = str.index(Regexp.new('\s*' + PATTERN_EUC, nil, 'n'))
+        pos = str.index(Regexp.new('\s*' + PATTERN_UTF8, nil, 'n'))
         if pos then
-          # str includes EUC character code.
+          # str includes UTF-8 multibyte character code.
           limit = 70 * 3 / 4 - ENCODE_MARK_H.size - ENCODE_MARK_T.size - 'Subject: '.size
         else
           limit = 70
@@ -191,67 +176,93 @@ module Kagemai
       end
       
       lines = Fold.fold_line(str, limit)
-      encoded = lines.collect {|line| b_encode_line(line)}
-
+      encoded = lines.collect {|line| m_encode_line(line)}
+      
       encoded.size > 0 ? encoded.join("\n ") : encoded[0]
     end
-
+    
+    def self.b_encode(str, limit = nil)
+      m_encode(str, limit)
+    end
+    
+    def self.m_encode_line(line)
+      case Config[:language]
+      when 'ja'
+        b_encode_line(line)
+      else
+        q_encode_line(line)
+      end
+    end
+    
     def self.b_encode_line(line)
       line = line.sub(/\n/, '')
-      pos = line.index(Regexp.new('\s*' + PATTERN_EUC, nil, 'n'))
+      pos = line.index(Regexp.new('\s*' + PATTERN_UTF8, nil, 'n'))
       if pos then
         ascii_part = pos > 0 ? line[0..pos-1] : ''
-        jis_part = KKconv::conv(line[pos..line.length], KKconv::JIS, KKconv::EUC)
-        
-        encoded_part = '' 
-        if defined?(Base64) then
-          encoded_part = Base64.encode64(jis_part)
-        else
-          encoded_part = encode64(jis_part)
-        end
-        encoded_part.gsub!(/\n/, '')
-
+        jis_part = KKconv::conv(line[pos..line.length], KKconv::JIS, KKconv::UTF8)
+        encoded_part = [jis_part].pack('m').gsub(/\n/, '')
         sep = ascii_part.empty? ? '' : ' '
-        
         "#{ascii_part}#{sep}#{ENCODE_MARK_H}#{encoded_part}#{ENCODE_MARK_T}"
       else
         line
       end
     end
+    
+    def self.q_encode_line(line)
+      line = line.sub(/\n/, '')
+      pos = line.index(Regexp.new('\s*' + PATTERN_UTF8, nil, 'n'))
+      if pos then
+        ascii_part = pos > 0 ? line[0..pos-1] : ''
+        encoded_part = [line[pos..line.length]].pack('M').gsub(/\n/, '')
+        sep = ascii_part.empty? ? '' : ' '
+        "#{ascii_part}#{sep}=?UTF-8?Q?#{encoded_part}?="
+      else
+        line
+      end
+    end
 
-    def self.b_decode(str)
+    def self.m_decode(str)
       result = ''
       
       first = true
       str.each_line do |line|
         l = first ? line.sub(/[\r\n]+/m, '') : line.strip
         first = false
-        if defined?(Base64) then
-          l = Base64.decode_b(l)
-        else
-          l = decode_b(l)
-	end	
-        result += KKconv.conv(l, KKconv::EUC, KKconv::JIS)
+        
+        encoding = nil
+        l.gsub!(/=\?(.*?)\?(B|Q)\?([!->@-~]+)\?=/i) do
+          encoding = $1
+          if $2 == 'B' then
+            $3.unpack('m')[0]
+          else
+            $3.unpack('M')[0]
+          end
+        end
+        l = KKconv.ckconv(l, 'utf8', encoding) if encoding
+        result += l
       end
-
+      
       result
     end
 
-
+    def self.b_decode(str)
+      m_decode(str)
+    end
+    
     DAY_NAME   = %w(Sun Mon Tue Wed Thu Fri Sat Sun)
     MONTH_NAME = %w(ZERO Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec)
-
+    
     def self.rfc2822_date_time(tm)
       # calculate offset from UTC. [ruby-dev:7928]
       ut = tm.clone.utc
       offset = (tm.to_i - Time.local(*ut.to_a[0, 6].reverse).to_i) / 60
       offset_h, offset_m = offset.divmod(60)
-
+      
       day_of_week = DAY_NAME[tm.wday]
       date = sprintf('%.2d %s %.4d', tm.mday, MONTH_NAME[tm.month], tm.year)
       time = sprintf('%.2d:%.2d:%.2d', tm.hour, tm.min, tm.sec)
       zone = sprintf('%+.2d%.2d', offset_h, offset_m)
-
+      
       "#{day_of_week}, #{date} #{time} #{zone}"
     end
 

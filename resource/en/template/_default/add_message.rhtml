@@ -1,6 +1,8 @@
 <%# requirements: report, message %>
 
+<% unless preview %>
 <p>Your message has been received.  Below are its contents.</p>
+<% end %>
 
 <table>
   <tr>
@@ -17,6 +19,7 @@
   <% end %>
 </table>
 
+<% unless preview %>
 <p><%= report.href('View report details') %></p>
 
 <% if report.error then %>
@@ -24,4 +27,17 @@
 <div class="error">
 There was an error sending the notification mail.
 </div>
+<% end %>
+
+<% else %>
+<form action="<%= project.url  %>" 
+      method="post" 
+      enctype="multipart/form-data"
+      accept-charset="<%= project.charset %>">
+  <input type="hidden" name="action" value="<%= AddMessage.name %>">
+  <input type="hidden" name="project" value="<%= project.id %>">
+  <input type="hidden" name="id" value="<%= report.id %>">
+  <input type="submit" value="Back" name="submit_back">
+  <input type="submit" value="Submit" name="submit_post">
+</form>
 <% end %>

@@ -1,0 +1,11 @@
+To: kagemai-bugs@daifukuya.com
+From: FUKUOKA Tomoyuki <fukuoka@daifukuya.com>
+Subject: =?ISO-2022-JP?B?GyRCJWEhPCVrPHU/LhsoQg==?=
+ =?ISO-2022-JP?B?GyRCJUYlOSVIIzMbKEI=?=
+Message-Id: <2003-01-07@mail.daifukuya.com>
+Date: Thu, 07 Jan 2003 23:23:00 +0900
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+
+test mail accept 3.
+今日はテスト日和

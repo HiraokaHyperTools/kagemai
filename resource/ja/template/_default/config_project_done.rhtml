@@ -1,6 +1,6 @@
 <%# requirements: project, mode %>
 
-<p>е╫еэе╕езепе╚д╬└▀─ъдЄ░╩▓╝д╬дшджд╦╩╤╣╣д╖д▐д╖д┐бг</p>
+<p>уГЧуГнуВ╕уВзуВпуГИуБошинхоЪуВТф╗еф╕ЛуБоуВИуБЖуБлхдЙцЫ┤уБЧуБ╛уБЧуБЯуАВ</p>
 
 <%= eval_template('project_info.rhtml', {:show_report_count => false, :project => project, :mode => mode}) %>
 
@@ -8,6 +8,10 @@
     <input type="hidden" name="action" value="config_project">
     <input type="hidden" name="s" value="1">
     <input type="hidden" name="project" value="<%= project.id %>">
-    <input type="submit" value="└▀─ъе╒ейб╝ердЄ╔╜╝и">
+    <input type="submit" value="шинхоЪуГХуВйуГ╝уГауВТшбичд║">
   </div>
 </form>
+
+<p>
+<%= 'уГЧуГнуВ╕уВзуВпуГИщБ╕цКЮуБлцИ╗уВЛ'.href(mode.url, {'action' => ConfigProject.name}) %>
+</p>

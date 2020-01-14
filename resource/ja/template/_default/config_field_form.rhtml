@@ -4,11 +4,11 @@
   # id to name map
   items = {
     'id'          => 'ID',
-    'name'        => '̾��',
-    'description' => '����',
-    'default'     => '�ǥե������',
+    'name'        => '名前',
+    'description' => '説明',
+    'default'     => 'デフォルト値',
 
-    'choices'      => '�����',
+    'choices'      => '選択肢',
   }
 
   def self.disabled?(opt)
@@ -42,7 +42,7 @@ function on_click(element) {
 </script>
 
 <% unless errors.empty? then %>
-  <p>�ʲ��ι��ܤǥ��顼��ȯ�����ޤ����������ͤ������Ƥ���������</p>
+  <p>以下の項目でエラーが発生しました。入力値を修正してください。</p>
 
   <ul>
   <% errors.each do |key, value| %>
@@ -63,7 +63,7 @@ function on_click(element) {
       <td>
       <% if edit_id then %>
         <input type="text" name="id" value="<%= values['id'] %>"><br>
-        <span class="form-desc">�ե�����ɤ�ID��(�ѿ����Τ�)</span>
+        <span class="form-desc">フィールドのID。(英数字のみ)</span>
       <% else %>
         <%= values['id'] %>
       <% end %>
@@ -71,39 +71,39 @@ function on_click(element) {
     </tr>
   
     <tr>
-      <th <%= errors.tag_class('name') %>>ɽ��̾<small>*</small></th>
+      <th <%= errors.tag_class('name') %>>表示名<small>*</small></th>
       <td>
         <input type="text" name="name" value="<%= values['name'] %>"><br>
-        <span class="form-desc">HTML��ɽ������Ȥ���̾����</span>
+        <span class="form-desc">HTMLで表示するときの名前。</span>
       </td>
     </tr>
   
     <tr>
-      <th>����</th>
+      <th>説明</th>
       <td>
         <textarea name="description" cols="40" rows="3"><%= values['description'] %></textarea><br>
-        <span class="form-desc">�ե���������Ϥ���Ȥ�������ʸ��</span>
+        <span class="form-desc">フォームで入力するときの説明文。</span>
       </td>
     </tr>
 
     <% if etype_class.ancestors.include?(SelectElementType) %>
     <tr>
-      <th <%= errors.tag_class('choices') %>>�����</th>
+      <th <%= errors.tag_class('choices') %>>選択肢</th>
       <td>
         <textarea name="choices" cols="40" rows="3"><%= values['choices'] %></textarea><br>
-        <span class="form-desc">��������Ԥ�����ޤǶ��ڤä�����Ƥ���������</span>
+        <span class="form-desc">選択肢を改行かカンマで区切って入れてください。</span>
       </td>
     </tr>
     <% end %>
 
     <tr>
-      <th <%= errors.tag_class('default') %>>�ǥե������</th>
+      <th <%= errors.tag_class('default') %>>デフォルト値</th>
       <td>
         <input type="text" name="default" value="<%= values['default'] ? values['default'] : 'nil' %>"><br>
         <span class="form-desc">
-          �ǥե�����ͤ����ꤵ��Ƥ��ʤ��ե�����ɤϡ�ɬ�ܹ��ܤˤʤ�ޤ���<br>
-          �ǥե�����ͤ����ꤷ�����ʤ����ˤϡ�nil ������Ƥ���������<br>
-          ����ξ��ˤϡ���ʸ���󤬥ǥե�����ͤȤ������ꤵ��ޤ���
+          デフォルト値が設定されていないフィールドは、必須項目になります。<br>
+          デフォルト値を設定したくない場合には、nil と入れてください。<br>
+          空白の場合には、空文字列がデフォルト値として設定されます。
         </span>
       </td>
     </tr>
@@ -124,7 +124,7 @@ function on_click(element) {
     <% end %>
 
     <tr>
-      <th>���ץ����</th>
+      <th>オプション</th>
       <td>
       <% etype_class.boolean_options.each do |opt| %>
         <% checked = (values[opt.name] == true || 
@@ -141,7 +141,7 @@ function on_click(element) {
   
   </table>
 
-  <p>*���Ĥ������ܤ�ɬ�ܹ��ܤǤ���</p>
+  <p>*がついた項目は必須項目です。</p>
 
   <div>
     <input type="hidden" name="project" value="<%= project.id %>">
@@ -154,7 +154,7 @@ function on_click(element) {
     <% end %>
 
     <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="��">
+    <input type="hidden" name="jp_enc_test" value="日">
     <% end %>
     <input type="submit" value="<%= submit_title %>">
   </div>

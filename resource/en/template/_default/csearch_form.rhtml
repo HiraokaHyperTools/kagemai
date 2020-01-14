@@ -26,8 +26,8 @@
          sel = 'selected="selected"'
        end
     %>
-    <input type="checkbox"  name="projects" <%= sel %> 
-           value="<%= project.id %>"> <%= project.name %>
+    <input type="checkbox"  name="projects" <%= sel %> id="label_<%= project.id %>"
+           value="<%= project.id %>"> <label for="label_<%= project.id %>"><%= project.name %></label>
   <% end %>
   </div>
 
@@ -41,15 +41,12 @@
 
   <div>
     <% checked = case_insensitive ? 'checked="checked"' : '' %>
-    <input type="checkbox" name="case_insensitive" <%= checked %>> Case-insensitive
+    <input type="checkbox" name="case_insensitive" id="label_case_insensitive" <%= checked %>> <label for="label_case_insensitive">Case-insensitive</label>
   </div>  
 
   <div>
     <input type="hidden" name="action" value="csearch">
     <input type="hidden" name="search_type" value="keyword">
-    <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="Æü">
-    <% end %>
   </div>
 
 </form>

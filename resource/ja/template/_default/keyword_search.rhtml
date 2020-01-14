@@ -2,18 +2,18 @@
 
 <form action="<%= mode.url %>" method="<%= Config[:search_form_method] %>">
 
-  Á´Ê¸¸¡º÷: <input type="text" name="keyword" size="20" value="<%= keyword.escape_h %>"> 
-            <input type="submit" value="¸¡º÷">
+  å…¨æ–‡æ¤œç´¢: <input type="text" name="keyword" size="20" value="<%= keyword.escape_h %>"> 
+            <input type="submit" value="æ¤œç´¢">
 
   <div style="margin-left:5em">
     <% project.report_type.find_all{|etype| etype.keyword_search?}.each do |etype| %>
       <!-- search_elements[<%= etype.id %>] = <%= search_elements[etype.id] %> -->
       <% checked = search_elements[etype.id] ? 'checked="checked"' : '' %>
-      <input type="checkbox" name="<%= etype.id %>" <%= checked %>><%= etype.name %>
+      <input type="checkbox" name="<%= etype.id %>" id="label_<%= etype.id %>" <%= checked %>><label for="label_<%= etype.id %>"><%= etype.name %></label>
     <% end %>
     <br>
     <% checked = case_insensitive ? 'checked="checked"' : '' %>
-    <input type="checkbox" name="case_insensitive" <%= checked %>> ÂçÊ¸»ú¾®Ê¸»ú¤ò¶èÊÌ¤·¤Ê¤¤¡£
+    <input type="checkbox" name="case_insensitive" id="label_case_insensitive" <%= checked %>> <label for="label_case_insensitive">å¤§æ–‡å­—å°æ–‡å­—ã‚’åŒºåˆ¥ã—ãªã„ã€‚</label>
   </div>
 
   <div>
@@ -21,7 +21,7 @@
     <input type="hidden" name="action" value="search">
     <input type="hidden" name="search_type" value="keyword">
     <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="Æü">
+    <input type="hidden" name="jp_enc_test" value="æ—¥">
     <% end %>
   </div>
 </form>

@@ -1,28 +1,22 @@
-=begin
-  CGI - CGI クラスの拡張です
-  
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-  
-  This file is part of KAGEMAI.  
-  
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-=end
 require 'cgi'
 require 'cgi/session'
 require 'tempfile'
 require 'kagemai/config'
+
+class Tempfile
+  alias init_org initialize
+  def initialize(basename, tmpdir = nil)
+    unless tmpdir
+      dir = Kagemai::Config[:tmp_dir]
+      if File.directory?(dir) and File.writable?(dir)
+        tmpdir = dir
+      else
+        tmpdir = Dir::tmpdir
+      end
+    end
+    init_org(basename, tmpdir)
+  end
+end
 
 module Kagemai
   class KCGI
@@ -84,7 +78,7 @@ module Kagemai
     def cookies() @cgi.cookies() end
     
     def element(name, opt = nil)
-      opt_str = opt ? ' ' + opt.collect{|k, v| "#{k}=#{v}"}.join(' ') : ''
+      opt_str = opt ? ' ' + opt.collect{|k, v| %Q!#{k}="#{v}"!}.join(' ') : ''
       unless block_given?
         "<#{name}#{opt_str}>"
       else
@@ -92,12 +86,12 @@ module Kagemai
       end
     end
     
-    def meta(opt) element('META', opt) end
-    def link(opt) element('LINK', opt) end
-    def title(&block) element('TITLE', nil, &block) end
-    def body(&block) element('BODY', nil, &block)  end
-    def html(opt = {}, &block) element('HTML', opt, &block) end
-    def head(&block) element('HEAD', nil, &block) end
+    def meta(opt) element('meta', opt) end
+    def link(opt) element('link', opt) end
+    def title(&block) element('title', nil, &block) end
+    def body(&block) element('body', nil, &block)  end
+    def html(opt = {}, &block) element('html', opt, &block) end
+    def head(&block) element('head', nil, &block) end
     
     def header(opt)
       if @session then
@@ -159,9 +153,15 @@ module Kagemai
           end
           @params_r[key]
         end
+        def self.set_param(key, value)
+          @params_r[key] = value
+        end
       else
         def self.do_get_param(key)
           @cgi.params[key].join(",\n")
+        end
+        def self.set_param(key, value)
+          @cgi.params[key] = [value]
         end
       end
     end    

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<message id="1" date="2002-11-21 00:31:16" hide="false">
+  <element id="email">fukuoka@daifukuya.com</element>
+  <element id="title">test 2</element>
+  <element id="status">未解決</element>
+  <element id="message">てすとその２&#x000a;です。&#x000a;&#x000a;あうあう。</element>
+  <element id="attachment">1,hoge.rb,120,text/plain,hoge_script,1,false</element>
+</message>

@@ -1,0 +1,14 @@
+Date: Fri, 27 Dec 2002 15:15:32 +0900
+From: fukuoka@daifukuya.com
+Subject: [test_project:0001] test subject
+To: fukuoka@daifukuya.com, fukuoka2@daifukuya.com
+Message-ID: <test_project.1.2.1040969732@localhost>
+References: <test_project.1.1.1040969732@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+X-Kagemai-Version: TEST_VERSION/TEST_CODENAME
+X-Kagemai-Project-ID: test_project
+X-Kagemai-Project-Name: test project
+X-Kagemai-Report-ID: 1
+X-Kagemai-Message-ID: 2
+X-Kagemai-Loop: 1

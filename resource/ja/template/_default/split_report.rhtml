@@ -1,13 +1,13 @@
 <%# requirements: project, report, use_cookie, errors %>
 
-<h2>��ݡ��Ȥ�ʬ��</h2>
+<h2>レポートの分割</h2>
 
 <form action="<%= project.url %>"
       method="post" 
       enctype="multipart/form-data"
       accept-charset="<%= project.charset %>">
 
-  <p>ʬ�䤷���̤Υ�ݡ��Ȥ˰�ư�����å����������򤷤Ƥ���������</p>
+  <p>分割して別のレポートに移動するメッセージを選択してください。</p>
 
   <% report.each_with_index do |message, i| %>
   <div>
@@ -33,7 +33,7 @@
   <% end %>
 
   <div>
-    <input type="submit" value="ʬ�䤹��">
+    <input type="submit" value="分割する">
   </div>
 
   <div>
@@ -42,7 +42,7 @@
     <input type="hidden" name="id" value="<%= report.id.to_s %>">
     <input type="hidden" name="s" value="1">
     <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="��">
+    <input type="hidden" name="jp_enc_test" value="日">
     <% end %>
   </div>
 </form>  

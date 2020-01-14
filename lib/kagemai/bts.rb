@@ -1,23 +1,5 @@
 =begin
   bts.rb - Bug Tracking System class.
-
-  Copyright(C) 2002-2005 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'fileutils'
@@ -47,24 +29,36 @@ module Kagemai
       if Config[:enable_postgres] then
         require 'kagemai/pgstore'
         require 'kagemai/pgstore3'
+        require 'kagemai/pgstore4'
         Config[:stores] << Kagemai::PostgresStore  # obsolete
-        Config[:stores] << Kagemai::PostgresStore3
+        Config[:stores] << Kagemai::PostgresStore3 # obsolete
+        Config[:stores] << Kagemai::PostgresStore4
       end      
       
       if Config[:enable_mssql] then
-        require 'kagemai/mssqlstore'
-        require 'kagemai/mssqlstore3'
-        Config[:stores] << Kagemai::MSSqlStore
-        Config[:stores] << Kagemai::MSSqlStore3
-      end      
-
+        if /^Provider=/ =~ Config[:mssql_dsn] then
+          require 'kagemai/mssqlstore3'
+          require 'kagemai/mssqlstore4'
+          Config[:stores] << Kagemai::MSSqlStore3 # obsolete
+          Config[:stores] << Kagemai::MSSqlStore4
+        else
+          require 'kagemai/mssqlstore'
+          require 'kagemai/odbcstore4'
+          Config[:stores] << Kagemai::MSSqlStore # obsolete
+          Config[:stores] << Kagemai::ODBCStore3 # obsolete
+          Config[:stores] << Kagemai::ODBCStore4
+        end
+      end
+      
       if Config[:enable_mysql] then
         require 'kagemai/mysqlstore'
         require 'kagemai/mysqlstore2'
         require 'kagemai/mysqlstore3'
+        require 'kagemai/mysqlstore4'
         Config[:stores] << Kagemai::MySQLStore  # obsolete
         Config[:stores] << Kagemai::MySQLStore2 # obsolete
-        Config[:stores] << Kagemai::MySQLStore3
+        Config[:stores] << Kagemai::MySQLStore3 # obsolete
+        Config[:stores] << Kagemai::MySQLStore4
       end      
       
       # set default mailer
@@ -329,6 +323,10 @@ module Kagemai
         projects << Project.open(@project_dir, id)
       end
       projects.sort(){|a, b| a.name <=> b.name}.each(&block)
+    ensure
+      Thread.current[:Project] = nil
+      lang = Thread.current[:CGIApplication].lang
+      MessageBundle.open(Config[:resource_dir], lang, Config[:message_bundle_name])
     end
     
     def invalidate_cache()

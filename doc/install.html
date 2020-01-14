@@ -48,8 +48,8 @@
 
 <pre>
   $ cd /home/fukuoka/public_html
-  $ tar xfvz kagemai-0.8.7.tar.gz
-  $ mv kagemai-0.8.7 kagemai
+  $ tar xfvz kagemai-0.9.0.tar.gz
+  $ mv kagemai-0.9.0 kagemai
 </pre>
 
 <li>guest.cgi がある場所に、Web サーバが書き込めるように適切にパーミッションを変更する
@@ -452,11 +452,11 @@ PostgreSQL を用いたデータの保存を行わない場合には、以下の設定は必要ありません。
 <li>影舞用のデータベースを作成する
 
 <div>
-エンコーディングとして EUC-JP を指定してください。
+エンコーディングとして UTF8 を指定してください。
 </div>
 
 <pre>
-  $ createdb --encoding EUC-JP kagemai
+  $ createdb --encoding UTF8 kagemai
 </pre>
    
 <li>PostgreSQL に影舞用のアカウントを作成する
@@ -501,9 +501,9 @@ PostgreSQL を用いたデータの保存を行わない場合には、以下の設定は必要ありません。
 </table>
 
 <li>プロジェクトの作成で、データの保存形式として、
-    PostgresStore3 が選択可能になっていることを確認する
+    PostgresStore4 が選択可能になっていることを確認する
 
-<li>データの保存形式として PostgresStore3 を選んでプロジェクトを作成してみる
+<li>データの保存形式として PostgresStore4 を選んでプロジェクトを作成してみる
 
 </ol>
 
@@ -578,9 +578,9 @@ Windows の場合には <a href="http://rubyforge.org/projects/mysql-win/">mysql-win<
 </table>
 
 <li>プロジェクトの作成で、データの保存形式として、
-     MySQLStore3 が選択可能になっていることを確認する
+     MySQLStore4 が選択可能になっていることを確認する
 
-<li>データの保存形式として MySQLStore3 を選んでプロジェクトを作成してみる
+<li>データの保存形式として MySQLStore4 を選んでプロジェクトを作成してみる
 
 </ol>
 
@@ -610,7 +610,7 @@ Windows の場合には <a href="http://rubyforge.org/projects/mysql-win/">mysql-win<
 
 <table>
   <tr class="odd">
-    <th>mssql_dns</th>
+    <th>mssql_dsn</th>
     <td>SQL Server のデータベースの指定。デフォルトは、"Provider=SQLOLEDB;Server=.\SQLEXPRESS;Database=kagemai" になっています。
     <dvi>Server にSQL Server のサーバ\インスタンス名（上の例では、ローカルホスト上のSQL Server Expressのデフォルト名）、Databaseにデータベースの名前を指定します。Providerは通常 SQLOLEDEB のままです。</div>
     </td>
@@ -628,9 +628,9 @@ Windows の場合には <a href="http://rubyforge.org/projects/mysql-win/">mysql-win<
 </table>
 
 <li>プロジェクトの作成で、データの保存形式として、
-    MSSqlStore3 が選択可能になっていることを確認する
+    MSSqlStore4 が選択可能になっていることを確認する
 
-<li>データの保存形式として MSSqlStore3 を選んでプロジェクトを作成してみる
+<li>データの保存形式として MSSqlStore4 を選んでプロジェクトを作成してみる
 
 </ol>
 
@@ -892,9 +892,6 @@ config_file は、'/var/www/html/kagemai/kagemai.conf' とする。</div>
 <div class="footer">
   Copyright(C) 2002-2008
   <a href="mailto:fukuoka@daifukuya.com">FUKUOKA Tomoyuki</a>. All Rights Reserved. 
-</div>
-<div class="footer">
-  $Id: install.html 471 2008-02-29 17:51:18Z fukuoka $
 </div>
 
 </body>

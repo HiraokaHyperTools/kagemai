@@ -1,23 +1,5 @@
 =begin
-  CreateProject - プロジェクトを作成します
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  CreateProject - create project
 =end
 
 require 'kagemai/mode'
@@ -71,12 +53,12 @@ module Kagemai
       # Check required parameters.
       requires = ['project_name', 'description', 'template']
       requires.each do |id|
-        check_form_value(id, nil, false)
+        validate_required_value(id)
       end
 
       # Check project_id inclues only [A-Za-z0-9] and
       # does not exist.
-      if check_form_value('project_id', nil, false) then
+      if validate_required_value('project_id') then
         if /^#{Project::ID_REGEXP_STR}$/ =~ @cgi.get_param('project_id') then
           project_id = Util.untaint_path(@cgi.get_param('project_id').downcase)
           
@@ -94,13 +76,13 @@ module Kagemai
       # email address は、email address check をかける
       email_fields = ['admin_address', 'post_address']
       email_fields.each do |id|
-        check_form_value(id, 'valid-address@daifukuya.com', true)
+        validate_email_address(id)
       end
       
       # Check integer parameters.
       int_params = ['subject_id_figure', 'fold_column']
       int_params.each do |id|
-        check_int_value(id)
+        validate_int_value(id)
       end
       
       notify_addresses = @cgi.get_param('notify_addresses', '').split(/[, \t\r\n]+/m).compact

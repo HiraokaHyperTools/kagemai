@@ -3,21 +3,21 @@
   Copyright(C) 2008 FUKUOKA Tomoyuki.
 =end
 
-require 'kagemai/store'
 require 'kagemai/dbistore3'
 require 'kagemai/util'
 require 'kagemai/kconv'
 
 module Kagemai
-  class MSSqlStore3 < Store
-    include BaseDBIStore3
+  class MSSqlStore3 < BaseDBIStore3
     
     SQL_TYPES = {
       'serial'    => SQLType.new('int identity'),
+      'int'       => SQLType.new('int'),
       'boolean'   => SQLType.new('tinyint'),
       'varchar'   => SQLType.new('nvarchar'),
       'text'      => SQLType.new('ntext'),
       'timestamp' => SQLType.new('datetime'),
+      'date'      => SQLType.new('datetime'),
       'blob'      => SQLType.new('varchar(max)')
     }
     
@@ -27,20 +27,16 @@ module Kagemai
       'regexp' => '~',
     }
     
+    def self.obsolete?()
+      true
+    end
+    
     def self.disp_name()
-      'MSSqlStore3'
+      'MSSqlStore3 (obsolete)'
     end
     
     def self.description()
       MessageBundle[:MSSqlStore]
-    end
-    
-    def self.create(dir, project_id, report_type, charset)
-      BaseDBIStore3.create(self, dir, project_id, report_type, charset)
-    end
-    
-    def self.destroy(dir, project_id)
-      BaseDBIStore3.destroy(self, dir, project_id)
     end
     
     def initialize(dir, project_id, report_type, charset)
@@ -57,16 +53,20 @@ module Kagemai
       @connection = nil
     end
     
-    def sql_types()
-      SQL_TYPES
+    def increment_view_count(report_id)
+      execute do |db|
+        db['AutoCommit'] = true
+        query = "UPDATE #{table_name('reports')} SET view_count=view_count+1 WHERE id=?"
+        db.do(query, report_id)
+      end
     end
     
-    def sql_op(key)
-      SQL_SEARCH_OP[key]
-    end
-    
-    def sql_search_op()
-      SQL_SEARCH_OP
+    def add_element_type(report_type, etype)
+      execute do |db|
+        type = etype.sql_type(sql_types())
+        db.do("alter table #{table_name('reports')} add #{col_name(etype.id)} #{type}")
+        db.do("alter table #{table_name('messages')} add #{col_name(etype.id)} #{type}")
+      end
     end
     
     def store_boolean(b)
@@ -83,14 +83,14 @@ module Kagemai
     
     # convert encoding from view to db
     def store_kconv(view_encoded_str)
-      KKconv::conv(view_encoded_str, KKconv::UTF8, KKconv::EUC)
+      view_encoded_str
     end
     
     # convert encoding from db to view
     def load_kconv(db_encoded_str)
-      KKconv::conv(db_encoded_str, KKconv::EUC, KKconv::UTF8)
+      db_encoded_str
     end
-
+    
     def escape_binary(v)
       [v].pack('m')
     end

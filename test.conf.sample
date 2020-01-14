@@ -1,0 +1,21 @@
+# configuration for testall.rb
+
+Kagemai::Config[:base_url] = "http://localhost/kagemai/"
+
+# PostgreSQL
+Kagemai::Config[:enable_postgres] = false
+Kagemai::Config[:postgres_host]   = '/tmp'
+Kagemai::Config[:postgres_user]   = 'kagemai'
+Kagemai::Config[:postgres_pass]   = 'kagemai'
+Kagemai::Config[:postgres_dbname]   = 'kagemai'
+
+# MySQL
+Kagemai::Config[:enable_mysql] = false
+Kagemai::Config[:mysql_user]   = 'kagemai'
+Kagemai::Config[:mysql_dbname] = 'kagemai'
+
+# SQL Server
+Kagemai::Config[:enable_mssql] = false
+Kagemai::Config[:mssql_dsn]    = 'Provider=SQLOLEDB;Server=.\SQLEXPRESS;Database=kagemai'
+Kagemai::Config[:mssql_dbname] = 'kagemai'
+Kagemai::Config[:mssql_user]   = 'kagemai'

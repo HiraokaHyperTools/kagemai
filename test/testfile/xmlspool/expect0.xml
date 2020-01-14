@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<message id="1" date="1970-01-01 09:00:00" hide="false" ip_addr="">
+  <element id="email">fukuoka@daifukuya.com</element>
+  <element id="status">新規</element>
+  <element id="message">hello world!</element>
+  <element id="cookie">true</element>
+  <option id="opt1" value="opt_v1" />
+  <option id="opt2" value="true" />
+  <option id="opt3" value="false" />
+</message>

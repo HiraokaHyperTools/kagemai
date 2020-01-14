@@ -1,0 +1,69 @@
+2008-03-18 fukuoka
+
+	* プレビューの追加
+
+2008-03-16 fukuoka
+
+	* 本文が UTF-8 のメールに対応
+	* メールの Subject の UTF-8/Q-Encode 対応
+
+2008-03-15 fukuoka
+
+	* レポートの UTF-8 化
+
+2008-03-14 fukuoka
+
+	* mod_ruby 時のエラーメッセージがおかしいのを修正
+
+2008-03-07 fukuoka
+
+	* resource/ja/* 文字コードを UTF-8 へ変換
+	* reporttype.rb UTF-8 対応
+	* fold.rb (Fold#fold_line) 全角文字の表示幅を考慮して折りたたむように修正
+
+2008-03-05 fukuoka
+
+	* ChangeLog new file
+
+2008-02-22    fukuoka
+
+	* HEAD での変更を stable-0_8 にマージ
+	
+	* test/*_test.rb MessageBunlde をキャッシュなしで使用するように修正
+
+2008-02-21    fukuoka
+
+	* action.rb, config.rb, admin.rb (Action#session_gc) new function
+
+	* message_bundle.rb (initialize) use cache file
+
+	* kagemai.rb, config.rb, action.rb session データ保存用に Config[:tmp_dir]を追加
+
+	* project.rb (delete) プロジェクト削除結果の rhtml をキャッシュしないようにするために追加
+
+	* dbistore3.rb (transaction) トランザクションを有効にするために AutoCommitを false に設定
+
+2008-02-20    fukuoka
+
+	* pgstore3.rb, mysqlstore3.rb (disp_name) クラス名を返すように修正。
+	  どのバージョンの保存形式を使っているのかユーザにわかりやすくするため。
+
+	* store.rb まわり deprecated を obsolete にリネーム
+
+	* message.rb (Message#name) Element#value ではなく Element を返すように修正。
+	  それに伴い dbistore3.rb も修正。Element#value を返すと 
+	  script/replace.rb などの ElementType に対するプラグインが正しく動作しなくなる。
+
+	* kcgi.rb (KCGI#get_param) 無駄な \r を削除するように修正 <BTS:345>
+	
+	* elementtype.rb (MultiSelectElementType#new) Marshal::load 時に
+	  Choice が正しく初期化されない問題を修正 <BTS:346>
+
+	* install_ja.rb, install_en.rb, make_dist.rb: ftools のかわりに
+	  fileutils を使用するように修正。<BTS:344>
+
+	* kconv.rb: 無駄なデバッグメッセージを削除
+
+	* testall.rb: AutoRunner を使うように修正 <BTS:344>
+
+	* test/*_test.rb: require 'test/unit' に修正

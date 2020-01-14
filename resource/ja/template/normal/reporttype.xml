@@ -1,86 +1,86 @@
-<?xml version="1.0" encoding="EUC-JP"?>
+<?xml version="1.0" encoding="UTF-8"?>
 
 <ReportType id="normal" name="BTS">
   <description>
-    ����Ū�ʥХ���ݡ��Ȥ򰷤��ޤ���
-    �Х���ݡ��Ȥ������ԡ������ȥ롢���֡����ƥ��ꡢ�С������ô���ԤʤɤΥե�����ɤ�������ե������ź�դ��뤳�Ȥ�Ǥ��ޤ���
+    一般的なバグレポートを扱います。
+    バグレポートは送信者、タイトル、状態、カテゴリ、バージョン、担当者などのフィールドを持ち、ファイルを添付することもできます。
   </description>
 
-  <string id="email" name="������" use_cookie="true" email_check="true"
+  <string id="email" name="送信者" use_cookie="true" email_check="true"
           delete="false"
           show_header="true" show_header_line="true">
-    �����ԤΥ᡼�륢�ɥ쥹�����Ϥ��Ƥ���������
+    送信者のメールアドレスを入力してください。
   </string>
 
-  <string id="title" name="����" 
+  <string id="title" name="概要" 
           delete="false"
           list_item="true"
           allow_guest="true" 
           report_attr="true">
-    �������γ��פ�ʷ顦���Ƥ˽񤤤Ƥ���������
-    ��ư���ޤ���ס֤狼��ޤ���סּ���Ǥ��פʤɤ���̾����Ŭ�ڤǤ���
+    この報告の概要を簡潔・明瞭に書いてください。
+    「動きません」「わかりません」「質問です」などの題名は不適切です。
   </string>
 
-  <select id="status" name="����" default="����" 
+  <select id="status" name="状態" default="新規" 
           delete="false"
           list_item="true" 
           report_attr="true"
           show_header="true"
           show_topics="true" 
-          close_by="��λ">
-    <choice id="����" sdesc="��Ƥ���Ƥ�����">��������Ƥ��줿�Х��Ǥ�</choice>
-    <choice id="�����Ѥ�" sdesc="�����ѤΤ��">ô���Ԥ˳�꿶��줿�Х������Ǥ�</choice>
-    <choice id="��ǧ�Ԥ�" sdesc="��ǧ�Ԥ��Τ��">�Ȥꤢ�������������ǧ�Ԥ��ΥХ������Ǥ�</choice>
-    <choice id="��λ" sdesc="��λ�������" show_topics="false">��λ�����Х������Ǥ�</choice>
+          close_by="完了">
+    <choice id="新規" sdesc="提案されているもの">新しく投稿されたバグです</choice>
+    <choice id="割当済み" sdesc="割当済のもの">担当者に割り振られたバグたちです</choice>
+    <choice id="確認待ち" sdesc="確認待ちのもの">とりあえず修正され確認待ちのバグたちです</choice>
+    <choice id="完了" sdesc="完了したもの" show_topics="false">完了したバグたちです</choice>
   </select>
 
-  <select id="resolution" name="������ˡ" default="̤����" 
+  <select id="resolution" name="処理方法" default="未処理" 
           list_item="true" 
           report_attr="true" 
           show_header="true">
-    <choice id="̤����">��������Ƥ��ʤ��Х�����</choice>
-    <choice id="�����Ѥ�">�������줿�Х�����</choice>
-    <choice id="��α">��α��ΥХ�����</choice>
-    <choice id="�Ѳ�">�Ѳ�����ޤ����Х�����</choice>
+    <choice id="未処理">処理されていないバグたち</choice>
+    <choice id="修正済み">修正されたバグたち</choice>
+    <choice id="保留">保留中のバグたち</choice>
+    <choice id="却下">却下されましたバグたち</choice>
   </select>
 
-  <select id="priority" name="ͥ����" default="��"
+  <select id="priority" name="優先度" default="中"
           list_item="true" 
           show_header="true" 
           report_attr="true">
-    <choice id="�۵�"></choice>
-    <choice id="��"></choice>
-    <choice id="��"></choice>
-    <choice id="��"></choice>
+    <choice id="緊急"></choice>
+    <choice id="高"></choice>
+    <choice id="中"></choice>
+    <choice id="低"></choice>
   </select>
   
-  <select id="severity" name="������" default="����"
+  <select id="severity" name="深刻度" default="普通"
           list_item="true" 
           show_header="true" 
           report_attr="true">
-    <choice id="��̿Ū"></choice>
-    <choice id="����"></choice>
-    <choice id="����"></choice>
-    <choice id="����"></choice>
+    <choice id="致命的"></choice>
+    <choice id="重大"></choice>
+    <choice id="普通"></choice>
+    <choice id="軽微"></choice>
   </select>
 
-  <select id="assigned" name="ô����"  default="̤��"
+  <select id="assigned" name="担当者"  default="未定"
           show_header="true" 
           report_attr="true">
-    <choice id="̤��"></choice>
-    <choice id="ô����1"></choice>
-    <choice id="ô����2"></choice>
+    <choice id="未定"></choice>
+    <choice id="担当者1"></choice>
+    <choice id="担当者2"></choice>
   </select>
 
-  <string id="depend" name="��¸����Х�" report_attr="true" default="">
-     ���Υ�ݡ��Ȥ���¸���Ƥ���Х��� ID �����Ϥ��Ƥ���������
+  <string id="depend" name="依存するバグ" report_attr="true" default="">
+     このレポートが依存しているバグの ID を入力してください。
   </text>
 
-  <text id="body" name="����" delete="false">
-    �ʷ顦���Ƥˤɤ�����;ʬ�ʰ��Ѥ䰧���Ϥ���ޤ���
+  <text id="body" name="内容" delete="false">
+    簡潔・明瞭にどうぞ。余分な引用や挨拶はいりません。
   </text>
 
-  <file id="attachment" name="ź�եե�����" default="">
-    �ե�����̾����ꤷ�Ƥ������������ܸ�Υե�����̾�Ϥ��Ƥ���������̵��Ǥ���
+  <file id="attachment" name="添付ファイル" default="">
+    ファイル名を指定してください。日本語のファイル名はやめておいた方が無難です。
   </file>
 </ReportType>

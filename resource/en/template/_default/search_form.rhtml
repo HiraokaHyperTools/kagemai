@@ -3,6 +3,7 @@
 <form action="<%= mode.url %>" method="<%= Config[:search_form_method] %>" >
 <table>
   <% project.report_type.each do |etype| %>
+  <%   next if etype['hide_from_guest'] && Mode::GUEST.current? %>
   <tr>
     <th><%= etype.name %></th>
     <td><%= etype.html_search(@cgi) %></td>
@@ -19,16 +20,16 @@
       <% end %>
       </select><br>
 
-      From (yyyy/mm/dd) <input type="text" size="4" name="b_year"  
-             value="<%= period_begin.year.to_s.escape_h %>"> /
+      From (yyyy-mm-dd) <input type="text" size="4" name="b_year"  
+             value="<%= period_begin.year.to_s.escape_h %>"> -
       <input type="text" size="2" name="b_month"
-             value="<%= period_begin.month.to_s.escape_h %>"> /
+             value="<%= period_begin.month.to_s.escape_h %>"> -
       <input type="text" size="2" name="b_day"   
-             value="<%= period_begin.day.to_s.escape_h %>"> to (yyyy/mm/dd)
+             value="<%= period_begin.day.to_s.escape_h %>"> to (yyyy-mm-dd)
       <input type="text" size="4" name="e_year"  
-             value="<%= period_end.year.to_s.escape_h %>"> /
+             value="<%= period_end.year.to_s.escape_h %>"> -
       <input type="text" size="2" name="e_month" 
-             value="<%= period_end.month.to_s.escape_h %>"> /
+             value="<%= period_end.month.to_s.escape_h %>"> -
       <input type="text" size="2" name="e_day"   
              value="<%= period_end.day.to_s.escape_h %>">
     </td>        
@@ -38,15 +39,15 @@
 <div>
   <% or_all = !and_op ? 'checked="checked"' : '' %>
   <% and_all = and_op ? 'checked="checked"' : '' %>
-  <input type="radio" name="search_op" 
-         value="and_all" <%= and_all %>>Search using all fields<br>
-  <input type="radio" name="search_op" 
-         value="or_all" <%= or_all %>>Search using any field
+  <input type="radio" name="search_op" id="label_and_all"
+         value="and_all" <%= and_all %>><label for="label_and_all">Search using all fields</label><br>
+  <input type="radio" name="search_op" id="label_or_all"
+         value="or_all" <%= or_all %>><label for="label_or_all">Search using any field</label>
 </div>
 
 <div>
-   <input type="checkbox" name="as_csv"> Display results in CSV format<br>
-   <input type="checkbox" name="as_csv_file"> Download results in CSV format
+   <input type="checkbox" name="as_csv" id="label_as_csv"><label for="label_as_csv">Display results in CSV format</label><br>
+   <input type="checkbox" name="as_csv_file" id="label_as_csv_file"><label for="label_as_csv_file">Download results in CSV format</label>
 </div>
 
 <div>(Empty fields are ignored.)</div>
@@ -55,10 +56,6 @@
   <input type="hidden" name="project" value="<%= project.id %>">
   <input type="hidden" name="action" value="search">
   <input type="hidden" name="search_type" value="search">
-
-  <% if @lang == 'ja' %>
-  <input type="hidden" name="jp_enc_test" value="Æü">
-  <% end %>
 
   <input type="submit" value="Search"> 
   <input type="reset" value="Reset">

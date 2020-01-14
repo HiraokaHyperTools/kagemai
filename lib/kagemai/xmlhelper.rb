@@ -1,25 +1,5 @@
 =begin
- xmlhelper.rb - XML writer/readers to store reports or messages.
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  $Id: xmlhelper.rb 405 2008-02-23 04:26:07Z fukuoka $
+  xmlhelper.rb - XML writer/readers to store reports or messages.
 =end
 
 require 'xmlscan/scanner'
@@ -37,7 +17,7 @@ module Kagemai
     def write(port, report)
       port.puts("<?xml version=\"1.0\" encoding=\"#{@charset}\"?>")
       port.puts("")
-      port.puts("<report id=\"#{report.id}\">")
+      port.puts(%Q!<report id="#{report.id}" view_count="#{report.view_count}">!)
 
       report.each do |message|
         @message_writer.write(port, message)
@@ -62,6 +42,7 @@ module Kagemai
         case name
         when 'report'
           @report = Report.new(@report_type, @report_id)
+          @report.view_count = attr['view_count'].to_i if attr['view_count']
         end
       end
 
@@ -227,8 +208,8 @@ module Kagemai
     end
     
     def read(file, report_type, id)
-      filename = file.kind_of?(File) ? file.path : id.to_s
       begin
+        filename = file.kind_of?(File) ? file.path : id.to_s
         message = XMLMessageScanner.new(file, report_type, id).parse()
         message.modified = false
         unless message

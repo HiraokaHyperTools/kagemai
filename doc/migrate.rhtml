@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="stylesheet" type="text/css" href="kagemai_doc.css">
+  <title>データの移行方法</title>
+</head>
+<body>
+
+<h1>データ移行方法</h1>
+
+<h2>概要</h2>
+<p>
+ここでは、0.7から0.8へのデータの移行法について説明します。
+データを移行の流れは、以下のようになります。</p>
+
+<ol>
+  <li>影舞 0.7 の動作確認</li>
+  <li>bin/migrate.rb を設定する</li>
+  <li>bin/migrate.rb を実行してデータを移行</li>
+  <li>移行したデータのパーミッションを変更</li>
+</ol>
+
+<p>
+migrate.rb によって、プロジェクトの設定と、バグのレポートのデータが
+0.8 用に取り込まれます。ただし、kagemai.rhtml のカスタマイズなどは取り込まれません。
+0.8 へ移行後、必要に応じてカスタマイズしてください。
+</p>
+
+
+<h2>影舞 0.7 の動作の確認</h2>
+
+<p>
+0.8 をインストールする際に、0.7 がインストールされてたディレクトリの名前を変更した場合には、
+そのままでは 0.7 が動作しなくなっています。
+</p>
+
+<p>global.rb の RootDir と、kagemai.rhtml の kagemai_root を修正し、
+   0.7 が動作することを確認してください。</p>
+
+
+<h2>migrate.rb の設定</h2>
+
+<p>
+migrate.rb の以下の変数を設定する必要があります。
+0.8 をインストールしたディレクトリにあわせて、修正してください。</p>
+
+<table>
+  <tr class="odd">
+    <th>kagemai_root</th>
+    <td>影舞 0.8 の lib ディレクトリがあるディレクトリ。<br>
+        kagemai.rb が、/usr/local/kagemai/lib/kagemai/kagemai.rb 
+        にある場合には、/usr/local/kagemai と指定する。
+    </td>
+  </tr>
+  <tr class="even">
+    <th>config_file</th>
+    <td>kagemai.conf のパス。<br>
+        /var/www/html/kagemai/kagemai.conf など。
+    </td>
+  </tr>
+  <tr class="odd">
+    <th>old_lib</th>
+    <td>影舞 0.7 の global.rb のあるディレクトリ。</td>
+  </tr>
+
+</table>
+
+<p>
+install_ja.rb でインストールした場合には、old_lib 以外はすでに正しい値が設定済みです。
+</p>
+
+<h2>データの移行</h2>
+
+<p>
+migrate.rb を実行します。
+必要な変数がすべて設定されていれば、0.7
+に登録されていたすべてのプロジェクトのデータが 0.8 に移行されます。
+</p>
+
+<p>レポート数 100 のプロジェクト test1 と、レポート数 45 の test2、
+   レポート数 5000 の test3、 レポート数 10000 の test4 がある場合の実行例を示します。</p>
+<p>レポート数が多い場合には、それなりに時間がかかります。</p>
+<pre>
+  $ ./migrate.rb
+  OLD VERSION = 0.7.1
+  extracting test1(100 reports)
+  ..
+  extracting test2(45 reports)
+  .
+  extracting test3(5000 reports)
+  ..............................................................................
+  ......................
+  extracting test4(10000 reports)
+  ..............................................................................
+  ..............................................................................
+  ............................................
+  
+  NEW VERSION = 0.8.0 (Youko)
+  migrate test1
+  ..
+  migrate test2
+  .
+  migrate test3
+  ..............................................................................
+  ......................
+  migrate test4
+  ..............................................................................
+  ..............................................................................
+  ............................................
+</pre>
+
+<h2>パーミッションの設定</h2>
+
+<p>
+パーミッションを正しく設定しないと、
+新規レポートやメッセージの追加ができない可能性があります。
+0.8 のプロジェクトディレクトリを確認して、必要であればパーミッションを変更してください。
+</p>
+
+<pre>
+  # chgrp -R kagemai project
+  # chmod -R 02770 project
+</pre>
+
+<!-- ページのフッターは footer から自動で取り込まれます。-->
+<%= open('footer') {|file| file.read } %>
+</body>
+</html>

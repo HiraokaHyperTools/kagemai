@@ -1,23 +1,5 @@
 =begin
-  ConfigFiled - レポートの要素の種類やオプションの設定を行います
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  ConfigFiled - configure report elements and options
 =end
 
 require 'kagemai/mode'
@@ -165,15 +147,15 @@ module Kagemai
       init_project()
       etype_class = validate_etype_class(@cgi.get_param('f'))
       ['id', 'name'].each do |name|
-        check_form_value(name, nil, false, false)
+        validate_required_value(name)
       end
       
-      if @project.report_type[@cgi.get_param('id').downcase] then
+      if @project.report_type[@cgi.get_param('id', '').downcase] then
         add_error(:err_exist_id, 'id')
       end
       
       options = {
-        'id' => @cgi.get_param('id').downcase,
+        'id' => @cgi.get_param('id', '').downcase,
         'name' => @cgi.get_param('name'),
         'description' => @cgi.get_param('description'),
       }
@@ -244,7 +226,7 @@ module Kagemai
       end
 
       ['name'].each do |name|
-        check_form_value(name, nil, false, false)
+        validate_required_value(name)
       end
 
       options = {

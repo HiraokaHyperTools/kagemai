@@ -1,24 +1,5 @@
 =begin
-  htmlhelper.rb - レポートの要素の HTML へのレンダリングや
-                  フォームの入力フィールドの作成を行います。
-
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  htmlhelper.rb - Rendering report fields for html and forms.
 =end
 
 require 'kagemai/elementtype'
@@ -154,8 +135,9 @@ module Kagemai
         checked['checked'] = 'checked'
       end
       case_opt = input_field('checkbox', case_opt_name, checked)
+      case_opt += "<label for=\"#{case_opt_name}\">"
       case_opt += MessageBundle[:search_cond_case_insensitive]
-      
+      case_opt += "</label>"
       keyword + "\n" + stype + "<br>\n" + case_opt
     end
     
@@ -285,7 +267,7 @@ module Kagemai
     end
 
     def input_field(type, name, others = {})
-      attr = {'type' => type, 'name' => name}
+      attr = {'type' => type, 'name' => name, 'id' => name}
       attr.update(others)
       field('input', attr)
     end
@@ -514,7 +496,7 @@ module Kagemai
       attr = {'name' => @attr['id'], 'cols' => cols(), 'rows' => rows()}
       attr.update(other)
       field('textarea', attr) {
-        v = @attr['quote'] ? value.to_s : ''
+        v = (@attr['quote'] || error) ? value.to_s : ''
         if @attr['quote_mark'] && !error then
           v = v.empty? ? '' : folding.render(nil, v).quote
         end
@@ -539,7 +521,24 @@ module Kagemai
       ''
     end
   end
+  
+  class DateElementType
+    def html_value(element, index_item = false)
+      value = element.value
+      if value then
+        value.to_s + " (#{value.week_of_day})"
+      else
+        ''
+      end
+    end
 
+    def html_input(value = '', other = {})
+      attr = {'value' => value.to_s.escape_h, 'size' => '20'}
+      attr.update(other)
+      input_field('text', @attr['id'], attr)
+    end
+  end
+  
   class FileElementType
     include StringSearchCondHelper
     include AttachmentHandler

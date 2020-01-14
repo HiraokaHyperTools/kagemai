@@ -1,25 +1,3 @@
-=begin
-  Project - １つのバグ管理プロジェクトを表します
-  
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-  
-  This file is part of KAGEMAI.  
-  
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-=end
-
 require 'kagemai/reporttype'
 require 'kagemai/config'
 require 'kagemai/message_bundle'
@@ -55,7 +33,7 @@ module Kagemai
   
   class Project
     REPORT_TYPE_FILENAME = 'reporttype.xml'
-    ID_REGEXP_STR = '[A-Za-z0-9_-]+'
+    ID_REGEXP_STR = '[A-Za-z0-9_]+'
     
     def Project.open(dir, id)
       Project.new(dir, id, ProjectConfig.new(dir, id))
@@ -106,6 +84,10 @@ module Kagemai
       @report_type = load_report_type()      
       @db_manager = @db_manager_class.new(@data_dir, @id, @report_type, @charset)
       
+      if @lang != Config[:language] then
+        # reopen message bundle by project langage
+        MessageBundle.open(Config[:resource_dir], @lang, Config[:message_bundle_name])
+      end
       if File.exist?("#{@data_dir}/#{@message_bundle_name}") then
         MessageBundle.update("#{@data_dir}/#{@message_bundle_name}")
       end
@@ -221,9 +203,14 @@ module Kagemai
       @db_manager.size()
     end
     
-    def load_report(report_id)
+    def load_report(report_id, increment = false)
+      @db_manager.increment_view_count(report_id) if increment
       report = @db_manager.load(@report_type, report_id)
       report
+    end
+    
+    def view_report(report_id)
+      load_report(report_id, true)
     end
     
     def each()
@@ -288,15 +275,14 @@ module Kagemai
     def spam_filter()
       return Proc.new{|strings| false} unless @use_filter
       
-      # TODO: * 外部からフィルタを読み込めるように
-      #       * ja/en で分けれるように
+      # TODO: make pluggable
       return Proc.new{|strings| false} if @lang != 'ja'
       
       Proc.new{|strings|
         use_japanese = false
         strings.each do |string|
-          # 日本語が含まれてるかのチェック
-          if string =~ /[\xA1-\xFE][\xA1-\xFE]/ then
+          # include hiragana?
+          if string =~ /\xe3\81[\x82-\x8a]/ then
             use_japanese = true
             break
           end

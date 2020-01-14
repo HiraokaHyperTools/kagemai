@@ -1,0 +1,18 @@
+To: kagemai-bugs@daifukuya.com
+From: FUKUOKA Tomoyuki <fukuoka@daifukuya.com>
+Subject: MIME Accept Test 1
+Message-ID: <hoge@mail.daifukuya.com>
+Date: Thu, 07 Jan 2003 23:23:00 +0900
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="1344"
+
+This is a multipart message.
+
+--1344
+Content-Type: applicatoin/octet-stream
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment; filename="hoge.txt"
+
+hoge line1.
+hoge line2.
+--1344--

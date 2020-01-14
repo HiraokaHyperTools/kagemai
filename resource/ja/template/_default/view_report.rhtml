@@ -1,7 +1,7 @@
 <%# requirements: project, report, email_notification, 
                   use_cookie, show_form, params, errors %>
 
-<h2>�ǿ�����</h2>
+<h2>最新状況</h2>
 
 <table>
   <% report.each_attr do |etype| %>
@@ -13,18 +13,18 @@
   <% end %>
 
   <tr>
-    <th>��������</th>
+    <th>作成日時</th>
     <td><span class="date"><%= report.create_time.html_value() %></span></td>
   </tr>
 
   <tr>
-    <th>�ǽ���������</th>
+    <th>最終更新日時</th>
     <td><span class="date"><%= report.modify_time.html_value() %></span></td>
   </tr>
 </table>
 
 
-<h2>����</h2>
+<h2>履歴</h2>
 
 <% report.each_with_index do |message, i| %>
 <div>
@@ -45,10 +45,10 @@
        felement.file_descs.each do |desc|   
          name, mtype, size, params = desc  
 	 url = CGIApplication.instance.mode.url
-         view_url = 'ɽ��'.href(url, params)
+         view_url = '表示'.href(url, params)
           
          params['d'] = 'true'
-         download_url = '�����������'.href(url, params)  %>
+         download_url = 'ダウンロード'.href(url, params)  %>
          
          <div class="message-fileelement">
            <%= name %> (<%= mtype %>, <%= size.to_s %> bytes) 
@@ -63,12 +63,12 @@
   <% if Mode::ADMIN.current? %>
     <% if message.hide? %>
       <div class="message-bottom">
-        ���Υ�å���������ɽ�������ꤵ��Ƥ��ޤ���[<%= message.hide_href('ɽ������', false) %>]
+        このメッセージは非表示に設定されています。[<%= message.hide_href('表示する', false) %>]
       </div>
     <% elsif report.visible_size > 1 %>
-      <div class="message-bottom">[<%= message.hide_href('���ѥ�Ȥ��Ʊ���') %>]</div>
+      <div class="message-bottom">[<%= message.hide_href('スパムとして隠す') %>]</div>
     <% else %>
-      <div class="message-bottom">�Ǹ��1�Ĥ���ɽ���ˤǤ��ޤ���<br>��ݡ��Ȥ�Ѳ��ʤɤξ��֤ؤ��ѹ����Ƥ���������</div>
+      <div class="message-bottom">最後の1つは非表示にできません。<br>レポートを却下などの状態へと変更してください。</div>
     <% end %>
   <% end %>
 
@@ -77,7 +77,7 @@
 <% end %>
 
 <% if show_form then %>
-  <h2 id="form">��ץ饤��Ĥ���</h2>
+  <h2 id="form">リプライをつける</h2>
   
   <%
     param = {
@@ -88,14 +88,15 @@
       :use_cookie         => use_cookie, 
       :errors             => errors,
       :use_captcha        => use_captcha,
-      :captcha_error      => false
+      :captcha_error      => false,
+      :submit_back        => false,
     }
   %>
   
   <%= eval_template('message_form.rhtml', param) %>
 <% else %>
 <%
-  opts = [report.href('��ץ饤��Ĥ���', {'s' => '1'}, '#form')]
+  opts = [report.href('リプライをつける', {'s' => '1'}, '#form')]
 
   unless Mode::GUEST.current? then
     opts << SplitReport.href(project.id, report.id)
@@ -108,9 +109,9 @@
 <% if Mode::ADMIN.current? then %>
 
 <hr>
-<h2>�᡼����������ѹ�</h2>
+<h2>メール通知先の変更</h2>
 
-<p>���Υ�ݡ��Ȥ��ѹ����줿�Ȥ��˥᡼������Τ��������ɥ쥹������å����Ƥ���������</p>
+<p>このレポートが変更されたときにメールを通知したいアドレスをチェックしてください。</p>
 
 <form action="<%= project.url  %>" 
       method="post" 
@@ -120,18 +121,18 @@
   <% addresses = report.email_addresses(false) %>
   <% addresses.each do |addr, notify| %>
     <% checked = notify ? 'checked="checked"' : '' %>
-    <input type="checkbox" name="<%= addr.escape_h %>" <%= checked %>> <%= addr.escape_h %><br>
+    <input type="checkbox" name="<%= addr.escape_h %>" id="label_<%= addr.escape_h %>" <%= checked %>> <label for="label_<%= addr.escape_h %>"><%= addr.escape_h %></label><br>
   <% end %>
   </p>
 
-  <p><input type="submit" value="������ѹ�����"></p>
+  <p><input type="submit" value="設定を変更する"></p>
 
   <div>
     <input type="hidden" name="action" value="<%= SetEmailNotification.name %>">
     <input type="hidden" name="project" value="<%= project.id %>">
     <input type="hidden" name="id" value="<%= report.id %>">
     <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="��">
+    <input type="hidden" name="jp_enc_test" value="日">
     <% end %>
   </div>
 </form>

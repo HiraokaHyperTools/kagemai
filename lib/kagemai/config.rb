@@ -49,7 +49,7 @@ module Kagemai
     :maintenance_mode => false,
 
     :language => 'ja',       # default language.
-    :charset  => 'EUC-JP',   # default charset.
+    :charset  => 'UTF-8',    # default charset.
     
     :home_url => 'http://www.example.org/',   # setup
     :base_url => 'http://localhost/kagemai/', # setup
@@ -70,45 +70,45 @@ module Kagemai
     # default message bundle file
     :message_bundle_name => 'messages',
     
-    # ¥Ç¥Õ¥©¥ë¥È¤ÎÊÝÂ¸·Á¼°
+    # ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ä¿å­˜å½¢å¼
     :default_store => 'Kagemai::XMLFileStore',
     
-    # ¥Ç¥Õ¥©¥ë¥È¤Î¥Æ¥ó¥×¥ì¡¼¥È
+    # ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆã®ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆ
     :default_template => 'simple',
     
-    # ¥á¡¼¥ë¤Î¥µ¥Ö¥¸¥§¥¯¥È¤Î ID ¤Î·å¿ô
+    # ãƒ¡ãƒ¼ãƒ«ã®ã‚µãƒ–ã‚¸ã‚§ã‚¯ãƒˆã® ID ã®æ¡æ•°
     :subject_id_figure => 4,
     
-    # ¥Æ¥­¥¹¥È¤ÎÀÞ¤êÊÖ¤··å¿ô
+    # ãƒ†ã‚­ã‚¹ãƒˆã®æŠ˜ã‚Šè¿”ã—æ¡æ•°
     :fold_column => 64,
 
-    # ¥Õ¥£¥ë¥¿¤Î»ÈÍÑ
+    # ãƒ•ã‚£ãƒ«ã‚¿ã®ä½¿ç”¨
     :use_filter => false,
     
-    # ÅºÉÕ¥Õ¥¡¥¤¥ë¤ÎÀ©¸Â¥µ¥¤¥º [KBytes]¡£0 °Ê²¼¤Ê¤éÀ©¸Â¤Ê¤·¡£
+    # æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã®åˆ¶é™ã‚µã‚¤ã‚º [KBytes]ã€‚0 ä»¥ä¸‹ãªã‚‰åˆ¶é™ãªã—ã€‚
     :max_attachment_size => 1500,
 
-    # HTML ¥­¥ã¥Ã¥·¥å¤ò»È¤¦¤«¤É¤¦¤«
+    # HTML ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã‚’ä½¿ã†ã‹ã©ã†ã‹
     :use_html_cache => true,
     
-    # *.cgi ¤ÎÌ¾Á°
+    # *.cgi ã®åå‰
     :guest_mode_cgi => 'guest.cgi',
     :user_mode_cgi  => 'user.cgi',
     :admin_mode_cgi => 'admin.cgi',
         
-    # ¥¹¥¿¥¤¥ë¥·¡¼¥È¤Î URL
+    # ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆã® URL
     :css_url => 'kagemai.css',
     
-    # Javascript ¤ÎÍøÍÑ
+    # Javascript ã®åˆ©ç”¨
     :use_javascript => true,
     
-    # ¥á¡¼¥ë¤Ç¤Î¥á¥Ã¥»¡¼¥¸Í×ÁÇ¤ÎÃÍ¤ÎÊÑ¹¹¤Î²ÄÈÝ
+    # ãƒ¡ãƒ¼ãƒ«ã§ã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¦ç´ ã®å€¤ã®å¤‰æ›´ã®å¯å¦
     :allow_mail_body_command => true,
     
-    # ¸¡º÷»þ¥Õ¥©¡¼¥à¤Î METHOD ¤ÎÃÍ
+    # æ¤œç´¢æ™‚ãƒ•ã‚©ãƒ¼ãƒ ã® METHOD ã®å€¤
     :search_form_method => "GET",
 
-    # HTML ¤ÎÀ°·Á¤ò¹Ô¤¦¤«¤É¤¦¤«
+    # HTML ã®æ•´å½¢ã‚’è¡Œã†ã‹ã©ã†ã‹
     :pretty_html => false,
     
     # PostgreSQL
@@ -137,7 +137,7 @@ module Kagemai
     # GDChart for summary
     :enable_gdchart => false,
     :gd_font => '/usr/share/fonts/japanese/TrueType/sazanami-gothic.ttf',
-    :gd_charset  => 'EUC-JP',
+    :gd_charset  => 'UTF-8',
     
     # title for RSS-all
     :rss_feed_title => 'Bug Tracking System Kagemai',

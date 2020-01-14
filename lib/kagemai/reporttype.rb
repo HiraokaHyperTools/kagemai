@@ -1,36 +1,31 @@
 =begin
-  ReportType - レポートが持つ要素やその種別を表します。
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  ReportType - Define report elements.
 =end
 
+require 'stringio'
 require 'xmlscan/scanner'
 require 'kagemai/elementtype'
 require 'kagemai/logger'
 require 'kagemai/sharedfile'
+require 'kagemai/kconv'
 
 module Kagemai
   class ReportType
     include Enumerable
-
+    
     def ReportType.load(filename)
       SharedFile.read_open(filename) do |file|
+        if file.gets =~ /^<\?xml.*encoding=\"(.*)\"\?>/ then
+          unless $1 == 'UTF-8' then
+            str = %Q!<?xml version="1.0" encoding="UTF-8"?>\n!
+            str += KKconv.ckconv(file.read, 'UTF-8', $1)
+            file = StringIO.new(str)
+          else
+            file.rewind
+          end
+        else
+          raise InitializeError, "bad report type fromat" 
+        end
         XMLScanner.new(file).parse()
       end
     end
@@ -46,22 +41,22 @@ module Kagemai
     end
     attr_reader :id, :name
     attr_accessor :description
-
+    
     def use_cookie?() @use_cookie end
-
+    
     def add_element_type(etype)
       @elements.push(etype)
       @use_cookie = @use_cookie || etype.use_cookie?
     end
-
+    
     def set_element_types(etypes)
       @elements = etypes.clone
     end
-
+    
     def delete_element_type(id)
       @elements.delete_if{|etype| etype.id == id && etype.can_delete?}
     end
-
+    
     def each(&block)
       @elements.each(&block)
     end
@@ -83,7 +78,7 @@ module Kagemai
     end
 
     def store(file, charset)
-      file.puts %Q!<?xml version="1.0" encoding="#{charset}"?>!
+      file.puts %Q!<?xml version="1.0" encoding="UTF-8"?>!
       file.puts
       file.puts %Q!<ReportType id="#{@id}" name="#{@name.escape_h}">!
       file.puts '  <description>'
@@ -135,7 +130,8 @@ module Kagemai
           MultiSelectElementType, 
           TextElementType, 
           BooleanElementType, 
-          FileElementType
+          FileElementType,
+          DateElementType
         ]
 
         @element_types = {}

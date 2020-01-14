@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<message date="1974/11/18 00:00:01">
+  <element id="email">fukuoka@daifukuya.com</element>
+  <element id="status">新規</element>
+  <element id="message">hello world!</element>
+  <element id="cookie">true</element>
+</message>

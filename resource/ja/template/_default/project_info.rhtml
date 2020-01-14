@@ -7,74 +7,74 @@
   </tr>
 
   <tr>
-    <th>̾��</th>
+    <th>名前</th>
     <td><%= project.name.escape_h %></td>
   </tr>
 
   <tr>
-    <th>����ʸ</th>
+    <th>説明文</th>
     <td><%= project.description.escape_h %></td>
   </tr>
 
   <tr>
-    <th>�����ԥ��ɥ쥹</th>
+    <th>管理者アドレス</th>
     <td><%= project.admin_address.escape_h %></td>
   </tr>
 
   <tr>
-    <th>����ѥ��ɥ쥹</th>
+    <th>投稿用アドレス</th>
     <td><%= project.post_address.escape_h %></td>
   </tr>
 
   <tr>
-    <th>�����襢�ɥ쥹</th>
+    <th>通知先アドレス</th>
     <td><%= project.notify_addresses.each{|addr| addr.escape_h}.join("<br>\n") %></td>
   </tr>
 
   <tr>
-    <th>�ƥ����Ȥ��ޤ��֤����</th>
+    <th>テキストの折り返し桁数</th>
     <td><%= project.fold_column %></td>
   </tr>
 
   <tr>
-    <th>�Х�ID�η��</th>
+    <th>バグIDの桁数</th>
     <td><%= project.subject_id_figure %></td>
   </tr>
 
   <tr>
-    <th>�ե��륿�λ���</th>
+    <th>フィルタの使用</th>
     <td>
       <%if project.use_filter then%>
-        ͭ��     
+        有効     
       <% else %>
-        ̵��
+        無効
       <% end %>
     </td>
   </tr>
 
   <tr>
-    <th>�������륷���Ȥ�URL</th>
+    <th>スタイルシートのURL</th>
     <td><%= project.css_url %></td>
   </tr>
 
   <tr>
-    <th>��¸����</th>
+    <th>保存形式</th>
     <td style="white-space: nowrap;"><%= project.db_manager_class %></td>
   </tr>
 
   <tr>
-    <th>����</th>
+    <th>言語</th>
     <td><%= project.lang %></td>
   </tr>
 
   <tr>
-    <th>���󥳡��ǥ���</th>
+    <th>エンコーディング</th>
     <td><%= project.charset %></td>
   </tr>
 
   <% if show_report_count then %>
   <tr>
-    <th>��ݡ��ȿ�</th>
+    <th>レポート数</th>
     <td><span class="ignore"><%= project.size() %></span></td>
   </tr>
   <% end %>

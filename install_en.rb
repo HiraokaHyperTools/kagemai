@@ -1,14 +1,11 @@
-#!/usr/bin/ruby -Ke
+#!/usr/bin/ruby -Ku
 =begin
   Kagemai install script (English version).
-
   usage: ruby install_en.rb [previous-install-logfile]
-
-  $Id: install_en.rb 474 2008-03-01 09:38:10Z fukuoka $
 =end
 
 # Installer revision number
-$revision = '$Revision: 474 $'.sub(/^\$Revisio.: (\d.+) \$$/, '\1')
+$revision = '$Revision: 649 $'.sub(/^\$Revisio.: (\d.+) \$$/, '\1')
 
 ### User and group for the directory where data will be saved.
 ### If you are not specifying these values, comment them out.
@@ -251,7 +248,7 @@ end
 
 bin_files.each do |file|
   puts "  #{file}"
-  update_file(file, /^\#!.+?$/m, "#!#{ruby_binary} -Ke")
+  update_file(file, /^\#!.+?$/m, "#!#{ruby_binary} -Ku")
 end
 $stdout.flush
 

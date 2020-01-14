@@ -1,23 +1,5 @@
 =begin
-  AttachmentHandler - 添付ファイルを処理するためのモジュールです  
-
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  AttachmentHandler - handling form attachment file
 =end
 
 require 'kagemai/error'
@@ -26,9 +8,27 @@ require 'kagemai/mime_type'
 
 module Kagemai
   Attachment = Struct.new(:tempfile, :fileinfo)
-
+  
+  class FileElementType
+    def validate(cgi)
+      size = 0
+      tempfile = cgi.get_attachment(@id)
+      if tempfile then
+        size = tempfile.stat.size
+        mime_type = AttachmentHandler.get_mime_type(cgi, @id, tempfile.original_filename)
+      end
+      
+      max_size = Config[:max_attachment_size] * 1024 # KBytes => Bytes
+      
+      return :err_no_mime_type if size != 0 && mime_type.empty?
+      return :err_attachment_size if max_size > 0 && size > max_size
+      
+      true
+    end
+  end
+  
   module AttachmentHandler
-
+    
     def make_attachment(etype_id, load_from_session = true)
       tempfile = @cgi.get_attachment(etype_id)
       if load_from_session && (tempfile.nil? || tempfile.original_filename.empty?) then
@@ -36,7 +36,7 @@ module Kagemai
       end
       
       if !(tempfile.nil? || tempfile.original_filename.empty?) then
-        mime_type = get_mime_type(etype_id, tempfile.original_filename)
+        mime_type = get_mime_type(@cgi, etype_id, tempfile.original_filename)
         info = FileElementType::FileInfo.new2(tempfile, mime_type)
         Attachment.new(tempfile, info)
       else
@@ -61,6 +61,12 @@ module Kagemai
       
       report_type.each do |etype|
         next unless etype.kind_of?(FileElementType)
+        
+        unless etype.validate(@cgi) then
+          @session[etype.id] = nil
+          next
+        end
+        
         attachment = make_attachment(etype.id, false)
         unless attachment then
           @session[etype.id] = nil
@@ -100,29 +106,8 @@ module Kagemai
       Attachment.new(tempfile, info)
     end
     
-    def validate_attachment(etype_id)
-      size = 0
-      tempfile = @cgi.get_attachment(etype_id)
-      if tempfile then
-        size = tempfile.stat.size
-        mime_type = get_mime_type(etype_id, tempfile.original_filename)
-        
-        Logger.debug('AttachmentHander', 
-                     "size = #{tempfile.stat.size}")
-        Logger.debug('AttachmentHander', 
-                     "mime_type = #{mime_type.inspect}")
-      end
-      
-      max_size = Config[:max_attachment_size] * 1024 # KBytes => Bytes
-      
-      return [false, :err_no_mime_type] if size != 0 && mime_type.empty?
-      return [false, :err_attachment_size] if max_size > 0 && size > max_size
-      
-      [true, nil]
-    end
-    
-    def get_mime_type(etype_id, filename)
-      mime_type = @cgi.get_param("#{etype_id}_mime_type", '')
+    def get_mime_type(cgi, etype_id, filename)
+      mime_type = cgi.get_param("#{etype_id}_mime_type", '')
       if mime_type.to_s.empty? || mime_type == 'auto' then
         mime_type = MimeType.new(filename).to_s
       elsif mime_type == 'binary' then
@@ -130,6 +115,8 @@ module Kagemai
       end
       mime_type
     end
+    module_function :get_mime_type
+    
   end
 
 end

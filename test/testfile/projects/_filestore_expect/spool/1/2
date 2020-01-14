@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<message id="2" date="2002-11-21 00:31:35" hide="false">
+  <element id="email">fukuoka@daifukuya.com</element>
+  <element id="title">test 1</element>
+  <element id="status">新規</element>
+  <element id="message">&gt; test その１。&#x000a;&gt; です。&#x000a;&gt; あう。&#x000a;&#x000a;りぷらいっす。</element>
+  <element id="attachment"></element>
+</message>

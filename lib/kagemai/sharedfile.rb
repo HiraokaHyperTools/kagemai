@@ -1,26 +1,6 @@
 =begin
-  SharedFile - ¥×¥í¥»¥¹/¥¹¥ì¥Ã¥É´Ö¤Ç¶¦Í­¤·¤Æ»ÈÍÑ¤¹¤ë
-               ¥Õ¥¡¥¤¥ë¤Î¤¿¤á¤ÎÇÓÂ¾À©¸æ¤òÄó¶¡¤·¤Ş¤¹¡£
-
-  Copyright(C) 2002-2004 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  $Id: sharedfile.rb 245 2008-02-05 15:56:07Z fukuoka $
+  SharedFile - ãƒ—ãƒ­ã‚»ã‚¹/ã‚¹ãƒ¬ãƒƒãƒ‰é–“ã§å…±æœ‰ã—ã¦ä½¿ç”¨ã™ã‚‹
+               ãƒ•ã‚¡ã‚¤ãƒ«ã®ãŸã‚ã®æ’ä»–åˆ¶å¾¡ã‚’æä¾›ã—ã¾ã™ã€‚
 =end
 
 require 'thread'

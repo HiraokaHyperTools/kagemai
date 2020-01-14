@@ -62,7 +62,7 @@
 </p>
 
 <p>
-現在(2008/02/22)のところ実現されている主な機能は以下のとおりです。
+現在(2008/03/16)のところ実現されている主な機能は以下のとおりです。
 </p>
 
 <ul>
@@ -921,11 +921,12 @@ guest.cgi, user.cgi, admin.cgi をコピーします。
   $ cp /var/www/html/kagemai/wallpaper.gif public_html/my_bts
 </pre>
 
-<p>次に、guest.cgi 中の config_file を適切に変更します。</p>
+<p>次に、guest.cgi 中の config_file を適切に変更します。
+また、kagemai_root が影舞をインストールしたディレクトリを指すように修正します。
+</p>
 
 <pre>
-  $ vi guest.cgi
-  $ grep 'config_file' guest.cgi
+  kagemai_root = '/home/fukuoka/kagemai'
   config_file  = '/home/fukuoka/public_html/my_bts/kagemai.conf'
 </pre>
 
@@ -943,9 +944,6 @@ guest.cgi, user.cgi, admin.cgi をコピーします。
 <div class="footer">
   Copyright(C) 2002-2008
   <a href="mailto:fukuoka@daifukuya.com">FUKUOKA Tomoyuki</a>. All Rights Reserved. 
-</div>
-<div class="footer">
-  $Id: guide.html 402 2008-02-22 16:54:41Z fukuoka $
 </div>
 
 </body>

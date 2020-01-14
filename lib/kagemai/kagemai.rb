@@ -1,22 +1,6 @@
 =begin
   kagemai.rb -- KAGEMAI : A Bug Tracking System.
   Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 begin
@@ -32,8 +16,8 @@ require 'kagemai/cgi/action'
 require 'kagemai/error'
 
 module Kagemai
-  CODENAME = 'Haru'
-  VERSION  = '0.8.8'
+  CODENAME = 'bk'
+  VERSION  = '0.9.0'
   URL      = 'http://www.daifukuya.com/kagemai/'
   
   class CGIApplication
@@ -68,7 +52,7 @@ module Kagemai
       Thread.current[:CGIApplication] = self
       CGIApplication.instance()
     end
-    attr_reader :cgi, :mode, :bts
+    attr_reader :cgi, :mode, :bts, :lang
     
     def action()
       name = @cgi.get_param('action', '')
@@ -101,14 +85,13 @@ module Kagemai
       end
     end
     
-    Z_SPACE = "\241\241"
     def cross_search(keyword, case_insensitive = true, 
                      ttype = 'all', projects = [],
                      limit = 50, offset = 0, order = 'report_id')
       results = {}
       total   = 0
       
-      keywords = keyword.split(/[\s#{Z_SPACE}]+/oe)
+      keywords = keyword.split(/[\s]+/oe)
       
       attr_cond = NullSearchCond.new(true)
       @bts.each_project do |project|
@@ -128,6 +111,9 @@ module Kagemai
       
       condition = SearchCondOr.new
       project.report_type.each do |etype|
+        if @mode.name == "mode_guest" && etype.hide_from_guest? then
+          next
+        end
         search_elements[etype.id] = true
         if keywords.size > 1 then
           acond = SearchCondAnd.new

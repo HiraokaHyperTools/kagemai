@@ -1,13 +1,17 @@
-<%# requirements: report, message %>
+<%# requirements: report, message, preview, project %>
 
+<% unless preview %>
 <p>Your new report has been received.<br>
 The content of the submitted report is below:</p>
+<% end %>
 
 <table>
+  <% unless preview %>
   <tr>
     <th>Report ID</th>
     <td><%= report.id %></td>
   </tr>
+  <% end %>
 
   <% message.type.each do |etype| %>
     <% next if etype.report_attr && !etype.allow_guest && Mode::GUEST.current? %>
@@ -18,6 +22,7 @@ The content of the submitted report is below:</p>
   <% end %>
 </table>
 
+<% unless preview %>
 <p><%= report.href('View report details') %></p>
 
 <% if report.error then %>
@@ -25,4 +30,16 @@ The content of the submitted report is below:</p>
 <div class="error">
 There was an error sending notifcation e-mail. (<%= report.error %>)
 </div>
+<% end %>
+
+<% else %>
+<form action="<%= project.url  %>" 
+      method="post" 
+      enctype="multipart/form-data"
+      accept-charset="<%= project.charset %>">
+  <input type="hidden" name="action" value="<%= NewReport.name %>">
+  <input type="hidden" name="project" value="<%= project.id %>">
+  <input type="submit" value="Back" name="submit_back">
+  <input type="submit" value="Submit" name="submit_post">
+</form>
 <% end %>

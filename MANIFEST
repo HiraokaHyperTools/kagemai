@@ -16,7 +16,7 @@ mrtg/en/summary.rhtml
 [bin]
 bin/convert.rb
 bin/mailif.rb
-bin/migrate.rb
+bin/migrate09.rb
 
 [doc]
 doc/guide.html
@@ -79,8 +79,10 @@ lib/kagemai/mssqlstore3.rb
 lib/kagemai/mysqlstore.rb
 lib/kagemai/mysqlstore2.rb
 lib/kagemai/mysqlstore3.rb
+lib/kagemai/mysqlstore4.rb
 lib/kagemai/pgstore.rb
 lib/kagemai/pgstore3.rb
+lib/kagemai/pgstore4.rb
 lib/kagemai/pmutex.rb
 lib/kagemai/project.rb
 lib/kagemai/pstore.rb

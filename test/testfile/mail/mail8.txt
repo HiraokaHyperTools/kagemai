@@ -1,0 +1,9 @@
+To: kagemai-bugs@daifukuya.com
+From: FUKUOKA Tomoyuki <tomoyuki@daifukuya.com>
+Subject: Mail Accept Test 12
+Message-ID: <hoge@mail.daifukuya.com>
+Date: Thu, 07 Jan 2003 23:23:00 +0900
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+
+UTF-8のテストですよ

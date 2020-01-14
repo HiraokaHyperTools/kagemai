@@ -1,23 +1,5 @@
 =begin
   NewReport - add new report to store
-
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'kagemai/cgi/action'
@@ -30,7 +12,7 @@ module Kagemai
     include AttachmentHandler
     include FormHandler
     include CaptchaHandler
-
+    
     def execute()
       init_project(true)
       init_form_handler()
@@ -39,8 +21,10 @@ module Kagemai
         return double_post_error_result()
       end
       
+      restore_values(@project.report_type)
       captcha_auth = check_captcha()
-      unless check_message_form(@project.report_type) && captcha_auth then
+      submit_back = @cgi.get_param('submit_back')
+      unless !submit_back && validate_message_form(@project.report_type) && captcha_auth then
         @cgi.cached_attachments = save_attachments_to_session(project.report_type) 
         
         param = {
@@ -56,22 +40,28 @@ module Kagemai
         init_captcha()
         start_form(NEW_REPORT_FORM)
         body = eval_template('new_form.rhtml', param)
-        action_result = ActionResult.new(MessageBundle[:title_new_report_e], 
-                                         header(), 
-                                         body, 
-                                         footer(), 
-                                         @css_url, 
-                                         @lang,
-                                         @charset)
+        title = submit_back ? MessageBundle[:title_new_report] : MessageBundle[:title_new_report_e]
+        action_result = ActionResult.new(title, header(), body, footer(), @css_url, @lang, @charset)
         return action_result
       end
-            
+      
+      if @cgi.get_param('submit_preview') then
+        @cgi.cached_attachments = save_attachments_to_session(project.report_type) 
+        message = save_values(@project.report_type, @cgi.cached_attachments)
+        skip_captcha()
+        start_form(NEW_REPORT_FORM)
+        param = {:message => message, :preview => true, :project=> @project}
+        body = eval_template('new_report.rhtml', param)
+        title = MessageBundle[:title_new_report_preview]
+        return ActionResult.new(title, header(), body, footer(), @css_url, @lang, @charset)
+      end
+      
       # create first message of new report.
       message = Message.new(@project.report_type)
       attachments = {}
       @project.report_type.each do |etype|
         unless etype.kind_of?(FileElementType)
-          message[etype.id] = @cgi.get_param(etype.id, etype.default)
+          message[etype.id] = @cgi.get_param(etype.id, etype.empty_value)
         else
           attachment = make_attachment(etype.id)
           if attachment then
@@ -85,7 +75,8 @@ module Kagemai
       store_attachments(@project, message, attachments)
       begin
         report = @project.new_report(message)
-        body   = eval_template('new_report.rhtml', {:report => report, :message => message})
+        param = {:report => report, :message => message, :preview => false}
+        body   = eval_template('new_report.rhtml', param)
         title  = MessageBundle[:title_new_report_added]
       rescue SpamError
         title = MessageBundle[:title_spam_error]

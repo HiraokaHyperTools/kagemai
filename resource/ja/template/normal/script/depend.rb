@@ -9,7 +9,7 @@ class DependRenderer
     bugs = value.scan(/\d+/)
 
     if bugs.size == 0 then
-      '¤Ê¤·'
+      'ãªã—'
     else
       bugs.collect {|report_id|
         param = {

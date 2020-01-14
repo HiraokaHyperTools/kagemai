@@ -1,8 +1,8 @@
 <%# requirements: mode, project, etype, options, choices, next_stage %>
 
-<p>ɬ�פǤ���С���������������Ĥ��뤳�Ȥ��Ǥ��ޤ���</p>
-<p>�֥ȥåץڡ����ؤ�ɽ���פϡ��ե�����ɤΡ֥ȥåץڡ����Ǽ��夲��פ�
-    on �ˤʤäƤ��ʤ���и��̤�����ޤ���</p>
+<p>必要であれば、各選択肢に説明をつけることができます。</p>
+<p>「トップページへの表示」は、フィールドの「トップページで取り上げる」が
+    on になっていなければ効果を持ちません。</p>
 
 <form action="<%= mode.url %>" method="POST">
 
@@ -11,21 +11,21 @@
 
   <table>
     <tr>
-      <th>û������</th>
+      <th>短い説明</th>
       <td><input type="text" 
                  name="<%= "c#{i}_sdesc" %>" size="20" value="<%= choice.sdesc %>"></td>
     </tr>
     <tr>
-      <th>Ĺ������</th>
+      <th>長い説明</th>
       <td>
         <textarea name=<%= "c#{i}_description" %> cols="40" rows="4"><%= choice.description %></textarea>
       </td>
     </tr>
 
     <tr>
-      <th>�ȥåץڡ����ؤ�ɽ��</th>
+      <th>トップページへの表示</th>
       <td><input type="checkbox" name="<%= "c#{i}_show_topics" %>" 
-                 <%= choice.show_topics ? 'checked="checked"' : '' %>>�ȥåץڡ�����ɽ������</td>
+                 <%= choice.show_topics ? 'checked="checked"' : '' %>>トップページに表示する</td>
     </tr>
   </table>
 <% end %>
@@ -43,8 +43,8 @@
     <input type="hidden" name="config_choice" value="yes">
 
     <% if project.lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="��">
+    <input type="hidden" name="jp_enc_test" value="日">
     <% end %>
-    <input type="submit" value="����������">
+    <input type="submit" value="選択肢を設定">
   </p>
 </form>

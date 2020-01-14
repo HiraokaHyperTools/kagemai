@@ -7,20 +7,20 @@
   # id to name map
   items = {
     'project_id'        => 'ID',
-    'project_name'      => '̾��',
-    'description'       => '����ʸ',
-    'admin_address'     => '�����ԥ��ɥ쥹',
-    'post_address'      => '����ѥ��ɥ쥹',
-    'notify_addresses'  => '�����襢�ɥ쥹',
-    'fold_column'       => '�ƥ����Ȥ��ޤ��֤����',
-    'subject_id_figure' => '�Х�ID�η��',
-    'store'             => '��¸����',
-    'template'          => '�ƥ�ץ졼��',
+    'project_name'      => '名前',
+    'description'       => '説明文',
+    'admin_address'     => '管理者アドレス',
+    'post_address'      => '投稿用アドレス',
+    'notify_addresses'  => '通知先アドレス',
+    'fold_column'       => 'テキストの折り返し桁数',
+    'subject_id_figure' => 'バグIDの桁数',
+    'store'             => '保存形式',
+    'template'          => 'テンプレート',
   }
 %>
 
 <% if error then %>
-  <p>�ʲ��ι��ܤǥ��顼��ȯ�����ޤ����������ͤ������Ƥ���������</p>
+  <p>以下の項目でエラーが発生しました。入力値を修正してください。</p>
 
   <ul>
   <% errors.each do |key, value| %>
@@ -41,96 +41,96 @@
       <td colspan="2">
         <input name="project_id" 
                type="text" value="<%= values.get_param('project_id').to_s.escape_h %>"><br>
-        <span>�ץ��������Ȥ��̤���ID��Ĥ��Ƥ�������(�ѿ����Τߡ��ѻ��Ͼ�ʸ�����Ѵ�����ޤ�)��</span>
+        <span>プロジェクトを識別するIDをつけてください(英数字のみ・英字は小文字に変換されます)。</span>
       </td>
     </tr>
     <tr>
-      <th <%= errors.tag_class('project_name') %>>̾��*</th>
+      <th <%= errors.tag_class('project_name') %>>名前*</th>
       <td colspan="2">
         <input name="project_name" 
                type="text" value="<%= values.get_param('project_name').to_s.escape_h %>"> <br>
-        <span>�ץ��������Ȥ�ɽ���Ѥ�̾����Ĥ��Ƥ���������</span>
+        <span>プロジェクトの表示用の名前をつけてください。</span>
       </td>
     </tr>
     <tr>
-      <th <%= errors.tag_class('description') %>>����ʸ*</th>
+      <th <%= errors.tag_class('description') %>>説明文*</th>
       <td colspan="2">
         <input name="description" type="text" size="50" 
                value="<%= values.get_param('description').to_s.escape_h %>"> <br>
-        <span>�ץ��������Ȱ����Ǥ�û�����������Ϥ��Ƥ���������</span>
+        <span>プロジェクト一覧での短い説明を入力してください。</span>
       </td>
     </tr>
     <tr>
-      <th <%= errors.tag_class('admin_address') %>>�����ԥ��ɥ쥹</th>
+      <th <%= errors.tag_class('admin_address') %>>管理者アドレス</th>
       <td colspan="2">
         <input name="admin_address" 
                type="text" size="30" value="<%= values.get_param('admin_address').to_s.escape_h %>"> <br>
-        <span>�᡼��ط��ε�ǽ�����Ѥ�����ˤϡ������ԤΥ᡼�륢�ɥ쥹�����Ϥ��Ƥ���������</span>
+        <span>メール関係の機能を利用する場合には、管理者のメールアドレスを入力してください。</span>
       </td>
     </tr>
     <tr>
-      <th <%= errors.tag_class('post_address') %>>����ѥ��ɥ쥹</th>
+      <th <%= errors.tag_class('post_address') %>>投稿用アドレス</th>
       <td colspan="2">
         <input name="post_address" type="text" 
                size="30"  value="<%= values.get_param('post_address').to_s.escape_h %>"> <br>
-        <span>�Х�����᡼�����Ƥ��뤿��Υ᡼�륢�ɥ쥹�����Ϥ��Ƥ���������</span>
+        <span>バグ報告をメールで投稿するためのメールアドレスを入力してください。</span>
       </td>
     </tr>
     <tr>
-      <th <%= errors.tag_class('notify_addresses') %>>�����襢�ɥ쥹</th>
+      <th <%= errors.tag_class('notify_addresses') %>>通知先アドレス</th>
       <td colspan="2">
         <textarea name="notify_addresses" 
 	          cols="60" rows="5"><%= values.get_param('notify_addresses').to_s.escape_h %></textarea><br>
-        <span>�Х����ο�������Ƥ���֤��ѹ���᡼������Τ�������硢
-              ������Υ��ɥ쥹�򥫥�ޤ����ԤǶ��ڤä�����Ƥ���������</span>
+        <span>バグ報告の新規の投稿や状態の変更をメールで通知したい場合、
+              通知先のアドレスをカンマか改行で区切って入れてください。</span>
       </td>
     </tr>
 
     <tr>
-      <th <%= errors.tag_class('fold_column') %>>�ƥ����Ȥ��ޤ��֤����</th>
+      <th <%= errors.tag_class('fold_column') %>>テキストの折り返し桁数</th>
       <td colspan="2">
         <input name="fold_column" 
                type="text" size="5" value="<%= fold_column %>"> <br>
-        <span>Ĺ���ƥ����Ȥ��ޤ��֤�����Ǥ������η���򤳤���ƥ����Ȥ��ޤ��֤���ޤ���</span>
+        <span>長いテキストを折り返す桁数です。この桁数をこえるテキストは折り返されます。</span>
       </td>
     </tr>
 
     <tr>
-      <th <%= errors.tag_class('subject_id_figure') %>>�Х�ID�η��</th>
+      <th <%= errors.tag_class('subject_id_figure') %>>バグIDの桁数</th>
       <td colspan="2">
         <input name="subject_id_figure" 
                type="text" size="5" value="<%= subject_id_figure %>"> <br>
-        <span>���Υ᡼��Υ��֥������ȤˤĤ��Х�ID�η������ꤷ�Ƥ���������
-              �����4�ʤ顢���֥������Ȥ� [ProjectID:0000] �η����ǥХ�ID���Ĥ��ޤ���</span>
+        <span>通知メールのサブジェクトにつくバグIDの桁数を指定してください。
+              桁数が4なら、サブジェクトに [ProjectID:0000] の形式でバグIDがつきます。</span>
       </td>
     </tr>
 
     <tr>
-      <th <%= errors.tag_class('use_filter') %>>��ƥե��륿�λ���</th>
+      <th <%= errors.tag_class('use_filter') %>>投稿フィルタの使用</th>
       <td colspan="2">
         <select name="use_filter">
           <% if values.get_param('use_filter') then %>
-            <option value="true" selected>ͭ��</option>
-            <option value="false">̵��</option>
+            <option value="true" selected>有効</option>
+            <option value="false">無効</option>
           <% else %>
-            <option value="true">ͭ��</option>
-            <option value="false" selected>̵��</option>
+            <option value="true">有効</option>
+            <option value="false" selected>無効</option>
           <% end %>
         </select><br>
-        <span>��Ƥ����Ƥ�ե��륿�ˤ�äƥ����å����뤫�ɤ������ꤷ�ޤ���</span>
+        <span>投稿の内容をフィルタによってチェックするかどうか指定します。</span>
       </td>
     </tr>
 
     <tr>
-      <th>�������륷���Ȥ�URL</th>
+      <th>スタイルシートのURL</th>
       <td colspan="2">
         <input name="css_url" 
                type="text" size="30" value="<%= css_url %>"> <br>
-        <span>�������륷���Ȥ� URL ����ꤷ�Ƥ���������</span>
+        <span>スタイルシートの URL を指定してください。</span>
       </td>
     </tr>
 
-    <% th_str = %Q!<th rowspan="#{bts.count_store()}">��¸����*</th>! %>
+    <% th_str = %Q!<th rowspan="#{bts.count_store()}">保存形式*</th>! %>
     <% bts.each_store() do |s| %>
     <%  next if s.obsolete? %>
     <tr>
@@ -147,7 +147,7 @@
     <%   th_str = '' %>
     <% end %>
 
-    <% th_str = %Q!<th rowspan="#{bts.count_template(@lang)}">�ƥ�ץ졼��*</th>! %>
+    <% th_str = %Q!<th rowspan="#{bts.count_template(@lang)}">テンプレート*</th>! %>
     <% bts.each_template(@lang) do |t| %>
     <tr>
         <%= th_str %>
@@ -164,30 +164,30 @@
     <% end %>
 
     <tr>
-      <th>�ȥåץڡ���</th>
+      <th>トップページ</th>
       <td colspan="2">
         <input type="checkbox" name="top_page_count" 
-               <%= top_page_options['count'] ? 'checked="checked"' : '' %>>�Х���<br>
+               <%= top_page_options['count'] ? 'checked="checked"' : '' %>>バグ数<br>
         <input type="checkbox" name="top_page_list"
-               <%= top_page_options['list'] ? 'checked="checked"' : '' %>>�Х��Υꥹ��<br>
+               <%= top_page_options['list'] ? 'checked="checked"' : '' %>>バグのリスト<br>
         <input type="checkbox" name="top_page_id_form"
-               <%= top_page_options['id_form'] ? 'checked="checked"' : '' %>>�Х�ID����ե�����<br>
+               <%= top_page_options['id_form'] ? 'checked="checked"' : '' %>>バグID指定フォーム<br>
         <input type="checkbox" name="top_page_keyword_search_form"
-               <%= top_page_options['keyword_search_form'] ? 'checked="checked"' : '' %>>�ʰ׸����ե�����<br>
+               <%= top_page_options['keyword_search_form'] ? 'checked="checked"' : '' %>>簡易検索フォーム<br>
         <input type="checkbox" name="top_page_search_form"
-               <%= top_page_options['search_form'] ? 'checked="checked"' : '' %>>�����ե�����<br>
+               <%= top_page_options['search_form'] ? 'checked="checked"' : '' %>>検索フォーム<br>
       </td>
     </tr>
   </table>
 
-  <p>* ���Ĥ������ܤ�ɬ�ܹ��ܤǤ���</p>
+  <p>* がついた項目は必須項目です。</p>
 
   <div>
     <input type="hidden" name="action" value="create_project">
     <input type="hidden" name="s" value="1">
     <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="��">
+    <input type="hidden" name="jp_enc_test" value="日">
     <% end %>
-    <input type="submit" value="�ץ��������Ȥ����">
+    <input type="submit" value="プロジェクトを作成">
   </div>
 </form>

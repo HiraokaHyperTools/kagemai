@@ -1,23 +1,5 @@
 =begin
   searchcond.rb - represent search conditions
-
-  Copyright(C) 2002-2005 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'kagemai/message_bundle'
@@ -76,7 +58,7 @@ module Kagemai
         SearchRegexp.new(@eid, pattern).to_sql(sql_op, &col_name)
       end
     end
-
+    
     def to_sql3(sql_op, &proc)
       unless @case_insensitive then
         col, quoted = proc.call(@eid, '%' + @word + '%')
@@ -87,8 +69,16 @@ module Kagemai
       end
     end
     
-    Zenkaku_Alpha = '£Á£Â£Ã£Ä£Å£Æ£Ç£È£É£Ê£Ë£Ì£Í£Î£Ï£Ğ£Ñ£Ò£Ó£Ô£Õ£Ö£×£Ø£Ù£Ú' 
-    Zenkaku_alpha = '£á£â£ã£ä£å£æ£ç£è£é£ê£ë£ì£í£î£ï£ğ£ñ£ò£ó£ô£õ£ö£÷£ø£ù£ú'
+    def case_insensitive_re_pattern(str)
+      if Config[:language] == 'ja' then
+        case_insensitive_re_pattern_ja(str)
+      else
+        Regexp.new(str, Regexp::IGNORECASE)
+      end
+    end
+    
+    Zenkaku_Alpha = 'ï¼¡ï¼¢ï¼£ï¼¤ï¼¥ï¼¦ï¼§ï¼¨ï¼©ï¼ªï¼«ï¼¬ï¼­ï¼®ï¼¯ï¼°ï¼±ï¼²ï¼³ï¼´ï¼µï¼¶ï¼·ï¼¸ï¼¹ï¼º' 
+    Zenkaku_alpha = 'ï½ï½‚ï½ƒï½„ï½…ï½†ï½‡ï½ˆï½‰ï½Šï½‹ï½Œï½ï½ï½ï½ï½‘ï½’ï½“ï½”ï½•ï½–ï½—ï½˜ï½™ï½š'
     
     Hankaku_Alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 
     Hankaku_alpha = 'abcdefghijklmnopqrstuvwxyz'
@@ -96,10 +86,10 @@ module Kagemai
     Zenkaku_ach = Zenkaku_Alpha + Zenkaku_alpha
     Hankaku_ach = Hankaku_Alpha + Hankaku_alpha
     
-    Zenkaku_num = '£°£±£²£³£´£µ£¶£·£¸£¹'
+    Zenkaku_num = 'ï¼ï¼‘ï¼’ï¼“ï¼”ï¼•ï¼–ï¼—ï¼˜ï¼™'
     Hankaku_num = '0123456789'
     
-    Zenkaku_sym = '¡ª¡÷¡ô¡ğ¡ó¡°¡õ¡ö¡Ê¡Ë¡İ¡á¡Î¡Ï¡ï¡¨¡Ç¡¢¡£¡¿¡²¡Ü¡Ğ¡Ñ¡Ã¡§¡É¡ã¡ä¡©¡®¡Á'
+    Zenkaku_sym = 'ï¼ï¼ ï¼ƒï¼„ï¼…ï¼¾ï¼†ï¼Šï¼ˆï¼‰âˆ’ï¼ï¼»ï¼½ï¿¥ï¼›â€™ã€ã€‚ï¼ï¼¿ï¼‹ï½›ï½ï½œï¼šâ€ï¼œï¼ï¼Ÿï½€ã€œ'
     Hankaku_sym = '!@#$%^&*()-=[]\\;\',./_+{}|:"<>?`~'
     
     Zenkaku = Zenkaku_num + Zenkaku_sym
@@ -108,30 +98,29 @@ module Kagemai
     def case_insensitive_re_pattern_alpha(alphabet_char)
       up       = alphabet_char.upcase
       down     = alphabet_char.downcase
-      zen_up   = Zenkaku_ach[Hankaku_ach.index(up) * 2, 2]
-      zen_down = Zenkaku_ach[Hankaku_ach.index(down) * 2, 2]
+      zen_up   = Zenkaku_ach[Hankaku_ach.index(up) * 3, 3]
+      zen_down = Zenkaku_ach[Hankaku_ach.index(down) * 3, 3]
       "[#{up}#{down}#{zen_up}#{zen_down}]"
     end
     
-    def case_insensitive_re_pattern(str)
-      $KCODE = 'EUC-JP'
+    def case_insensitive_re_pattern_ja(str)
       pattern = ''
       
       str.scan(/./) {|ch|
         case ch          
         when /[A-Za-z]/ then
           pattern += case_insensitive_re_pattern_alpha(ch)
-        when /[£Á-£Ú£á-£ú]/ then
-          i = Zenkaku_ach.index(ch) / 2
+        when /[ï¼¡-ï¼ºï½-ï½š]/ then
+          i = Zenkaku_ach.index(ch) / 3
           han = Hankaku_ach[i, 1]
           pattern += case_insensitive_re_pattern_alpha(han)
         when /[#{Regexp.quote(Hankaku)}]/ then
-          i = Hankaku.index(ch) * 2
-          zen = Zenkaku[i, 2]
+          i = Hankaku.index(ch) * 3
+          zen = Zenkaku[i, 3]
           han = Regexp.quote(ch)
           pattern += "[#{han}#{zen}]"
         when /[#{Zenkaku}]/ then
-          i = Zenkaku.index(ch) / 2
+          i = Zenkaku.index(ch) / 3
           han = Regexp.quote(Hankaku[i, 1])
           pattern += "[#{han}#{ch}]"
         else
@@ -448,7 +437,7 @@ module Kagemai
     end
 
     def to_sql3(sql_op, &proc)
-      "(not #{@condition.to_sql(sql_op, &proc)})"
+      "(not #{@condition.to_sql3(sql_op, &proc)})"
     end
 
     def to_s(report_type)

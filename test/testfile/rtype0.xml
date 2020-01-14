@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="EUC-JP"?>
+
+<!-- name が省略されると name == id とする？ -->
+<ReportType>
+  <string id="email" name="送信者">
+    送信者のメールアドレスを入力してください。
+  </string>
+
+  <select id="status" name="状況" default="新規">
+    <choice id="新規" />
+    <choice id="未解決" />
+    <choice id="解決済み" />
+    <choice id="完了" />
+  </select>
+
+  <text id="message" name="内容">
+    簡潔・明瞭にどうぞ。余分な引用や挨拶はいりません。
+  </text>
+
+  <boolean id="cookie" name="メールアドレスの保存" default="true">
+    クッキーを使用してメールアドレスを保存する。
+  </boolean>
+</ReportType>

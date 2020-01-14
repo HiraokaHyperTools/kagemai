@@ -1,16 +1,16 @@
-## ÆÃÄê¤Î¥Õ¥£¡¼¥ë¥É¤ÎÃÍ¤ò¾¡¼ê¤ËÊÑ¹¹¤¹¤ë¥µ¥ó¥×¥ë
+## ç‰¹å®šã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®å€¤ã‚’å‹æ‰‹ã«å¤‰æ›´ã™ã‚‹ã‚µãƒ³ãƒ—ãƒ«
 
-## ¾õÂÖ¥Õ¥£¡¼¥ë¥É¤ÎÈ¾¼«Æ°ÀßÄê¡£
+## çŠ¶æ…‹ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®åŠè‡ªå‹•è¨­å®šã€‚
 
 =begin
 
 @project.add_add_message_hook {|report, message|
-  if message['assigned'] != 'Ì¤Äê' && message['status'] == '¿·µ¬' then
-    message['status'] = '³äÅöºÑ¤ß'
+  if message['assigned'] != 'æœªå®š' && message['status'] == 'æ–°è¦' then
+    message['status'] = 'å‰²å½“æ¸ˆã¿'
   end
 
-  if message['resolution'] != 'Ì¤½èÍı' && message['status'] != '´°Î»' then
-    message['status'] = '³ÎÇ§ÂÔ¤Á'
+  if message['resolution'] != 'æœªå‡¦ç†' && message['status'] != 'å®Œäº†' then
+    message['status'] = 'ç¢ºèªå¾…ã¡'
   end
 }
 

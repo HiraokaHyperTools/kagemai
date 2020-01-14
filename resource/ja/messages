@@ -3,204 +3,208 @@
 ###
 
 ### Navi
-navi_home = ¥Û¡¼¥à
+navi_home = ãƒ›ãƒ¼ãƒ 
 
 ### Action
-action_projects      = ¥×¥í¥¸¥§¥¯¥È°ìÍ÷
-action_top           = ¥È¥Ã¥×
-action_new_report    = ¿·µ¬¥ì¥İ¡¼¥È
-action_search_report = ¸¡º÷
-action_summary       = Åı·×
-action_admin         = ´ÉÍı
-action_split_report  = ¥ì¥İ¡¼¥È¤ÎÊ¬³ä
-action_csearch       = Á´ÂÎ¸¡º÷
-action_rssall        = RSS(Á´¥×¥í¥¸¥§¥¯¥È)
+action_projects      = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§
+action_top           = ãƒˆãƒƒãƒ—
+action_new_report    = æ–°è¦ãƒ¬ãƒãƒ¼ãƒˆ
+action_search_report = æ¤œç´¢
+action_summary       = çµ±è¨ˆ
+action_admin         = ç®¡ç†
+action_split_report  = ãƒ¬ãƒãƒ¼ãƒˆã®åˆ†å‰²
+action_csearch       = å…¨ä½“æ¤œç´¢
+action_rssall        = RSS(å…¨ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ)
 
 ### Mode
-mode_guest = ¥í¥°¥¢¥¦¥È
-mode_user  = ¥í¥°¥¤¥ó
-mode_admin = ´ÉÍı¼Ô
+mode_guest = ãƒ­ã‚°ã‚¢ã‚¦ãƒˆ
+mode_user  = ãƒ­ã‚°ã‚¤ãƒ³
+mode_admin = ç®¡ç†è€…
 
 ### Page Titles
-title_projects = ¥×¥í¥¸¥§¥¯¥È°ìÍ÷
+title_projects = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§
 title_top      = %s
 
-title_admin = ±ÆÉñ¤Î´ÉÍı
+title_admin = å½±èˆã®ç®¡ç†
 
-title_new_report = ¥Ğ¥°Êó¹ğ¤Î¿·µ¬ºîÀ®
-title_new_report_e = ¥Ğ¥°Êó¹ğ¤Î¿·µ¬ºîÀ®(¥¨¥é¡¼)
-title_new_report_added = ¿·µ¬¥Ğ¥°Êó¹ğÁ÷¿®´°Î»
+title_new_report = ãƒã‚°å ±å‘Šã®æ–°è¦ä½œæˆ
+title_new_report_e = ãƒã‚°å ±å‘Šã®æ–°è¦ä½œæˆ(ã‚¨ãƒ©ãƒ¼)
+title_new_report_added = æ–°è¦ãƒã‚°å ±å‘Šé€ä¿¡å®Œäº†
+title_new_report_preview = æ–°è¦ãƒã‚°å ±å‘Š
 
-title_add_message_e = ¥á¥Ã¥»¡¼¥¸Åê¹Æ(¥Ç¡¼¥¿¥¨¥é¡¼)
-title_add_message   = ¿·µ¬¥á¥Ã¥»¡¼¥¸Á÷¿®´°Î»
+title_add_message_e = ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸æŠ•ç¨¿(ãƒ‡ãƒ¼ã‚¿ã‚¨ãƒ©ãƒ¼)
+title_add_message   = æ–°è¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸é€ä¿¡å®Œäº†
+title_add_message_preview = æ–°è¦ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸
+
+title_search_form = ãƒã‚°ã®æ¤œç´¢
+title_search_result = æ¤œç´¢çµæœ
+
+title_summary = çµ±è¨ˆ
+
+title_config_env = å…¨ä½“ã®è¨­å®š
+
+title_config_choice = é¸æŠè‚¢ã®ç·¨é›†
+title_field_add     = %sãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®è¿½åŠ 
+title_field_edit    = %sãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ç·¨é›†
+title_field_select  = ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º
+title_field_main    = ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã®ã‚«ã‚¹ã‚¿ãƒã‚¤ã‚º
+title_config_choice = é¸æŠè‚¢ã®ç·¨é›†
+
+title_config_project_select = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®è¨­å®šå¤‰æ›´
+title_config_project        = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®è¨­å®šå¤‰æ›´ (%s)
+title_config_project_done   = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®è¨­å®šå¤‰æ›´çµ‚äº†(%s)
+
+title_create_project      = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆ
+title_create_project_done = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ä½œæˆçµ‚äº†
+
+title_delete_project = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤
+title_delete_project_confirm = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆå‰Šé™¤ã®ç¢ºèª
+title_delete_project_delete = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤å®Œäº†
+
+title_split_done = ãƒ¬ãƒãƒ¼ãƒˆã®åˆ†å‰²çµ‚äº†
+
+title_csearch_form   = å…¨ä½“æ¤œç´¢
+title_csearch_result = æ¤œç´¢çµæœ
+title_spam_error = æŠ•ç¨¿å¤±æ•—
+title_post_error = æŠ•ç¨¿å¤±æ•—
+
+### æ¤œç´¢é–¢é€£
+
+search_cond_include = %s ã« %s ã‚’å«ã‚€
+search_cond_equal   = %s ãŒ %s ã«ç­‰ã—ã„
+
+search_cond_case_insensitive = å¤§æ–‡å­—å°æ–‡å­—ã‚’åŒºåˆ¥ã—ãªã„
+
+search_select_any = ã™ã¹ã¦
+
+search_keyword_include_all     = ã™ã¹ã¦ã®èªã‚’å«ã‚€
+search_keyword_include_any     = ã„ãšã‚Œã‹ã®èªã‚’å«ã‚€
+search_keyword_not_include_all = ã™ã¹ã¦ã®èªã‚’å«ã¾ãªã„
+search_keyword_not_include_any = ã„ãšã‚Œã‹ã®èªã‚’å«ã¾ãªã„
+search_keyword_regexp          = æ­£è¦è¡¨ç¾
+
+search_multi_equal       = å®Œå…¨ã«ä¸€è‡´ã™ã‚‹
+search_multi_include_all = ã™ã¹ã¦ã®é¸æŠè‚¢ã‚’å«ã‚€
+search_multi_include_any = ã„ãšã‚Œã‹ã®é¸æŠè‚¢ã‚’å«ã‚€
 
 
-title_search_form = ¥Ğ¥°¤Î¸¡º÷
-title_search_result = ¸¡º÷·ë²Ì
+# æ¤œç´¢æœŸé–“
+search_period_all        = ã™ã¹ã¦ã®æœŸé–“
+search_period_last_year  = 1å¹´ä»¥å†…
+search_period_last_month = 1ãƒ¶æœˆä»¥å†…
+search_period_last_week  = 1é€±é–“ä»¥å†…
+search_period_last_day   = 24æ™‚é–“ä»¥å†…
+search_period_other      = æŒ‡å®šã—ãŸæœŸé–“
 
-title_summary = Åı·×
+### ã‚µãƒãƒªé–¢ä¿‚
 
-title_config_env = Á´ÂÎ¤ÎÀßÄê
-
-title_config_choice = ÁªÂò»è¤ÎÊÔ½¸
-title_field_add     = %s¥Õ¥£¡¼¥ë¥É¤ÎÄÉ²Ã
-title_field_edit    = %s¥Õ¥£¡¼¥ë¥É¤ÎÊÔ½¸
-title_field_select  = ¥Õ¥£¡¼¥ë¥É¤Î¥«¥¹¥¿¥Ş¥¤¥º
-title_field_main    = ¥Õ¥£¡¼¥ë¥É¤Î¥«¥¹¥¿¥Ş¥¤¥º
-title_config_choice = ÁªÂò»è¤ÎÊÔ½¸
-
-title_config_project_select = ¥×¥í¥¸¥§¥¯¥È¤ÎÀßÄêÊÑ¹¹
-title_config_project        = ¥×¥í¥¸¥§¥¯¥È¤ÎÀßÄêÊÑ¹¹ (%s)
-title_config_project_done   = ¥×¥í¥¸¥§¥¯¥È¤ÎÀßÄêÊÑ¹¹½ªÎ»(%s)
-
-title_create_project      = ¥×¥í¥¸¥§¥¯¥È¤ÎºîÀ®
-title_create_project_done = ¥×¥í¥¸¥§¥¯¥È¤ÎºîÀ®½ªÎ»
-
-title_delete_project = ¥×¥í¥¸¥§¥¯¥È¤Îºï½ü
-title_delete_project_confirm = ¥×¥í¥¸¥§¥¯¥Èºï½ü¤Î³ÎÇ§
-title_delete_project_delete = ¥×¥í¥¸¥§¥¯¥È¤Îºï½ü´°Î»
-
-title_split_done = ¥ì¥İ¡¼¥È¤ÎÊ¬³ä½ªÎ»
-
-title_csearch_form   = Á´ÂÎ¸¡º÷
-title_csearch_result = ¸¡º÷·ë²Ì
-title_spam_error = Åê¹Æ¼ºÇÔ
-title_post_error = Åê¹Æ¼ºÇÔ
-
-### ¸¡º÷´ØÏ¢
-
-search_cond_include = %s ¤Ë %s ¤ò´Ş¤à
-search_cond_equal   = %s ¤¬ %s ¤ËÅù¤·¤¤
-
-search_cond_case_insensitive = ÂçÊ¸»ú¾®Ê¸»ú¤ò¶èÊÌ¤·¤Ê¤¤
-
-search_select_any = ¤¹¤Ù¤Æ
-
-search_keyword_include_all     = ¤¹¤Ù¤Æ¤Î¸ì¤ò´Ş¤à
-search_keyword_include_any     = ¤¤¤º¤ì¤«¤Î¸ì¤ò´Ş¤à
-search_keyword_not_include_all = ¤¹¤Ù¤Æ¤Î¸ì¤ò´Ş¤Ş¤Ê¤¤
-search_keyword_not_include_any = ¤¤¤º¤ì¤«¤Î¸ì¤ò´Ş¤Ş¤Ê¤¤
-search_keyword_regexp          = Àµµ¬É½¸½
-
-search_multi_equal       = ´°Á´¤Ë°ìÃ×¤¹¤ë
-search_multi_include_all = ¤¹¤Ù¤Æ¤ÎÁªÂò»è¤ò´Ş¤à
-search_multi_include_any = ¤¤¤º¤ì¤«¤ÎÁªÂò»è¤ò´Ş¤à
-
-
-# ¸¡º÷´ü´Ö
-search_period_all        = ¤¹¤Ù¤Æ¤Î´ü´Ö
-search_period_last_year  = 1Ç¯°ÊÆâ
-search_period_last_month = 1¥ö·î°ÊÆâ
-search_period_last_week  = 1½µ´Ö°ÊÆâ
-search_period_last_day   = 24»ş´Ö°ÊÆâ
-search_period_other      = »ØÄê¤·¤¿´ü´Ö
-
-### ¥µ¥Ş¥ê´Ø·¸
-
-summry_legend_new        = ¿·µ¬
-summry_legend_reply      = ¥ê¥×¥é¥¤
-summry_legend_close      = ½ªÎ»
-summry_legend_cumm_open  = ÎßÀÑÌ¤½ªÎ»
-summry_legend_cumm_close = ÎßÀÑ½ªÎ»
-summry_legend_total      = ¹ç·×
+summry_legend_new        = æ–°è¦
+summry_legend_reply      = ãƒªãƒ—ãƒ©ã‚¤
+summry_legend_close      = çµ‚äº†
+summry_legend_cumm_open  = ç´¯ç©æœªçµ‚äº†
+summry_legend_cumm_close = ç´¯ç©çµ‚äº†
+summry_legend_total      = åˆè¨ˆ
 
 ### Form Strings
-StringElementType_opt_size = ¥µ¥¤¥º
-TextElementType_opt_cols  = ²£Éı
-TextElementType_opt_rows  = ¹Ô¿ô
-TextElementType_opt_quote = ¥ê¥×¥é¥¤»ş¤ËÁ°²ó¤ÎÆâÍÆ¤ò°úÍÑ¤¹¤ë
-TextElementType_opt_quote_mark = °úÍÑ»ş¤Ë°úÍÑµ­¹æ¤ò¤Ä¤±¤ë
+StringElementType_opt_size = ã‚µã‚¤ã‚º
+TextElementType_opt_cols  = æ¨ªå¹…
+TextElementType_opt_rows  = è¡Œæ•°
+TextElementType_opt_quote = ãƒªãƒ—ãƒ©ã‚¤æ™‚ã«å‰å›ã®å†…å®¹ã‚’å¼•ç”¨ã™ã‚‹
+TextElementType_opt_quote_mark = å¼•ç”¨æ™‚ã«å¼•ç”¨è¨˜å·ã‚’ã¤ã‘ã‚‹
 
-ElementType_opt_use_cache        = ÃÍ¤ò¥­¥ã¥Ã¥·¥å¤¹¤ë
-ElementType_opt_use_cookie       = ¥¯¥Ã¥­¡¼¤ÇÃÍ¤òÊİÂ¸¤¹¤ë
-ElementType_opt_email_check      = ¥á¡¼¥ë¥¢¥É¥ì¥¹¥Á¥§¥Ã¥¯¤ò¹Ô¤¦
-ElementType_opt_report_attr      = ¥ì¥İ¡¼¥È¤ÎÂ°À­¤È¤·¤Æ°·¤¦
-ElementType_opt_allow_guest      = ¥²¥¹¥È¤Ë¤è¤ëÊÑ¹¹¤òµö²Ä¤¹¤ë
-ElementType_opt_allow_user       = ¥æ¡¼¥¶¤Ë¤è¤ëÊÑ¹¹¤òµö²Ä¤¹¤ë
-ElementType_opt_list_item        = ¥ì¥İ¡¼¥È¤Î¥¤¥ó¥Ç¥Ã¥¯¥¹¹àÌÜ¤È¤·¤ÆÉ½¼¨¤¹¤ë
-ElementType_opt_show_header      = ÍúÎò¤Î¥Ø¥Ã¥À¤ËÉ½¼¨¤¹¤ë
-ElementType_opt_show_header_line = ÍúÎò¤Î¥Ø¥Ã¥À¤Ë°ì¹Ô¤ÇÉ½¼¨¤¹¤ë
-ElementType_opt_hide_from_guest  = ¥²¥¹¥È¤Ë¤Ï¸«¤»¤Ê¤¤
+ElementType_opt_use_cache        = å€¤ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã™ã‚‹
+ElementType_opt_use_cookie       = ã‚¯ãƒƒã‚­ãƒ¼ã§å€¤ã‚’ä¿å­˜ã™ã‚‹
+ElementType_opt_email_check      = ãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒã‚§ãƒƒã‚¯ã‚’è¡Œã†
+ElementType_opt_report_attr      = ãƒ¬ãƒãƒ¼ãƒˆã®å±æ€§ã¨ã—ã¦æ‰±ã†
+ElementType_opt_allow_guest      = ã‚²ã‚¹ãƒˆã«ã‚ˆã‚‹å¤‰æ›´ã‚’è¨±å¯ã™ã‚‹
+ElementType_opt_allow_user       = ãƒ¦ãƒ¼ã‚¶ã«ã‚ˆã‚‹å¤‰æ›´ã‚’è¨±å¯ã™ã‚‹
+ElementType_opt_list_item        = ãƒ¬ãƒãƒ¼ãƒˆã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹é …ç›®ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹
+ElementType_opt_show_header      = å±¥æ­´ã®ãƒ˜ãƒƒãƒ€ã«è¡¨ç¤ºã™ã‚‹
+ElementType_opt_show_header_line = å±¥æ­´ã®ãƒ˜ãƒƒãƒ€ã«ä¸€è¡Œã§è¡¨ç¤ºã™ã‚‹
+ElementType_opt_hide_from_guest  = ã‚²ã‚¹ãƒˆã«ã¯è¦‹ã›ãªã„
 
-SelectElementType_opt_show_topics = ¥È¥Ã¥×¥Ú¡¼¥¸¤Ç¼è¤ê¾å¤²¤ë
-SelectElementType_opt_radio       = ¥é¥¸¥ª¥Ü¥¿¥ó¤È¤·¤ÆÉ½¼¨¤¹¤ë
-SelectElementType_opt_close_by    = ½ªÎ»¾õÂÖ
+SelectElementType_opt_show_topics = ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸ã§å–ã‚Šä¸Šã’ã‚‹
+SelectElementType_opt_radio       = ãƒ©ã‚¸ã‚ªãƒœã‚¿ãƒ³ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹
+SelectElementType_opt_close_by    = çµ‚äº†çŠ¶æ…‹
 
-SelectElementType_opt_close_by_desc  = ½ªÎ»¾õÂÖ¤ò¥«¥ó¥Ş¤Ç¶èÀÚ¤Ã¤ÆÆş¤ì¤Æ¤¯¤À¤µ¤¤¡£<br />¤³¤³¤Ë»ØÄê¤µ¤ì¤¿¤¤¤º¤ì¤«¤Î¾õÂÖ¤Ë¤Ê¤Ã¤¿¤È¤­¡¢¤½¤Î¥ì¥İ¡¼¥È¤¬½ªÎ»¤·¤¿¤È¸«¤Ê¤·¤Ş¤¹¡£<br />Ê£¿ô¤Î¥Õ¥£¡¼¥ë¥É¤Ç½ªÎ»¾õÂÖ¤¬»ØÄê¤µ¤ì¤Æ¤¤¤ë¤È¤­¤Ë¤Ï¡¢AND ¤ò¤È¤Ã¤ÆÈ½ÃÇ¤µ¤ì¤Ş¤¹¡£
+SelectElementType_opt_close_by_desc  = çµ‚äº†çŠ¶æ…‹ã‚’ã‚«ãƒ³ãƒã§åŒºåˆ‡ã£ã¦å…¥ã‚Œã¦ãã ã•ã„ã€‚<br />ã“ã“ã«æŒ‡å®šã•ã‚ŒãŸã„ãšã‚Œã‹ã®çŠ¶æ…‹ã«ãªã£ãŸã¨ãã€ãã®ãƒ¬ãƒãƒ¼ãƒˆãŒçµ‚äº†ã—ãŸã¨è¦‹ãªã—ã¾ã™ã€‚<br />è¤‡æ•°ã®ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã§çµ‚äº†çŠ¶æ…‹ãŒæŒ‡å®šã•ã‚Œã¦ã„ã‚‹ã¨ãã«ã¯ã€AND ã‚’ã¨ã£ã¦åˆ¤æ–­ã•ã‚Œã¾ã™ã€‚
 
-MultiSelectElementType_opt_show_topics = ¥È¥Ã¥×¥Ú¡¼¥¸¤Ç¼è¤ê¾å¤²¤ë
-MultiSelectElementType_opt_checkbox    = ¥Á¥§¥Ã¥¯¥Ü¥Ã¥¯¥¹¤È¤·¤ÆÉ½¼¨¤¹¤ë
+MultiSelectElementType_opt_show_topics = ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸ã§å–ã‚Šä¸Šã’ã‚‹
+MultiSelectElementType_opt_checkbox    = ãƒã‚§ãƒƒã‚¯ãƒœãƒƒã‚¯ã‚¹ã¨ã—ã¦è¡¨ç¤ºã™ã‚‹
 
-Choice_opt_show_topics = ¥È¥Ã¥×¥Ú¡¼¥¸¤ËÉ½¼¨¤¹¤ë
+Choice_opt_show_topics = ãƒˆãƒƒãƒ—ãƒšãƒ¼ã‚¸ã«è¡¨ç¤ºã™ã‚‹
 
-cached_attachment = %s (%d bytes) ¤ò¥­¥ã¥Ã¥·¥å¤·¤Æ¤¤¤Ş¤¹¡£<br />
+cached_attachment = %s (%d bytes) ã‚’ã‚­ãƒ£ãƒƒã‚·ãƒ¥ã—ã¦ã„ã¾ã™ã€‚<br />
 
-no_values = ¤Ê¤·
+no_values = ãªã—
 
 
 ### Store type description
-FileStore     = 1¥á¥Ã¥»¡¼¥¸¤ò1¥Õ¥¡¥¤¥ë¤ÇÊİÂ¸¤·¤Ş¤¹¡£
-XMLFileStore  = 1¥ì¥İ¡¼¥È¤ò1¥Õ¥¡¥¤¥ë¤ËÊİÂ¸¤·¤Ş¤¹¡£
-PStore        = PStore ¤òÍÑ¤¤¤Æ¥ì¥İ¡¼¥È¤òÊİÂ¸¤·¤Ş¤¹¡£
-PostgresStore = PostgreSQL ¤òÍÑ¤¤¤Æ¥ì¥İ¡¼¥È¤òÊİÂ¸¤·¤Ş¤¹¡£
-MySQLStore    = MySQL ¤òÍÑ¤¤¤Æ¥ì¥İ¡¼¥È¤òÊİÂ¸¤·¤Ş¤¹¡£
-MSSqlStore    = SQL*Server ¤òÍÑ¤¤¤Æ¥ì¥İ¡¼¥È¤òÊİÂ¸¤·¤Ş¤¹¡£
+FileStore     = 1ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’1ãƒ•ã‚¡ã‚¤ãƒ«ã§ä¿å­˜ã—ã¾ã™ã€‚
+XMLFileStore  = 1ãƒ¬ãƒãƒ¼ãƒˆã‚’1ãƒ•ã‚¡ã‚¤ãƒ«ã«ä¿å­˜ã—ã¾ã™ã€‚
+PStore        = PStore ã‚’ç”¨ã„ã¦ãƒ¬ãƒãƒ¼ãƒˆã‚’ä¿å­˜ã—ã¾ã™ã€‚
+PostgresStore = PostgreSQL ã‚’ç”¨ã„ã¦ãƒ¬ãƒãƒ¼ãƒˆã‚’ä¿å­˜ã—ã¾ã™ã€‚
+MySQLStore    = MySQL ã‚’ç”¨ã„ã¦ãƒ¬ãƒãƒ¼ãƒˆã‚’ä¿å­˜ã—ã¾ã™ã€‚
+MSSqlStore    = SQL Server ã‚’ç”¨ã„ã¦ãƒ¬ãƒãƒ¼ãƒˆã‚’ä¿å­˜ã—ã¾ã™ã€‚
+ODBCStore     = SQL Server(ODBC)ã‚’ç”¨ã„ã¦ãƒ¬ãƒãƒ¼ãƒˆã‚’ä¿å­˜ã—ã¾ã™ã€‚
 
 ### ElementType name
-Kagemai::StringElementType      = Ê¸»úÎó
-Kagemai::SelectElementType      = Ã±°ìÁªÂò»è
-Kagemai::MultiSelectElementType = Ê£¿ôÁªÂò»è
-Kagemai::TextElementType        = ¥Æ¥­¥¹¥È
-Kagemai::BooleanElementType     = ¥Õ¥é¥°
-Kagemai::FileElementType        = ¥Õ¥¡¥¤¥ëÅºÉÕ
+Kagemai::StringElementType      = æ–‡å­—åˆ—
+Kagemai::SelectElementType      = å˜ä¸€é¸æŠè‚¢
+Kagemai::MultiSelectElementType = è¤‡æ•°é¸æŠè‚¢
+Kagemai::TextElementType        = ãƒ†ã‚­ã‚¹ãƒˆ
+Kagemai::BooleanElementType     = ãƒ•ãƒ©ã‚°
+Kagemai::FileElementType        = ãƒ•ã‚¡ã‚¤ãƒ«æ·»ä»˜
+Kagemai::DateElementType        = æ—¥ä»˜
 
-Kagemai::StringElementType_desc       = £±¹Ô¤ÎÊ¸»úÎó¤Ç¤¹¡£
-Kagemai::SelectElementType_desc       = Ê£¿ô¤Î¸õÊä¤«¤é£±¤Ä¤ÎÃÍ¤òÁªÂò¤Ç¤­¤Ş¤¹¡£
-Kagemai::MultiSelectElementType_desc  = Ê£¿ô¤Î¸õÊä¤«¤éÊ£¿ô¤ÎÃÍ¤òÁªÂò¤Ç¤­¤Ş¤¹¡£
-Kagemai::TextElementType_desc         = Ê£¿ô¹Ô¤Î¥Æ¥­¥¹¥È¤Ç¤¹¡£
-Kagemai::BooleanElementType_desc      = On/Off ¤ÎÃÍ¤ò¤È¤ê¤Ş¤¹¡£
-Kagemai::FileElementType_desc         = ¥Õ¥¡¥¤¥ëÅºÉÕÍÑ¤ÎÆşÎÏ¥Õ¥£¡¼¥ë¥É¡£
-
+Kagemai::StringElementType_desc       = ï¼‘è¡Œã®æ–‡å­—åˆ—ã§ã™ã€‚
+Kagemai::SelectElementType_desc       = è¤‡æ•°ã®å€™è£œã‹ã‚‰ï¼‘ã¤ã®å€¤ã‚’é¸æŠã§ãã¾ã™ã€‚
+Kagemai::MultiSelectElementType_desc  = è¤‡æ•°ã®å€™è£œã‹ã‚‰è¤‡æ•°ã®å€¤ã‚’é¸æŠã§ãã¾ã™ã€‚
+Kagemai::TextElementType_desc         = è¤‡æ•°è¡Œã®ãƒ†ã‚­ã‚¹ãƒˆã§ã™ã€‚
+Kagemai::BooleanElementType_desc      = On/Off ã®å€¤ã‚’ã¨ã‚Šã¾ã™ã€‚
+Kagemai::FileElementType_desc         = ãƒ•ã‚¡ã‚¤ãƒ«æ·»ä»˜ç”¨ã®å…¥åŠ›ãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã€‚
+Kagemai::DateElementType_desc         = æ—¥ä»˜(yyyy-mm-dd)ã‚’è¡¨ã—ã¾ã™ã€‚
 
 ### Error massages
-err_no_such_project   = »ØÄê¤µ¤ì¤¿¥×¥í¥¸¥§¥¯¥È '%s' ¤Ï¤¢¤ê¤Ş¤»¤ó¡£
-err_invalid_report_id = »ØÄê¤µ¤ì¤¿¥ì¥İ¡¼¥È(ID = '%s')¤Ï¤¢¤ê¤Ş¤»¤ó¡£
-err_invalid_split     = Ê¬³ä¤â¤È¡¢¤â¤·¤¯¤ÏÊ¬³ä¤µ¤­¤Î¥ì¥İ¡¼¥È¤Ë¤Ï£±¤Ä°Ê¾å¤Î¥á¥Ã¥»¡¼¥¸¤¬É¬Í×¤Ç¤¹¡£
-err_spam = Åê¹Æ¤Ë¼ºÇÔ¤·¤Ş¤·¤¿¡£
+err_no_such_project   = æŒ‡å®šã•ã‚ŒãŸãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆ '%s' ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚
+err_invalid_report_id = æŒ‡å®šã•ã‚ŒãŸãƒ¬ãƒãƒ¼ãƒˆ(ID = '%s')ã¯ã‚ã‚Šã¾ã›ã‚“ã€‚
+err_invalid_split     = åˆ†å‰²ã‚‚ã¨ã€ã‚‚ã—ãã¯åˆ†å‰²ã•ãã®ãƒ¬ãƒãƒ¼ãƒˆã«ã¯ï¼‘ã¤ä»¥ä¸Šã®ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒå¿…è¦ã§ã™ã€‚
+err_spam = æŠ•ç¨¿ã«å¤±æ•—ã—ã¾ã—ãŸã€‚
 
 ### Form Errors
-err_exist_id = ¤¹¤Ç¤ËÂ¸ºß¤¹¤ëID¤Ï»ØÄê¤Ç¤­¤Ş¤»¤ó¡£
-err_required = °Ê²¼¤ÎÉ¬¿Ü¹àÌÜ¤ÏÉ¬¤ºÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£
-err_exist_project = ¤¹¤Ç¤ËÂ¸ºß¤¹¤ë¥×¥í¥¸¥§¥¯¥È¤ÎID¤Ï»ØÄê¤Ç¤­¤Ş¤»¤ó¡£
-err_invalid_email_address = °Ê²¼¤Î¹àÌÜ¤Ë¤ÏÀµ¤·¤¤¥á¡¼¥ë¥¢¥É¥ì¥¹¤ò»ØÄê¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹¡£
-err_limit_cvs = ¥×¥í¥¸¥§¥¯¥ÈID¤Ë 'CVS' ¤Ï»ÈÍÑ¤Ç¤­¤Ş¤»¤ó¡£
-err_ascii_only = ¥×¥í¥¸¥§¥¯¥ÈID ¤Ï±Ñ¿ô»ú¤À¤±¤ò»ÈÍÑ¤·¤Æ¤¯¤À¤µ¤¤¡£
-err_subject_tag_figure = ¥Ğ¥°ID¤Î·å¿ô¤Ï 0 ¤«¤é 7 ¤Î´Ö¤Ë¤·¤Æ¤¯¤À¤µ¤¤¡£
-err_invalid_int_value = À°¿ôÃÍ¤òÆşÎÏ¤·¤Æ¤¯¤À¤µ¤¤¡£
-err_exceed_max_size = Ê¸»úÎó¤¬Ä¹¤¹¤®¤Ş¤¹¡£
+err_exist_id = ã™ã§ã«å­˜åœ¨ã™ã‚‹IDã¯æŒ‡å®šã§ãã¾ã›ã‚“ã€‚
+err_required = ä»¥ä¸‹ã®å¿…é ˆé …ç›®ã¯å¿…ãšå…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+err_exist_project = ã™ã§ã«å­˜åœ¨ã™ã‚‹ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®IDã¯æŒ‡å®šã§ãã¾ã›ã‚“ã€‚
+err_invalid_email_address = ä»¥ä¸‹ã®é …ç›®ã«ã¯æ­£ã—ã„ãƒ¡ãƒ¼ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æŒ‡å®šã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
+err_limit_cvs = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆIDã« 'CVS' ã¯ä½¿ç”¨ã§ãã¾ã›ã‚“ã€‚
+err_ascii_only = ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆID ã¯è‹±æ•°å­—ã ã‘ã‚’ä½¿ç”¨ã—ã¦ãã ã•ã„ã€‚
+err_subject_tag_figure = ãƒã‚°IDã®æ¡æ•°ã¯ 0 ã‹ã‚‰ 7 ã®é–“ã«ã—ã¦ãã ã•ã„ã€‚
+err_invalid_int_value = æ•´æ•°å€¤ã‚’å…¥åŠ›ã—ã¦ãã ã•ã„ã€‚
+err_exceed_max_size = æ–‡å­—åˆ—ãŒé•·ã™ãã¾ã™ã€‚
+err_invalid_date = æ—¥ä»˜ã®ãƒ•ã‚©ãƒ¼ãƒãƒƒãƒˆãŒä¸æ­£ã§ã™ã€‚
 
-err_config_field_default = ¤¹¤Ç¤Ë¥ì¥İ¡¼¥È¤¬Åê¹Æ¤µ¤ì¤Æ¤¤¤ë¤¿¤á¡¢¥Ç¥Õ¥©¥ë¥ÈÃÍ¤ò nil ¤Ë¤¹¤ë¤³¤È¤Ï¤Ç¤­¤Ş¤»¤ó¡£
-err_config_field_default2 = Í×ÁÇ¤ò¥ì¥İ¡¼¥ÈÂ°À­¤Ë¤¹¤ë¤È¤­¡¢¥²¥¹¥È¤Ë¤è¤ëÊÑ¹¹¤òµö¤µ¤Ê¤¤¾ì¹ç¤Ë¤Ï¡¢¥Ç¥Õ¥©¥ë¥ÈÃÍ¤òÀßÄê¤¹¤ëÉ¬Í×¤¬¤¢¤ê¤Ş¤¹¡£
+err_config_field_default = ã™ã§ã«ãƒ¬ãƒãƒ¼ãƒˆãŒæŠ•ç¨¿ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’ nil ã«ã™ã‚‹ã“ã¨ã¯ã§ãã¾ã›ã‚“ã€‚
+err_config_field_default2 = è¦ç´ ã‚’ãƒ¬ãƒãƒ¼ãƒˆå±æ€§ã«ã™ã‚‹ã¨ãã€ã‚²ã‚¹ãƒˆã«ã‚ˆã‚‹å¤‰æ›´ã‚’è¨±ã•ãªã„å ´åˆã«ã¯ã€ãƒ‡ãƒ•ã‚©ãƒ«ãƒˆå€¤ã‚’è¨­å®šã™ã‚‹å¿…è¦ãŒã‚ã‚Šã¾ã™ã€‚
 
-err_no_mime_type = MIME type ¤¬»ØÄê¤µ¤ì¤Æ¤¤¤Ş¤»¤ó¡£
-err_attachment_size = ÅºÉÕ¥Õ¥¡¥¤¥ë¤Î¥µ¥¤¥º¤¬À©¸ÂÃÍ¤ò±Û¤¨¤Æ¤¤¤Ş¤¹¡£
+err_no_mime_type = MIME type ãŒæŒ‡å®šã•ã‚Œã¦ã„ã¾ã›ã‚“ã€‚
+err_attachment_size = æ·»ä»˜ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚µã‚¤ã‚ºãŒåˆ¶é™å€¤ã‚’è¶Šãˆã¦ã„ã¾ã™ã€‚
 
-err_double_post = Æó½ÅÅê¹Æ¤Ç¤¹¡£
+err_double_post = äºŒé‡æŠ•ç¨¿ã§ã™ã€‚
 
 ### Week of day
-wod_sun = Æü
-wod_mon = ·î
-wod_tue = ²Ğ
-wod_wed = ¿å
-wod_thu = ÌÚ
-wod_fri = ¶â
-wod_sat = ÅÚ
+wod_sun = æ—¥
+wod_mon = æœˆ
+wod_tue = ç«
+wod_wed = æ°´
+wod_thu = æœ¨
+wod_fri = é‡‘
+wod_sat = åœŸ
 
 ### Misc
-m_max_size     = (%dK¥Ğ¥¤¥È¤Ş¤Ç)
-mime_type_auto = ³ÈÄ¥»Ò¤ÇÈ½Äê
+m_max_size     = (%dKãƒã‚¤ãƒˆã¾ã§)
+mime_type_auto = æ‹¡å¼µå­ã§åˆ¤å®š
 
 ### CSV
-csv_author = Êó¹ğ¼Ô
-csv_ctime  = Êó¹ğÆü
-csv_mtime  = ºÇ½ª¹¹¿·Æü
+csv_author = å ±å‘Šè€…
+csv_ctime  = å ±å‘Šæ—¥
+csv_mtime  = æœ€çµ‚æ›´æ–°æ—¥

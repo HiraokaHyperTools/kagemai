@@ -1,23 +1,5 @@
 =begin
-  ConfigProject - プロジェクトの設定変更
-
-  Copyright(C) 2002-2004 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  ConfigProject - configure project options
 =end
 
 require 'kagemai/mode'
@@ -99,20 +81,20 @@ module Kagemai
       # Check required parameters.
       requires = ['name', 'description']
       requires.each do |id|
-        check_form_value(id, nil, false)
+        validate_required_value(id)
       end
 
       # Check optional parameters.
       # email address は、email address check をかける
       email_fields = ['admin_address', 'post_address']
       email_fields.each do |id|
-        check_form_value(id, 'valid-address@daifukuya.com', true)
+        validate_email_address(id)
       end
 
       # Check integer parameters.
       int_params = ['subject_id_figure', 'fold_column']
       int_params.each do |id|
-        check_int_value(id)
+        validate_int_value(id)
       end
 
       notify_addresses = @cgi.get_param('notify_addresses', '').split(/[, \t\r\n]+/m).compact

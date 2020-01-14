@@ -20,8 +20,6 @@
   You should have received a copy of the GNU General Public License
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  $Id: mailif.rb 409 2008-02-23 14:07:23Z fukuoka $
 =end
 
 ## usage: ruby mailif.rb project-id
@@ -126,12 +124,14 @@ module Kagemai
       end
 
       body = nil
+      charset = 'iso-2022-jp'
       attachments = []
       if mail_message.multipart? then
         ctime = Time.parsedate(mail_message.header['Date'])
         mail_message.each_part do |part|
           if !body && part.header.content_type == 'text/plain' then
             body = part.decode
+            charset = get_charset(part.header['content-type'])
           else
             name = part.header.param('Content-Disposition', 'filename')
             if name[0,1] == '"' then
@@ -148,10 +148,11 @@ module Kagemai
         end
       else
         body = mail_message.decode
+        charset = get_charset(mail_header['content-type'])
       end
-
+      
       raise InvalidMailError, "No text body." if body.nil?
-
+      
       report = get_report(mail_header['in-reply-to'], title)
       if report then
         pmessage = report.last
@@ -161,9 +162,9 @@ module Kagemai
           bts_message[etype.id] = pmessage[etype.id]
         end
       end
-
+      
       bts_message['email'] = from_addr.address
-      bts_message['title'] = strip_subject_tag(kconv(title))
+      bts_message['title'] = strip_subject_tag(title)
       
       if bts_message.has_element?('cc') then
         cc_addrs = []
@@ -178,7 +179,7 @@ module Kagemai
         bts_message['cc'] = cc_addrs.uniq.join(", ")
       end
       
-      set_message_body(bts_message, kconv(body))
+      set_message_body(bts_message, KKconv::ckconv(body, 'utf8', charset))
       bts_message.set_option('email_notification', true)
       store_attachments(bts_message, attachments)
       
@@ -197,8 +198,12 @@ module Kagemai
       log(accept_message)
     end
     
-    def kconv(str)
-      KKconv.conv(str, KKconv::EUC, KKconv::JIS)      
+    def get_charset(content_type)
+      charset = 'iso-2022-jp'
+      if content_type =~ /;\s*charset=([A-Za-z0-9_\-]+)/i then
+        charset = $1
+      end
+      charset
     end
     
     def get_report(msg_id, title)
@@ -245,7 +250,7 @@ module Kagemai
       return unless felement
       
       attachments.each do |fileinfo, value|
-        file = Tempfile.new('kagemai_tempfile')
+        file = Tempfile.new('kagemai_tempfile', Config[:tmp_dir])
         file.binmode
         begin
           file.write(value)

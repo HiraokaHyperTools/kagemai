@@ -1,0 +1,10 @@
+To: kagemai-bugs@daifukuya.com
+From: FUKUOKA Tomoyuki <tomoyuki@daifukuya.com>
+Subject: Re: [p1:0001] Mail Accept Test 1
+Message-ID: <hoge@mail.daifukuya.com>
+In-Reply-To: <p1.2.1.20030107@mail.daifukuya.com>
+Date: Thu, 07 Jan 2003 23:23:00 +0900
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+
+メール返信のテスト

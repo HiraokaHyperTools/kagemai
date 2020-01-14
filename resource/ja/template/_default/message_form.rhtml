@@ -4,7 +4,7 @@
 
 <% if error then %>
 
-<p>�ʲ��ι��ܤǥ��顼��ȯ�����ޤ����������ͤ������Ƥ���������</p>
+<p>以下の項目でエラーが発生しました。入力値を修正してください。</p>
 
 <ul>
   <% errors.each do |key, value| %>
@@ -16,7 +16,7 @@
   </ul>
   <% end %>
   <% if captcha_error then %>
-  <li>ǧ����ʸ��������������ޤ���</li>
+  <li>認証用文字が正しくありません。</li>
   <% end %>
 </ul>
 <% end %>
@@ -27,7 +27,7 @@
       accept-charset="<%= project.charset %>">
   <table>
 
-  <!-- ReportType ��������ϥե���������� -->
+  <!-- ReportType からの入力フィールド生成 -->
   <% project.report_type.each do |etype| %>
     <% next if etype.report_attr && etype['hide_from_guest'] && Mode::GUEST.current? %>
     <% next if etype.report_attr && !etype.allow_guest && Mode::GUEST.current? %>
@@ -39,7 +39,7 @@
     <td>
       <% 
          attr = params.attr(etype.id)
-         unless error then
+         unless error || submit_back then
            input_f = etype.use_cookie? ? etype.html_input() : etype.html_input(attr)
          else
            input_f = etype.html_input_with_error(attr)
@@ -54,37 +54,38 @@
   <% end %>
 
   <tr>
-    <th>���ץ����</th>
+    <th>オプション</th>
 
     <td>
-      <input type="checkbox" name="email_notification"
-             <%= email_notification ? 'checked="checked"' : '' %>> ��ץ饤��᡼��Ǽ�����롣
+      <input type="checkbox" name="email_notification" id="label_email_notification" 
+             <%= email_notification ? 'checked="checked"' : '' %>> <label for="label_email_notification">リプライをメールで受け取る。</label>
       <% if project.report_type.use_cookie? %>
         <br>
-        <input type="checkbox" name="allow_cookie" 
-               <%= use_cookie ? 'checked="checked"' : '' %>> Cookie��Ȥä� 
+        <input type="checkbox" name="allow_cookie" id="label_allow_cookie" 
+               <%= use_cookie ? 'checked="checked"' : '' %>> <label for="label_allow_cookie">Cookieを使って 
         {<%= project.report_type.use_cookie_element_list() %>}
-        ����¸��Ԥ���
+        の保存を行う。</label>
       <% end %>
     </td>
   </tr>
   
   <% if use_captcha && Mode::GUEST.current? then %>
   <tr>
-    <th  <%= captcha_error ? 'class="error"' : ''%>>ǧ��*</th>
+    <th  <%= captcha_error ? 'class="error"' : ''%>>認証*</th>
     <td>
-       <% captcha_url = project.url() + "&action=#{CaptchaImage.name}" %>
+       <% captcha_url = project.url() + "&action=#{CaptchaImage.name}&c=#{Time.now.to_s.escape_h}" %>
        <img src="<%= captcha_url %>" alt="captcha" ><br>
        <input name="<%= CaptchaHandler::CAPTCHA_CODE_KEY %>" type="text" size="6">
-       ������ʸ�������Ϥ��Ƥ���������
+       画像の文字を入力してください。
     </td>
   </tr>
   <% end %>
   
   </table>
   <div>
-    <small>*���Ĥ������ܤ�ɬ�ܹ��ܤǤ���</small><br>
-    <input type="submit" value="��������">
+    <small>*がついた項目は必須項目です。</small><br>
+    <input type="submit" value="プレビュー" name="submit_preview">
+    <input type="submit" value="送信する" name="submit_post">
   </div>
 
   <div>
@@ -92,14 +93,14 @@
     <input type="hidden" name="project" value="<%= project.id %>">
     <input type="hidden" name="id" value="<%= report_id %>">
     <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="��">
+    <input type="hidden" name="jp_enc_test" value="日">
     <% end %>
   </div>
 </form>
 
 <ul>
-  <li>URL�ϼ�ưŪ�˥�󥯤��Ѵ�����ޤ���</li>
-  <li>&lt;BTS:1&gt; �Τ褦�˥Х��� ID �� '&lt;BTS:' �� '>' �Ǥ�����ȡ��̤ΥХ��˥�󥯤���ޤ���</li>
-  <li>�̤Υץ��������ȤΥХ��˥�󥯤���Ȥ��ˤϡ�'&lt;BTS:project_id:1&gt;'�Τ褦�ˤ��ޤ���</li>
-  <li>��Ƭ�� '&gt' �⤷���ϡ�����ǻϤޤäƤ���Ԥϡ��ɤ�ʤ�Ĺ���Ƥ��ޤ��֤���ޤ���
+  <li>URLは自動的にリンクに変換されます。</li>
+  <li>&lt;BTS:1&gt; のようにバグの ID を '&lt;BTS:' と '>' でかこむと、別のバグにリンクされます。</li>
+  <li>別のプロジェクトのバグにリンクするときには、'&lt;BTS:project_id:1&gt;'のようにします。</li>
+  <li>先頭が '&gt' もしくは、空白で始まっている行は、どんなに長くても折り返されません。
 </ul>

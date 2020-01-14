@@ -1,0 +1,9 @@
+@name = 'テスト5'
+@description = 'test'
+@admin_address = 'fukuoka@daifukuya.com'
+@post_address = 'admin@daifukuya.com'
+@lang = 'ja'
+@charset = 'UTF-8'
+@notify_addresses = ['test@daifukuya.com']
+@subject_tag_figure = 4
+@db_manager_class = Kagemai::FileStore

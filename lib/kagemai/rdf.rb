@@ -1,59 +1,17 @@
 =begin
   RDF - RDF class to make RSS
-  
-  Copyright(C) 2005,2008 FUKUOKA Tomoyuki.
-  
-  This file is part of KAGEMAI.  
-  
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-  
-  $Id: rdf.rb 392 2008-02-21 13:40:44Z fukuoka $
 =end
 
 module Kagemai
   class RSSEncoder
     def initialize(lang)
       @encode = 'UTF-8'
-      case lang
-      when 'ja'
-        @encode = 'EUC-JP'
-        if RUBY_VERSION > "1.8.3" then
-          @encode = 'UTF-8'
-          @encoder = Proc.new{|s| KKconv::conv(s, KKconv::UTF8, KKconv::EUC)}
-        else
-          @encoder = uconv_encoder()
-        end
-      when 'en'
-      end
-      @encoder = Proc.new{|s| s} unless @encoder
     end
     attr_reader :encode
     
     def do(s)
-      @encoder.call(s)
-    end
-    
-  private
-    def uconv_encoder()
-      begin
-        require 'uconv'
-        @encode = 'UTF-8'
-        Proc.new {|s| Uconv.euctou8( s ) }
-      rescue LoadError
-      end
-    end
+      s
+    end    
   end
 
   class Rdf

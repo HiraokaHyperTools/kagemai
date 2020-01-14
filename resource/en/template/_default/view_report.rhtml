@@ -85,7 +85,8 @@
       :use_cookie         => use_cookie, 
       :errors             => errors,
       :use_captcha        => use_captcha,
-      :captcha_error      => false
+      :captcha_error      => false,
+      :submit_back        => false,
     }
   %>
   
@@ -117,7 +118,7 @@
   <% addresses = report.email_addresses(false) %>
   <% addresses.each do |addr, notify| %>
     <% checked = notify ? 'checked="checked"' : '' %>
-    <input type="checkbox" name="<%= addr.escape_h %>" <%= checked %>> <%= addr.escape_h %><br>
+    <input type="checkbox" name="<%= addr.escape_h %>" id="label_<%= addr.escape_h %>" <%= checked %>> <label for="label_<%= addr.escape_h %>"><%= addr.escape_h %></label><br>
   <% end %>
   </p>
 
@@ -127,9 +128,6 @@
     <input type="hidden" name="action" value="<%= SetEmailNotification.name %>">
     <input type="hidden" name="project" value="<%= project.id %>">
     <input type="hidden" name="id" value="<%= report.id %>">
-    <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="Æü">
-    <% end %>
   </div>
 </form>
 

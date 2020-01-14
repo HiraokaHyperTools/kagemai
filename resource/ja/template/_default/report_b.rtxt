@@ -3,16 +3,16 @@
 <%= message_body %>
 
 
-== ╓Ё╓н╔Л╔щ║╪╔х╓н╬э╨ы╓о╟й╡╪╓ндл╓Й╓г╓╧ ==
+== Ц│⌠Ц│╝Ц┐╛Ц┐²Ц┐╪Ц┐┬Ц│╝Х╘ЁГ╢╟Ц│╞Д╩╔Д╦▀Ц│╝И─ Ц┌┼Ц│╖Ц│≥ ==
 
-╔Л╔щ║╪╔х ID  : <%= report.id.to_s %>
-╔Л╔щ║╪╔х URL : <%= report_url %>
+Ц┐╛Ц┐²Ц┐╪Ц┐┬ ID  : <%= report.id.to_s %>
+Ц┐╛Ц┐²Ц┐╪Ц┐┬ URL : <%= report_url %>
 
 <% message_detail.each do |name, value| %><%= name %> : <%= value %>
 <% end %>
-║Т ╓╒╓й╓©╓╛║╒╓Ё╓н╓Х╓╕╓й╔А╔ц╔╩║╪╔╦╓кл╣╢ь╥╦╓г╓╒╓К╬Л╧Г╓к╓о║╒
-║Т ╢имЩ╪т <<%= project.admin_address %>> ╓ч╓г╓╢о╒мМ╓╞╓ю╓╣╓╓║ё
+О╪┐ Ц│┌Ц│╙Ц│÷Ц│▄Ц─│Ц│⌠Ц│╝Ц┌┬Ц│├Ц│╙Ц┐║Ц┐┐Ц┌╩Ц┐╪Ц┌╦Ц│╚Г└║И√╒Д©┌Ц│╖Ц│┌Ц┌▀Е═╢Е░┬Ц│╚Ц│╞Ц─│
+О╪┐ Г╝║Г░├Х─┘ <<%= project.admin_address %>> Ц│╬Ц│╖Ц│■И─ёГ╣║Ц│▐Ц│═Ц│∙Ц│└Ц─┌
 
 --
-Bug Tracking System ╠фиЯ <%= Kagemai::VERSION %>.
+Bug Tracking System Е╫╠Х┬· <%= Kagemai::VERSION %>.
 <%= Kagemai::URL %>

@@ -4,7 +4,7 @@
 <% 
   # id to name map
   items = {
-    'project_name'       => 'Name',
+    'name'               => 'Name',
     'description'        => 'Description',
     'admin_address'      => 'Admin address',
     'post_address'       => 'Submission address',
@@ -42,7 +42,7 @@
       <td colspan="2"><%= project.id %></td>
     </tr>
     <tr>
-      <th <%= errors.tag_class('project_name') %>>Name*</th>
+      <th <%= errors.tag_class('name') %>>Name*</th>
       <td colspan="2">
         <input name="name" 
                type="text" value="<%= values.get_param('name').to_s.escape_h %>"> <br>
@@ -185,9 +185,6 @@
     <input type="hidden" name="action" value="config_project">
     <input type="hidden" name="s" value="2">
     <input type="hidden" name="project" value="<%= project.id %>">
-    <% if project.lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="Æü">
-    <% end %>
     <input type="submit" value="Change settings">
   </div>
 </form>

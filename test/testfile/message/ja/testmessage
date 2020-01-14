@@ -1,0 +1,9 @@
+# test message resources
+
+# skip this
+test_key1 = hello world
+
+test_key2 = hello world2
+
+#test_key3 = hello world2
+

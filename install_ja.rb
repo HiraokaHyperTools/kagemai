@@ -1,65 +1,62 @@
-#!/usr/bin/ruby -Ke
+#!/usr/bin/ruby -Ku
 =begin
   Kagemai install script (Japanese-EUC version).
-
   usage: ruby install_ja.rb [previous-install-logfile]
-
-  $Id: install_ja.rb 472 2008-02-29 18:05:30Z fukuoka $
 =end
 
-# ¥¤¥ó¥¹¥È¡¼¥é¤Î Revision number
-$revision = '$Revision: 472 $'.sub(/^\$Revisio.: (\d.+) \$$/, '\1')
+# ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ©ã® Revision number
+$revision = '$Revision: 649 $'.sub(/^\$Revisio.: (\d.+) \$$/, '\1')
 
-### ¥Ç¡¼¥¿¤òÊİÂ¸¤¹¤ë¥Ç¥£¥ì¥¯¥È¥ê¤Ê¤É¤Î user ¤È group¡£
-### ÀßÄê¤·¤Ê¤¤¾ì¹ç¤Ë¤Ï¡¢¥³¥á¥ó¥È¥¢¥¦¥È¤·¤Æ¤¯¤À¤µ¤¤
+### ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã™ã‚‹ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªãªã©ã® user ã¨ groupã€‚
+### è¨­å®šã—ãªã„å ´åˆã«ã¯ã€ã‚³ãƒ¡ãƒ³ãƒˆã‚¢ã‚¦ãƒˆã—ã¦ãã ã•ã„
 # $user = 'kagemai'
 $group = 'kagemai'
 
-## .htaccess ¤ò¥³¥Ô¡¼¤¹¤ë¤«¤É¤¦¤«
+## .htaccess ã‚’ã‚³ãƒ”ãƒ¼ã™ã‚‹ã‹ã©ã†ã‹
 $setup_htaccess = true
 
-### ¥¤¥ó¥¹¥È¡¼¥ëÀè¤ÎÀßÄê
+### ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å…ˆã®è¨­å®š
 
-# ±ÆÉñ¤ÎËÜÂÎ¤ä¥É¥­¥å¥á¥ó¥È
+# å½±èˆã®æœ¬ä½“ã‚„ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ
 $root_dir = '/usr/local/kagemai'      
 
-# CGI ¤ä¥¹¥¿¥¤¥ë¥·¡¼¥È
+# CGI ã‚„ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆ
 $html_dir = '/var/www/html/kagemai' 
 
-# ¥×¥í¥¸¥§¥¯¥È¤Î¥Ç¡¼¥¿¤ä¥í¥°
+# ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ‡ãƒ¼ã‚¿ã‚„ãƒ­ã‚°
 $data_dir = '/var/lib/kagemai'
 
-# ¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë
+# ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«
 $passwd_dir = '/etc/kagemai'            
 
-# ¥¤¥ó¥¹¥È¡¼¥ë¤Î¥í¥°
+# ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã®ãƒ­ã‚°
 $install_logfile = "#{$data_dir}/install.log" 
 
-$bin_dir = "#{$root_dir}/bin"  # ¥æ¡¼¥Æ¥£¥ê¥Æ¥£¥¹¥¯¥ê¥×¥È
-$lib_dir = "#{$root_dir}/lib"  # ±ÆÉñ¤ÎËÜÂÎ
-$doc_dir = "#{$root_dir}/doc"  # ¥É¥­¥å¥á¥ó¥È
-$etc_dir = "#{$root_dir}"      # README ¤ä MRTG ¤ÎÀßÄê¥Õ¥¡¥¤¥ë¤Ê¤É
-$resource_dir = "#{$root_dir}/resource" # ¥Æ¥ó¥×¥ì¡¼¥È¡¢¥á¥Ã¥»¡¼¥¸¥ê¥½¡¼¥¹
+$bin_dir = "#{$root_dir}/bin"  # ãƒ¦ãƒ¼ãƒ†ã‚£ãƒªãƒ†ã‚£ã‚¹ã‚¯ãƒªãƒ—ãƒˆ
+$lib_dir = "#{$root_dir}/lib"  # å½±èˆã®æœ¬ä½“
+$doc_dir = "#{$root_dir}/doc"  # ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆ
+$etc_dir = "#{$root_dir}"      # README ã‚„ MRTG ã®è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«ãªã©
+$resource_dir = "#{$root_dir}/resource" # ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆã€ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãƒªã‚½ãƒ¼ã‚¹
 
-$html_i_dir       = "#{$root_dir}/html"    # CGI ¤ä¥¹¥¿¥¤¥ë¥·¡¼¥È¡Ê¥³¥Ô¡¼ÍÑ¡Ë
+$html_i_dir       = "#{$root_dir}/html"    # CGI ã‚„ã‚¹ã‚¿ã‚¤ãƒ«ã‚·ãƒ¼ãƒˆï¼ˆã‚³ãƒ”ãƒ¼ç”¨ï¼‰
 
-$user_passwd_file  = "#{$passwd_dir}/user.passwd"  # ¥æ¡¼¥¶¤Î¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë
-$admin_passwd_file = "#{$passwd_dir}/admin.passwd" # ´ÉÍı¼Ô¤Î¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë
+$user_passwd_file  = "#{$passwd_dir}/user.passwd"  # ãƒ¦ãƒ¼ã‚¶ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«
+$admin_passwd_file = "#{$passwd_dir}/admin.passwd" # ç®¡ç†è€…ã®ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«
 
-$project_dir     = "#{$data_dir}/project"     # ¥×¥í¥¸¥§¥¯¥È¤Î¥Ç¡¼¥¿
-$mailif_logfile  = "#{$data_dir}/mailif.log"  # mailif.rb ¤ÎÍÑ¥í¥°¥Õ¥¡¥¤¥ë
-$tmp_dir         = "#{$project_dir}/_tmp"     # ¥­¥ã¥Ã¥·¥å¤Ê¤É¤Î°ì»ş¥Õ¥¡¥¤¥ë
+$project_dir     = "#{$data_dir}/project"     # ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®ãƒ‡ãƒ¼ã‚¿
+$mailif_logfile  = "#{$data_dir}/mailif.log"  # mailif.rb ã®ç”¨ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«
+$tmp_dir         = "#{$project_dir}/_tmp"     # ã‚­ãƒ£ãƒƒã‚·ãƒ¥ãªã©ã®ä¸€æ™‚ãƒ•ã‚¡ã‚¤ãƒ«
 
-$config_file = "#{$html_dir}/kagemai.conf" # ÀßÄê¥Õ¥¡¥¤¥ë
+$config_file = "#{$html_dir}/kagemai.conf" # è¨­å®šãƒ•ã‚¡ã‚¤ãƒ«
 
 
 ###########################################################################
-## ¤³¤³¤«¤é²¼¤Ï¡¢ÉáÄÌ¤ÏÊÔ½¸¤¹¤ëÉ¬Í×¤Ï¤¢¤ê¤Ş¤»¤ó
+## ã“ã“ã‹ã‚‰ä¸‹ã¯ã€æ™®é€šã¯ç·¨é›†ã™ã‚‹å¿…è¦ã¯ã‚ã‚Šã¾ã›ã‚“
 
 require 'fileutils'
 require 'digest/md5'
 
-## Ìä¤¤¹ç¤ï¤»
+## å•ã„åˆã‚ã›
 def query(msg, default)
   print "#{msg} [#{default ? "Y/n" : "y/N"}]: "
   $stdout.flush
@@ -67,7 +64,7 @@ def query(msg, default)
   ans.empty? ? default : (/^[Yy].*/ =~ ans) != nil
 end
 
-## Á°²ó¤Î¥¤¥ó¥¹¥È¡¼¥ë¥í¥°¤ÎÆÉ¤ß¹ş¤ß
+## å‰å›ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãƒ­ã‚°ã®èª­ã¿è¾¼ã¿
 if ARGV.size == 1 then
   $install_logfile = ARGV.shift
 end
@@ -82,7 +79,7 @@ if File.exist?($install_logfile) then
 end
 $html_summary_dir = "#{$html_dir}/summary" # for summary PNG file
 
-## uid, gid ¤Î¼èÆÀ
+## uid, gid ã®å–å¾—
 $uid = $gid = -1
 begin
   require 'etc.so'
@@ -92,7 +89,7 @@ rescue LoadError
   # ignore
 end
 
-## ¥Ç¡¼¥¿ÍÑ¥Ç¥£¥ì¥¯¥È¥ê/¥Õ¥¡¥¤¥ë¤Î¥â¡¼¥É
+## ãƒ‡ãƒ¼ã‚¿ç”¨ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒª/ãƒ•ã‚¡ã‚¤ãƒ«ã®ãƒ¢ãƒ¼ãƒ‰
 $dir_mode = 02775
 $file_mode = 0664
 if $uid != -1 && $gid == -1 then
@@ -100,7 +97,7 @@ if $uid != -1 && $gid == -1 then
   $file_mode = 0644
 end
 
-## ¥Ç¥£¥ì¥¯¥È¥ê¤ÎºîÀ®
+## ãƒ‡ã‚£ãƒ¬ã‚¯ãƒˆãƒªã®ä½œæˆ
 dirs = %w(
   root_dir
   html_dir data_dir passwd_dir bin_dir lib_dir doc_dir resource_dir
@@ -118,7 +115,7 @@ File.chmod($dir_mode, $html_summary_dir)
 
 $ex_lib_dir = $lib_dir
 
-## ¥¤¥ó¥¹¥È¡¼¥ë¥í¥°¥Õ¥¡¥¤¥ë¤ÎºîÀ®
+## ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ãƒ­ã‚°ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆ
 $logfile = File.open($install_logfile, 'w')
 $logfile.puts "## KAGEMAI install log"
 $logfile.puts "## #{Time.now}"
@@ -147,13 +144,13 @@ files.each do |name|
 end
 $logfile.puts
 
-## ¥Õ¥¡¥¤¥ë¤Î digest ¤Î·×»»
+## ãƒ•ã‚¡ã‚¤ãƒ«ã® digest ã®è¨ˆç®—
 def digest(filename)
   src = File.open(filename) {|file| file.read}
   digest = Digest::MD5::hexdigest(src)
 end
 
-## ¥Õ¥¡¥¤¥ë¤Î¥³¥Ô¡¼
+## ãƒ•ã‚¡ã‚¤ãƒ«ã®ã‚³ãƒ”ãƒ¼
 $backup = []
 $files = {}
 $cfiles = []
@@ -170,8 +167,8 @@ def copy(category, filename)
     FileUtils.mkpath(File.dirname(to))
   end
 
-  # ¥¤¥ó¥¹¥È¡¼¥ëÀè¤ËÆ±¤¸¥Õ¥¡¥¤¥ë¤¬Â¸ºß¤·¤Æ¡¢
-  # Á°²ó¤Î¥¤¥ó¥¹¥È¡¼¥ë¤«¤éÊÑ¹¹¤µ¤ì¤Æ¤¤¤ë¤Ê¤é¡¢¥Ğ¥Ã¥¯¥¢¥Ã¥×¤òºî¤ë
+  # ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«å…ˆã«åŒã˜ãƒ•ã‚¡ã‚¤ãƒ«ãŒå­˜åœ¨ã—ã¦ã€
+  # å‰å›ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«ã‹ã‚‰å¤‰æ›´ã•ã‚Œã¦ã„ã‚‹ãªã‚‰ã€ãƒãƒƒã‚¯ã‚¢ãƒƒãƒ—ã‚’ä½œã‚‹
   if File.exist?(to) && $ifiles.has_key?(to) then
     mtime, digest = $ifiles[to]
     if mtime != File.stat(to) && digest != digest(to) then
@@ -214,7 +211,7 @@ IO.foreach('MANIFEST') do |line|
   $stderr.flush
 end
 
-## ¥¹¥¯¥ê¥×¥È¥Õ¥¡¥¤¥ë¹¹¿·´Ø¿ô
+## ã‚¹ã‚¯ãƒªãƒ—ãƒˆãƒ•ã‚¡ã‚¤ãƒ«æ›´æ–°é–¢æ•°
 def update_file(filename, regexp, replace)
   stat = File.stat(filename)
 
@@ -229,7 +226,7 @@ def update_file(filename, regexp, replace)
 end
 $stdout.flush
 
-## ruby ¤Î¥Ñ¥¹¤Î½ñ¤­´¹¤¨
+## ruby ã®ãƒ‘ã‚¹ã®æ›¸ãæ›ãˆ
 require 'rbconfig'
 ruby_binary = "#{Config::CONFIG['bindir']}/#{Config::CONFIG['ruby_install_name']}"
 if RUBY_PLATFORM =~ /mswin32/ then
@@ -251,11 +248,11 @@ end
 
 bin_files.each do |file|
   puts "  #{file}"
-  update_file(file, /^\#!.+?$/m, "#!#{ruby_binary} -Ke")
+  update_file(file, /^\#!.+?$/m, "#!#{ruby_binary} -Ku")
 end
 $stdout.flush
 
-## ¤½¤ÎÂ¾¤Î setup ¤Î½ñ¤­´¹¤¨
+## ãã®ä»–ã® setup ã®æ›¸ãæ›ãˆ
 puts ""
 puts "Update kagemai paths:"
 $stdout.flush
@@ -271,7 +268,7 @@ $stdout.flush
 end
 $stdout.flush
 
-## ¥³¥Ô¡¼¤·¤¿¥Õ¥¡¥¤¥ë¤Î¹¹¿·Æü»ş¡¢digest ¤ò·×»»¤·¤Æ¥í¥°¤Ë½ñ¤¯
+## ã‚³ãƒ”ãƒ¼ã—ãŸãƒ•ã‚¡ã‚¤ãƒ«ã®æ›´æ–°æ—¥æ™‚ã€digest ã‚’è¨ˆç®—ã—ã¦ãƒ­ã‚°ã«æ›¸ã
 $cfiles.each do |name|
   mtime = File.stat(name).mtime
   digest = digest(name)
@@ -280,8 +277,8 @@ end
 
 if $backup.size > 0 then
   puts 
-  puts "°Ê²¼¤Î¥Õ¥¡¥¤¥ë¤Ï¡¢Á°²ó¤Î¥¤¥ó¥¹¥È¡¼¥ë»ş¤è¤ê¹¹¿·¤µ¤ì¤Æ¤¤¤ë¤¿¤á¡¢"
-  puts "³ÈÄ¥»Ò .bak ¤ò¤Ä¤±¤ÆÊİÂ¸¤·¤Ş¤·¤¿¡£"
+  puts "ä»¥ä¸‹ã®ãƒ•ã‚¡ã‚¤ãƒ«ã¯ã€å‰å›ã®ã‚¤ãƒ³ã‚¹ãƒˆãƒ¼ãƒ«æ™‚ã‚ˆã‚Šæ›´æ–°ã•ã‚Œã¦ã„ã‚‹ãŸã‚ã€"
+  puts "æ‹¡å¼µå­ .bak ã‚’ã¤ã‘ã¦ä¿å­˜ã—ã¾ã—ãŸã€‚"
   $backup.each do |name|
     puts " #{name}"
   end
@@ -289,7 +286,7 @@ end
 $stdout.flush
 
 ###########################################################################
-## kagemai.conf ¤ÎÀßÄê
+## kagemai.conf ã®è¨­å®š
 
 unless File.exist?($config_file) then
   File.open($config_file, 'w') do |file|
@@ -308,7 +305,7 @@ unless File.exist?($config_file) then
 end
 
 ###########################################################################
-## dot.htaccess ¤ÎÀßÄê
+## dot.htaccess ã®è¨­å®š
 
 unless $setup_htaccess then
   File.unlink $files['html']['dot.htaccess'][1]
@@ -316,7 +313,7 @@ unless $setup_htaccess then
 end
 $stdout.flush
 
-## dot.htaccess ¤Î½ñ¤­´¹¤¨
+## dot.htaccess ã®æ›¸ãæ›ãˆ
 htaccess = [$files['html']['dot.htaccess'][1], $files['html_i']['dot.htaccess'][1]]
 htaccess.each do |file|
   update_file(file, %r!/etc/kagemai/user\.passwd!, $user_passwd_file)
@@ -324,7 +321,7 @@ htaccess.each do |file|
 end
 $stdout.flush
 
-## $html_dir ¤Î dot.htaccess ¤ò .htaccess ¤Ë rename
+## $html_dir ã® dot.htaccess ã‚’ .htaccess ã« rename
 from = $files['html']['dot.htaccess'][1]
 to = "#{File.dirname(from)}/.htaccess"
 unless File.exist?(to) then
@@ -332,7 +329,7 @@ unless File.exist?(to) then
 end
 $stdout.flush
 
-## ¥Ñ¥¹¥ï¡¼¥É¥Õ¥¡¥¤¥ë¤ÎºîÀ®
+## ãƒ‘ã‚¹ãƒ¯ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ã®ä½œæˆ
 puts ""
 [$user_passwd_file, $admin_passwd_file].each do |passwd|
   unless File.exist?(passwd) then

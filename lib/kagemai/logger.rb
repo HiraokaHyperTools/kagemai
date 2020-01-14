@@ -1,33 +1,15 @@
 =begin
-  Logger - デバッグ用のログを記録します
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  $Id: logger.rb 450 2008-02-28 17:20:01Z fukuoka $
+  Logger - Debug log class
 =end
-
-require 'singleton'
 
 module Kagemai
   class Logger
-    include Singleton
-
+    @@instance = nil
+    def self.instance()
+      @@instance = self.new unless @@instance
+      @@instance
+    end
+    
     level = Struct.new('Level', :value, :name)
     DEBUG = level.new(0, 'DEBUG')
     WARN  = level.new(1, 'WARN ')
@@ -58,7 +40,7 @@ module Kagemai
     end
 
     def self.format(level, category, str)
-      level.name + ' ' + category + ': ' + str + "\r\n"
+      level.name + ' ' + category + ': ' + str + "\n"
     end
 
     def self.log(level, category, str)

@@ -1,15 +1,14 @@
 #!/usr/bin/env ruby
 =begin
   guest.cgi - KAGEMAI CGI main
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki, DAIFUKUYA.
+  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
 =end
 
 BEGIN { $stdout.binmode }
 
-$KCODE = 'e'
+$KCODE = 'u'
 $SAFE = 1
 
-# $DEBUG = 1
 $SHOW_ENV_VARS = false # debug
 $KAGEMAI_DEBUG = false # debug
 
@@ -22,6 +21,7 @@ kagemai_root = File.dirname(work_dir.untaint) # setup
 config_file  = work_dir + '/kagemai.conf' # setup
 
 $:.unshift(kagemai_root + '/lib')
+
 
 require 'kagemai/config'
 
@@ -40,12 +40,27 @@ if $KAGEMAI_DEBUG then
   Kagemai::Logger.add_category('Temp')
 end
 
+def print_http_head(type, charset = 'iso-8859-1', lang = 'en')
+  content_type = "#{type}; charset=#{charset}"
+  if defined?(MOD_RUBY)
+    Apache::request.status_line = "HTTP/1.1 200 OK"
+    Apache::request.status = 200
+    Apache::request.content_type = content_type
+    Apache::request.headers_out['Content-Language'] = lang
+    Apache::request.send_http_header
+  else
+    print "Content-Language: #{lang}\r\n"
+    print "Content-Type: " + content_type
+    print "\r\n\r\n"
+  end
+end
+
 def print_maintenance_message()
-  print "Content-type: text/plain; charset=iso-8859-1\n\n";
-  print "This system is under maintenance now.\n"
-  print "Please visit again several hours later.\n"
-  print "--\n"
-  print "Bug Tracking System KAGEMAI.\n"
+  print_http_head('text/plain')
+  print "This system is under maintenance now.\r\n"
+  print "Please visit again several hours later.\r\n"
+  print "--\r\n"
+  print "Bug Tracking System KAGEMAI.\r\n"
 end
 
 def execute(mode, cgi = nil)
@@ -64,18 +79,16 @@ def execute(mode, cgi = nil)
     result.respond(kcgi, $KAGEMAI_DEBUG, $SHOW_ENV_VARS)
     
   rescue Kagemai::Error => e
+    charset = Kagemai::Config[:charset]
     err_msg = '<p class="error">Following errors occurred.</p>'
     err_msg += "\r\n<pre>#{e.class}: "
-    err_msg += "#{Kagemai::KKconv.conv(e.to_s, Kagemai::KKconv::EUC).escape_h}</pre>"
+    err_msg += "#{Kagemai::KKconv.ckconv(e.to_s, charset).escape_h}</pre>"
     err_msg += %Q!\r\n<pre>#{e.backtrace.join("\r\n")}</pre>! if $KAGEMAI_DEBUG
     
-    print "HTTP/1.1 200 OK\r\n" if defined?(MOD_RUBY)
-    print "Content-Type: text/html; charset=EUC-JP\r\n"
-    print "Content-Language: ja\r\n"
-    print "\r\n"
+    print_http_head('text/html', charset, Kagemai::Config[:language])
     print "<HTML>\r\n"
     print "<HEAD>\r\n"
-    print "  <META content=text/html; charset=EUC-JP http-equiv=Content-Type>\r\n"
+    print "  <META content=text/html; charset=#{charset} http-equiv=Content-Type>\r\n"
     print "  <META content=text/css http-equiv=Content-Style-Type>\r\n"
     print "  <LINK href=kagemai.css rel=stylesheet type=text/css>\r\n"
     print "  <TITLE>#{e.class.to_s}</TITLE>\r\n"
@@ -89,8 +102,7 @@ def execute(mode, cgi = nil)
   end
   
 rescue Exception => e
-  print "HTTP/1.1 200 OK\r\n" if defined?(MOD_RUBY)
-  print "Content-Type: text/plain\r\n\r\n"
+  print_http_head('text/plain')
   print "Following errors occurred. Please contact administrator.\r\n\r\n"
   print "#{e.to_s} (#{e.class})\r\n"
   

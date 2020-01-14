@@ -1,26 +1,9 @@
 =begin
   form_handler.rb - module for check form values
-
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'kagemai/mail/mail'
+require 'kagemai/message'
 
 module Kagemai
   module AdminAuthorization
@@ -30,7 +13,36 @@ module Kagemai
       end
     end
   end
-
+  
+  class ElementType
+    def validate(cgi)
+      value = cgi.get_param(@id, default())
+      result = true
+      if value then
+        if email_check && !FormHandler.valid_email_address?(value) then
+          result = :err_invalid_email_address
+        elsif max_size && max_size < value.size then
+          result = :err_exceed_max_size
+        end
+      else
+        result = :err_required
+      end
+      result
+    end    
+  end
+  
+  class DateElementType
+    def validate(cgi)
+      value = cgi.get_param(@id, default())
+      begin
+        value.to_s.empty? || Date.parse(value)
+        true
+      rescue ArgumentError
+        :err_invalid_date
+      end
+    end
+  end
+  
   module FormHandler
     class FormErrors
       def initialize(errors = {})
@@ -59,60 +71,83 @@ module Kagemai
     end
     attr_reader :errors
 
-    def check_message_form(report_type)
-      report_type.each do |etype|        
-        check_form_value(etype.id, 
-                         etype.default, 
-                         etype.email_check, 
-                         etype.kind_of?(FileElementType), etype.max_size)
+    
+    SAVE_OPTIONS = %w(allow_cookie email_notification)
+    def save_values(report_type, attachments)
+      message = Message.new(report_type)
+      report_type.each do |etype|
+        unless etype.kind_of?(FileElementType)
+          value = @cgi.get_param(etype.id, etype.default)
+          message[etype.id] = value
+          @session[etype.id] = value
+        else
+          if attachments[etype.id] then
+            message.element(etype.id).add_fileinfo(attachments[etype.id])
+          end
+        end
       end
-
-      valid_form?()
+      
+      SAVE_OPTIONS.each do |option|
+        @session[option] = @cgi.get_param(option)
+      end
+      message
     end
-
-    def valid_form?()
-      Logger.debug('FormHandler', "valid_form: @errors = #{@errors.inspect}")
+    
+    def restore_values(report_type)
+      report_type.each do |etype|
+        unless etype.kind_of?(FileElementType)
+          @cgi.set_param(etype.id, @session[etype.id]) unless @session[etype.id].to_s.empty?
+          @session[etype.id] = nil
+        end
+      end
+      
+      SAVE_OPTIONS.each do |option|
+        @cgi.set_param(option, @session[option]) unless @session[option].to_s.empty?
+        @session[option] = nil
+      end
+    end
+    
+    def validate_message_form(report_type)
+      report_type.each do |etype|
+        result = etype.validate(@cgi)
+        unless result == true then
+          add_error(result, etype.id)
+        end
+      end
       @errors.empty?
     end
-
+    
     def error_id?(id)
       @errors.find{|key, earray| earray.include?(id)} != nil
     end
-
+    
+    def valid_form?()
+      @errors.empty?
+    end
+    
     def tag_class(id)
       error_id?(id) ? 'class="error"' : ''
     end
-
-    def check_form_value(id, default, email_check, attachment = false, max_size = 64)
-      unless attachment then
-        value = @cgi.get_param(id, default)
-        if value then
-          if email_check && !valid_email_address?(value) then
-            Logger.debug('FormHandler', "email_check: #{id} = #{value.inspect}")
-            add_error(:err_invalid_email_address, id)
-            return false
-          end
-          if max_size && max_size < value.size then
-            Logger.debug('FormHandler', "exceed max size: value.size = #{value.size}")
-            add_error(:err_exceed_max_size, id)
-            return false
-          end
-        else
-          Logger.debug('FormHandler', "required: #{id}")
-          add_error(:err_required, id)
-          return false
-        end
-      else
-        validness, err = validate_attachment(id)
-        unless validness then
-          add_error(err, id)
-          return false
-        end
+    
+    def validate_required_value(id)
+      unless @cgi.get_param(id) then
+        add_error(:err_required, id)
+        return false
       end
       true
     end
-
-    def check_int_value(id)
+    
+    def validate_email_address(id)
+      address = @cgi.get_param(id)
+      if address && valid_email_address?(address)
+        return true
+      else
+        add_error(:err_invalid_email_address, id)
+        return false
+      end
+    end
+    
+    def validate_int_value(id)
       value = @cgi.get_param(id)
       if value && /[^\d]/ =~ value then
         add_error(:err_invalid_int_value, id)
@@ -120,11 +155,12 @@ module Kagemai
       end
       true
     end
-
+    
     def valid_email_address?(address)
       RMail::Address.validate(address)
     end
-
+    module_function :valid_email_address?
+    
     def add_error(key, value)
       unless @errors.has_key?(key) then
         @errors[key] = []

@@ -1,13 +1,17 @@
-<%# requirements: report, message %>
+<%# requirements: report, message, preview, project %>
 
-<p>��������ݡ��Ȥ���Ƥ�����դ��ޤ�����<br>
-   ��Ƥ��줿��ݡ��Ȥ����Ƥϰʲ����̤�Ǥ���</p>
+<% unless preview %>
+<p>新しいレポートの投稿を受け付けました。<br>
+   投稿されたレポートの内容は以下の通りです。</p>
+<% end %>
 
 <table>
+  <% unless preview %>
   <tr>
-    <th>��ݡ���ID</th>
+    <th>レポートID</th>
     <td><%= report.id %></td>
   </tr>
+  <% end %>
 
   <% message.type.each do |etype| %>
     <% next if etype.report_attr && !etype.allow_guest && Mode::GUEST.current? %>
@@ -18,11 +22,24 @@
   <% end %>
 </table>
 
-<p><%= report.href('��ݡ��Ȥξܺ٤򸫤�') %></p>
+<% unless preview %>
+<p><%= report.href('レポートの詳細を見る') %></p>
 
 <% if report.error then %>
 <hr>
 <div class="error">
-���Υ᡼��������ǥ��顼��ȯ�����ޤ�����(<%= report.error %>)
+通知メールの送信でエラーが発生しました。(<%= report.error %>)
 </div>
+<% end %>
+
+<% else %>
+<form action="<%= project.url  %>" 
+      method="post" 
+      enctype="multipart/form-data"
+      accept-charset="<%= project.charset %>">
+  <input type="hidden" name="action" value="<%= NewReport.name %>">
+  <input type="hidden" name="project" value="<%= project.id %>">
+  <input type="submit" value="戻る" name="submit_back">
+  <input type="submit" value="送信する" name="submit_post">
+</form>
 <% end %>

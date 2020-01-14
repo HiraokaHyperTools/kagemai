@@ -1,0 +1,7 @@
+# Kagemai project configuration file
+
+@name = 'test project 2'
+@description = 'desc 2' 
+
+@charset = 'UTF-8'
+@db_manager_class = FileStore

@@ -1,29 +1,12 @@
 =begin
   util.rb - utilities
-  
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-  
-  This file is part of KAGEMAI.  
-  
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'fileutils'
 require 'erb'
 require 'cgi'
 require 'thread'
+require 'date'
 require 'kagemai/error'
 require 'kagemai/logger'
 require 'kagemai/template_cache'
@@ -50,17 +33,12 @@ class String
   end
 end
 
-if RUBY_VERSION < "1.9.0" then
-  require 'parsedate' 
-else
-  require 'time'
-end
-
 if RUBY_VERSION < "1.9.0"
   require 'parsedate' 
 else
+  require 'time'
+  require 'date/format'
   module ParseDate
-    require 'date/format'
     def ParseDate.parsedate(date, cyear)
       h = Date._parse(date)
       [h[:year], h[:mon], h[:mday], h[:hour], h[:min], h[:sec], [:zone], [:wday]]
@@ -99,6 +77,22 @@ class Time
     @@week_of_days[wod]
   end
 end
+
+class Date
+  # for save xml
+  def escape_h()
+    self.to_s.escape_h()
+  end
+  
+  def week_of_day()
+    Date.week_of_day(self.cwday)
+  end
+  
+  def self.week_of_day(wd)
+    Time.week_of_day(wd)
+  end
+end
+
 
 def File.create(path)
   File.open(path, 'wb') {|file| }

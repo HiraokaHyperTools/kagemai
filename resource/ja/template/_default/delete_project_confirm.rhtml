@@ -1,22 +1,22 @@
 <%# requirements: mode, project %>
 
-<p>°Ê²¼¤Î¥×¥í¥¸¥§¥¯¥È¤òºï½ü¤·¤Æ¤â¤è¤í¤·¤¤¤Ç¤¹¤«¡©</p>
+<p>ä»¥ä¸‹ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤ã—ã¦ã‚‚ã‚ˆã‚ã—ã„ã§ã™ã‹ï¼Ÿ</p>
 
 <%= eval_template('project_info.rhtml', {:project => project, :show_report_count => true, :mode => mode}) %>
 
 <form action="<%= mode.url %>" method="POST">
   <ul>
-    <li><input name="confirm" type="radio" value="yes">¤Ï¤¤¡¢ºï½ü¤·¤Þ¤¹¡£¤¿¤À¤·¡¢¥Ç¡¼¥¿¤Ï»Ä¤·¤Æ¤ª¤­¤Þ¤¹¡£</li>
-    <li><input name="confirm" type="radio" value="yes_all">¤Ï¤¤¡¢ºï½ü¤·¤Þ¤¹¡£¥Ç¡¼¥¿¤âÁ´Éôºï½ü¤·¤Þ¤¹¡£</li>
-    <li><input name="confirm" type="radio" value="no" checked="checked">¤¤¤¤¤¨¡¢¤ä¤á¤Æ¤ª¤­¤Þ¤¹¡£</li>
+    <li><input name="confirm" type="radio" value="yes">ã¯ã„ã€å‰Šé™¤ã—ã¾ã™ã€‚ãŸã ã—ã€ãƒ‡ãƒ¼ã‚¿ã¯æ®‹ã—ã¦ãŠãã¾ã™ã€‚</li>
+    <li><input name="confirm" type="radio" value="yes_all">ã¯ã„ã€å‰Šé™¤ã—ã¾ã™ã€‚ãƒ‡ãƒ¼ã‚¿ã‚‚å…¨éƒ¨å‰Šé™¤ã—ã¾ã™ã€‚</li>
+    <li><input name="confirm" type="radio" value="no" checked="checked">ã„ã„ãˆã€ã‚„ã‚ã¦ãŠãã¾ã™ã€‚</li>
   </ul>
   <div>
     <input type="hidden" name="action" value="delete_project">
     <input type="hidden" name="s" value="2">
     <input type="hidden" name="project" value="<%= project.id %>">
     <% if project.lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="Æü">
+    <input type="hidden" name="jp_enc_test" value="æ—¥">
     <% end %>
-    <input type="submit" value="Á÷¿®">
+    <input type="submit" value="é€ä¿¡">
   </div>
 </form>

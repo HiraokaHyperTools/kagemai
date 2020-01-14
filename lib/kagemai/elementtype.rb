@@ -1,25 +1,8 @@
 =begin
-  ElementType - ¥á¥Ã¥»¡¼¥¸¤¬»ı¤ÄÍ×ÁÇ¤Î¼ïÎà¤òÉ½¤·¤Ş¤¹
-
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  ElementType - ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ãŒæŒã¤è¦ç´ ã®ç¨®é¡ã‚’è¡¨ã—ã¾ã™
 =end
 
+require 'date'
 require 'kagemai/message_bundle'
 
 module Kagemai
@@ -54,7 +37,7 @@ module Kagemai
 
   class ElementType
     include Enumerable
-
+    
     def initialize(attr)
       before_init_hook()
       
@@ -65,7 +48,8 @@ module Kagemai
         raise InitializeError, 
           "Invalid ReportType definition. '#{k}' isn't specified." unless @attr.has_key?(k)
       end
-
+      @id = @attr['id']
+      
       # known options
       options = [
         ElementTypeOption.new('name', attr['id']),
@@ -100,7 +84,7 @@ module Kagemai
     def self._load(obj)
       ElementType.new(Marshal.load(obj))
     end
-    
+        
     # max string-value size
     # nil means unlimited.
     def max_size()
@@ -108,8 +92,12 @@ module Kagemai
     end
     
     def element_created(element)
-      # Element ¤¬ºî¤é¤ì¤¿¤È¤­¤Ë¸Æ¤Ğ¤ì¤ë¡£
-      # Í×ÁÇ·¿¸ÇÍ­¤ÎÆ°ºî¤òÍ×ÁÇ¤Ë²Ã¤¨¤¿¤¤¤È¤­¤Ë¥ª¡¼¥Ğ¡¼¥é¥¤¥É¤¹¤ë
+      # Element ãŒä½œã‚‰ã‚ŒãŸã¨ãã«å‘¼ã°ã‚Œã‚‹ã€‚
+      # è¦ç´ å‹å›ºæœ‰ã®å‹•ä½œã‚’è¦ç´ ã«åŠ ãˆãŸã„ã¨ãã«ã‚ªãƒ¼ãƒãƒ¼ãƒ©ã‚¤ãƒ‰ã™ã‚‹
+    end
+
+    def empty_value()
+      default()
     end
 
     def self.default_value()
@@ -430,7 +418,11 @@ module Kagemai
       attr['default'] = 'off' unless attr.has_key?('default')
       super(attr)
     end
-
+    
+    def empty_value()
+      'off'
+    end
+    
     def self.default_value()
       'off'
     end
@@ -447,7 +439,76 @@ module Kagemai
       BooleanElementType.new(Marshal.load(obj))
     end
   end
+  
+  class DateElementType < ElementType
+    def self.tagname()
+      'date'
+    end
+    
+    def self._load(obj)
+      DateElementType.new(Marshal.load(obj))
+    end
+    
+    def self.boolean_options()
+      bopt = [
+        ElementTypeBooleanOption.new('report_attr', false, 
+                                     MessageBundle[:ElementType_opt_report_attr]),
+        ElementTypeBooleanOption.new('allow_guest', 
+                                     false,
+                                     MessageBundle[:ElementType_opt_allow_guest], 
+                                     false, 
+                                     'report_attr'),
+        ElementTypeBooleanOption.new('allow_user', 
+                                     true,
+                                     MessageBundle[:ElementType_opt_allow_user], 
+                                     false, 
+                                     'report_attr'),
+        ElementTypeBooleanOption.new('list_item', false, 
+                                     MessageBundle[:ElementType_opt_list_item],
+                                     false,
+                                     'report_attr'),
+        ElementTypeBooleanOption.new('show_header', false, 
+                                     MessageBundle[:ElementType_opt_show_header]),
+        ElementTypeBooleanOption.new('show_header_line', 
+                                     false, 
+                                     MessageBundle[:ElementType_opt_show_header_line],
+                                     false, 
+                                     'show_header'),
+        ElementTypeBooleanOption.new('hide_from_guest', 
+                                     false, 
+                                     MessageBundle[:ElementType_opt_hide_from_guest]),
+      ] 
 
+      bopt + extended_boolean_options()
+    end
+    
+    def use_cookie?
+      false
+    end
+    
+    def element_created(element)
+      class << element
+        def value()
+          @value.to_s.empty? ? nil : @value
+        end
+        
+        def value=(v)
+          if v.nil? || v.kind_of?(String) then
+            @value = !v.to_s.empty? ? Date.parse(v) : nil
+          elsif v.kind_of?(Date) then
+            @value = v
+          elsif v.kind_of?(Time) then
+            @value = v.to_date
+          elsif defined?(DBI) && v.kind_of?(DBI::Date)
+            @value = v.to_date
+          else
+            raise ArgumentError, "unknown class: #{v.class}"
+          end
+        end
+      end
+    end
+  end
+  
   class FileElementType < ElementType
     def self._load(obj)
       FileElementType.new(Marshal.load(obj))

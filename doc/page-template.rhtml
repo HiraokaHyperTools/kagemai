@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html lang="ja">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=EUC-JP">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <link rel="stylesheet" type="text/css" href="kagemai_doc.css">
+  <title>ページテンプレート一覧</title>
+</head>
+<body>
+
+<h1>ページテンプレート一覧</h1>
+
+<p>
+ページを作成する際に使用されるテンプレートファイル一覧です。
+デフォルトのテンプレートは、resource/ja/template/_default にあります。
+</p>
+
+<%
+  entry = []
+  entry << %w(add_message.rhtml メッセージ投稿後に表示するページです。)
+  entry << %w(admin.rhtml 管理用のトップページです。)
+  entry << %w(attr_search_result.rhtml レポート属性を用いた検索結果ページです。)
+  entry << %w(config_choice.rhtml 選択肢フィールドの設定ページです。)
+  entry << %w(config_env.rhtml 全体の設定フォームです。)
+  entry << %w(config_env_done.rhtml 全体設定後の確認ページです。)
+  entry << %w(config_field_add.rhtml フィールド追加ページです。)
+  entry << %w(config_field_edit.rhtml フィールド編集ページです。)
+  entry << %w(config_field_form.rhtml フィールドの追加、編集用のフォームです。)
+  entry << %w(config_field_main.rhtml フィールド編集のトップページです。)
+  entry << %w(config_field_select.rhtml フィールドをカスタマイズするプロジェクトの選択ページです。)
+  entry << %w(config_project.rhtml プロジェクトの設定変更フォームです。)
+  entry << %w(config_project_done.rhtml プロジェクト設定変更後の確認ページです。)
+  entry << %w(config_project_select.rhtml 設定を変更するプロジェクトの選択ページです。)
+  entry << %w(create_project.rhtml プロジェクト作成フォームです。)
+  entry << %w(create_project_done.rhtml プロジェクト作成後の確認ページです。)
+  entry << %w(delete_project.rhtml 削除するプロジェクトの選択ページです。)
+  entry << %w(delete_project_confirm.rhtml 削除するプロジェクトの情報と、削除方法の確認ページです。)
+  entry << %w(delete_project_done.rhtml 削除したプロジェクトの確認ページです。)
+  entry << %w(footer.rhtml 各ページに挿入されるフッターです。)
+  entry << %w(keyword_search.rhtml 簡易検索フォームです。)
+  entry << %w(keyword_search_result.rhtml 簡易検索結果を表示するページです。)
+  entry << %w(message_form.rhtml メッセージ投稿用フォームです。)
+  entry << %w(navi.rhtml 各ページに挿入されるナビゲータです。)
+  entry << %w(new_form.rhtml 新規作成フォームです。)
+  entry << %w(new_report.rhtml 新規作成後の確認ページです。)
+  entry << %w(project_info.rhtml プロジェクト情報表示用の表です。)
+  entry << %w(projects.rhtml プロジェクト一覧ページです。)
+  entry << %w(report_index.rhtml レポートのインデックスのテンプレートです。)
+  entry << %w(search.rhtml 検索ページです。)
+  entry << %w(search_form.rhtml 検索用フォームです。)
+  entry << %w(search_navi.rhtml 検索結果のナビゲータ（"前のページ"、"次のページ"）です。)
+  entry << %w(search_result.rhtml 検索結果ページです。)
+  entry << %w(split_report.rhtml レポート分割用のページです。)
+  entry << %w(split_report_done.rhtml レポート分割結果表示ページです。)
+  entry << %w(summary.rhtml サマリ用のページです。)
+  entry << %w(summary_month.rhtml １ヶ月のサマリ表示用のページです。)
+  entry << %w(topics.rhtml 各プロジェクトのトップページです。)
+  entry << %w(topics_collection.rhtml 選択肢別のレポートインデックスです。)
+  entry << %w(topics_count.rhtml 選択肢別のレポート数です。)
+  entry << %w(view_report.rhtml レポートの詳細表示ページです。)
+  entry << %w(report_b.rtxt 通知メールのボディのテンプレートです。)
+  entry << %w(report_h.rtxt 通知メールのヘッダのテンプレートです。このファイル中の空行は、自動的に削除されます。)
+%>
+
+<table>
+<% tr_class = 'even' %>
+<% entry.each do |h, d| %>
+  <tr class="<%= tr_class %>">
+    <th><%= h %></th>
+    <td><%= d %></td>
+  </tr>
+  <% tr_class = tr_class == 'even' ? 'odd' : 'even' %>
+<% end %>
+</table>
+
+
+<!-- ページのフッターは footer から自動で取り込まれます。-->
+<%= open('footer') {|file| file.read } %>
+</body>
+</html>

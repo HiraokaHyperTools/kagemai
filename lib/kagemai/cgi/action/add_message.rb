@@ -1,23 +1,5 @@
 =begin
   AddMessage
-
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'kagemai/cgi/action'
@@ -45,8 +27,10 @@ module Kagemai
         return double_post_error_result()
       end
       
+      restore_values(@project.report_type)
       captcha_auth = check_captcha()
-      unless check_message_form(@project.report_type) && captcha_auth then
+      submit_back = @cgi.get_param('submit_back')
+      unless !submit_back && validate_message_form(@project.report_type) && captcha_auth then
         @cgi.cached_attachments = save_attachments_to_session(project.report_type) 
         
         param = {
@@ -58,20 +42,33 @@ module Kagemai
           :email_notification => @email_notification,
           :use_captcha        => use_captcha?(),
           :captcha_error      => !captcha_auth,
+          :submit_back        => submit_back,
         }
         
         init_captcha()
         start_form(ADD_MESSAGE_FORM)
-        title = MessageBundle[:title_add_message_e]
+        title = submit_back ? MessageBundle[:title_add_message] : MessageBundle[:title_add_message_e]
         body = eval_template('message_form.rhtml', param)
         return ActionResult.new(title, header(), body, footer(), 
                                 @css_url, @lang, @charset)
       end
-      
+
       # get last message
       report_id = Util.untaint_digit_id(report_id)
-      last_message = @project.load_report(report_id).last
-
+      report = @project.load_report(report_id)
+      last_message = report.last
+      
+      if @cgi.get_param('submit_preview') then
+        @cgi.cached_attachments = save_attachments_to_session(project.report_type) 
+        message = save_values(@project.report_type, @cgi.cached_attachments)
+        skip_captcha()
+        start_form(ADD_MESSAGE_FORM)
+        param = {:report => report, :message => message, :preview => true, :project=> @project}
+        body = eval_template('add_message.rhtml', param)
+        title = MessageBundle[:title_add_message_preview]
+        return ActionResult.new(title, header(), body, footer(), @css_url, @lang, @charset)
+      end
+            
       # add new message
       message = Message.new(@project.report_type)
       attachments = {}
@@ -84,10 +81,10 @@ module Kagemai
         elsif (etype.report_attr && Mode::GUEST.current? && !etype.allow_guest) ||
               (etype.report_attr && Mode::GUEST.current? && etype.hide_from_guest) ||
               (etype.report_attr && Mode::USER.current? && !etype.allow_user) then
-          default = etype.report_attr ? last_message[etype.id] : etype.default
+          default = etype.report_attr ? last_message[etype.id] : etype.empty_value
           message[etype.id] = @cgi.get_param(etype.id, default)
         else
-          message[etype.id] = @cgi.get_param(etype.id, etype.default)
+          message[etype.id] = @cgi.get_param(etype.id, etype.empty_value)
         end
       end
       message.set_option('email_notification', email_notification_allowed?)
@@ -98,7 +95,7 @@ module Kagemai
       begin
         report = @project.add_message(report_id, message)
         title = MessageBundle[:title_add_message]
-        param = {:report => report, :message => message}
+        param = {:report => report, :message => message, :preview => false}
         body  = eval_template('add_message.rhtml', param)
       rescue SpamError
         title = MessageBundle[:title_spam_error]

@@ -1,25 +1,5 @@
 =begin
   Renderer - HTML rendering module
-
-  Copyright(C) 2002, 2003 FUKUOKA Tomoyuki.
-
-  This file is part of KAGEMAI.  
-
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
-
-  $Id: htmlrenderer.rb 313 2008-02-13 14:47:19Z fukuoka $
 =end
 
 module Kagemai
@@ -119,8 +99,8 @@ module Kagemai
 
     module HttpUrl 
       # RFC 2396, 2616, RubyMagic pp.75-85
-      # NOTE: escape_h ¤µ¤ì¤¿Ê¸»úÎó¤òÂĞ¾İ¤Ë¤¹¤ë¤¿¤á¡¢'&' ¤ò '&amp;' ¤Ë¤·¤Æ¤¤¤ë¡£
-      #       ¼ÂÍÑ¾å '(' ¤È ')' ¤Ï´Ş¤á¤Ê¤¤Êı¤¬ÎÉ¤µ¤½¤¦¤Ê¤Î¤Çºï½ü¤·¤Æ¤¤¤ë (BTS:86)
+      # NOTE: escape_h ã•ã‚ŒãŸæ–‡å­—åˆ—ã‚’å¯¾è±¡ã«ã™ã‚‹ãŸã‚ã€'&' ã‚’ '&amp;' ã«ã—ã¦ã„ã‚‹ã€‚
+      #       å®Ÿç”¨ä¸Š '(' ã¨ ')' ã¯å«ã‚ãªã„æ–¹ãŒè‰¯ã•ãã†ãªã®ã§å‰Šé™¤ã—ã¦ã„ã‚‹ (BTS:86)
       alpha         = '[A-Za-z]'
       alphanum      = '[\w]'
       alphanum2     = '[\w\-]'

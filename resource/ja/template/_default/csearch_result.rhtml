@@ -12,7 +12,7 @@
 <%= eval_template('csearch_form.rhtml', params) %>
 
 <div class="day">
-<h2><span class="title">������� (�ҥåȿ�: <%= total %>)</span></h2>
+<h2><span class="title">検索結果 (ヒット数: <%= total %>)</span></h2>
 <div class="body">
 <div class="section">
 
@@ -20,10 +20,10 @@
 
 <table>
   <tr>
-    <th>�ץ���������</th>
+    <th>プロジェクト</th>
     <th>ID</th>
-    <th>�����ȥ�</th>
-    <th>�ǽ�������</th>
+    <th>タイトル</th>
+    <th>最終更新日</th>
   </tr>
 
 <% bts.each_project do |project| %>
@@ -51,7 +51,7 @@
 
 <% else %>
 
-<p>���˰��פ����ݡ��ȤϤ���ޤ���</p>
+<p>条件に一致するレポートはありません</p>
 
 <% end %>
 

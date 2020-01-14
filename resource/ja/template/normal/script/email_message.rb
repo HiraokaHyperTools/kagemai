@@ -1,4 +1,4 @@
-## ��ݡ��Ȥο�����������ץ饤����ô���Ԥ˥᡼�����������
+## レポートの新規作成、リプライ時に担当者にメールを送信する
 
 class MessageSender
   include FormHandler

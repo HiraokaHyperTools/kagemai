@@ -10,19 +10,16 @@
 	<% project.report_type.find_all{|etype| etype.keyword_search?}.each do |etype| %>
       <!-- search_elements[<%= etype.id %>] = <%= search_elements[etype.id] %> -->
       <% checked = search_elements[etype.id] ? 'checked="checked"' : '' %>
-      <input type="checkbox" name="<%= etype.id %>" <%= checked %>><%= etype.name %>
+      <input type="checkbox" name="<%= etype.id %>" id="label_<%= etype.id %>" <%= checked %>><label for="label_<%= etype.id %>"><%= etype.name %></label>
     <% end %>
     <br>
     <% checked = case_insensitive ? 'checked="checked"' : '' %>
-    <input type="checkbox" name="case_insensitive" <%= checked %>> Case-insensitive
+    <input type="checkbox" name="case_insensitive" id="label_case_insensitive" <%= checked %>><label for="label_case_insensitive">Case-insensitive</label>
   </div>
 
   <div>
     <input type="hidden" name="project" value="<%= project.id %>">
     <input type="hidden" name="action" value="search">
     <input type="hidden" name="search_type" value="keyword">
-    <% if @lang == 'ja' %>
-    <input type="hidden" name="jp_enc_test" value="Æü">
-    <% end %>
   </div>
 </form>

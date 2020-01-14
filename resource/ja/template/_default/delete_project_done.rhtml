@@ -1,17 +1,17 @@
 <%# requirements: mode, project, del_name, delete_all %>
 
-<p>°Ê²¼¤Î¥×¥í¥¸¥§¥¯¥È¤òºï½ü¤·¤Þ¤·¤¿¡£</p>
+<p>ä»¥ä¸‹ã®ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã‚’å‰Šé™¤ã—ã¾ã—ãŸã€‚</p>
 
 <% unless delete_all then %>
 <p>
-¥Ç¡¼¥¿¤Ï '<%= "#{del_name}" %>' ¤ËÊÝÂ¸¤µ¤ì¤Æ¤¤¤Þ¤¹¡£<br>
-(DBMS ¤òÍøÍÑ¤·¤Æ¤¤¤ë¾ì¹ç¤Ë¤Ï¡¢DB ¤Ë¤â¥Ç¡¼¥¿¤¬»Ä¤µ¤ì¤Æ¤¤¤Þ¤¹¡£)
+ãƒ‡ãƒ¼ã‚¿ã¯ '<%= "#{del_name}" %>' ã«ä¿å­˜ã•ã‚Œã¦ã„ã¾ã™ã€‚<br>
+(DBMS ã‚’åˆ©ç”¨ã—ã¦ã„ã‚‹å ´åˆã«ã¯ã€DB ã«ã‚‚ãƒ‡ãƒ¼ã‚¿ãŒæ®‹ã•ã‚Œã¦ã„ã¾ã™ã€‚)
 </p>
 <% end %>
 
 <%= eval_template('project_info.rhtml', {:project => project, :show_report_count => false, :mode => mode}) %>
 
 <ul>
-  <li><%= '¥×¥í¥¸¥§¥¯¥È¤Îºï½ü¤ËÌá¤ë'.href(mode.url, {'action' => DeleteProject.name}) %></li>
-  <li><%= '¥×¥í¥¸¥§¥¯¥È°ìÍ÷¤ËÌá¤ë'.href(mode.url, {'action' => Projects.name}) %></li>
+  <li><%= 'ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆã®å‰Šé™¤ã«æˆ»ã‚‹'.href(mode.url, {'action' => DeleteProject.name}) %></li>
+  <li><%= 'ãƒ—ãƒ­ã‚¸ã‚§ã‚¯ãƒˆä¸€è¦§ã«æˆ»ã‚‹'.href(mode.url, {'action' => Projects.name}) %></li>
 </ul>

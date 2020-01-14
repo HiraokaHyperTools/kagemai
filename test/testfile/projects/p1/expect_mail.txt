@@ -1,0 +1,34 @@
+Date: Fri, 27 Dec 2002 15:15:32 +0900
+From: fukuoka@daifukuya.com
+Reply-To: kagemai-bts@daifukuya.com
+Subject: [p1:0002] sendmail test
+To: fukuoka@daifukuya.com
+Message-ID: <p1.2.1.1040969732@localhost>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+X-Kagemai-Version: TEST_VERSION/TEST_CODENAME
+X-Kagemai-Project-ID: p1
+X-Kagemai-Project-Name: test project 1
+X-Kagemai-Report-ID: 2
+X-Kagemai-Message-ID: 1
+X-Kagemai-Loop: 1
+
+fukuoka@daifukuya.com wrote: 
+
+hello world
+
+
+== このレポートの詳細は以下の通りです ==
+
+レポート ID  : 2
+レポート URL : http://localhost/kagemai/guest.cgi?project=p1&action=view_report&id=2
+
+状況                 : 新規
+メールアドレスの保存 : true
+
+＃ あなたが、このようなメッセージに無関係である場合には、
+＃ 管理者 <kagemai-admin@daifukuya.com> までご連絡ください。
+
+--
+Bug Tracking System 影舞 TEST_VERSION.
+http://www.daifukuya.com/kagemai/

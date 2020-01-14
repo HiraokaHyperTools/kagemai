@@ -1,7 +1,6 @@
 ### Kagemai message resources. 
 ### Encoding: EUC-JP
 ###
-### $Id: messages 409 2008-02-23 14:07:23Z fukuoka $
 
 ### Navigation
 navi_home = Home
@@ -31,9 +30,11 @@ title_admin = Kagemai administration
 title_new_report = New bug report
 title_new_report_e = Error creating a new bug report
 title_new_report_added = New bug report sent
+title_new_report_preview = New bug report
 
 title_add_message_e = Message submission error
 title_add_message   = Message sent
+title_add_message_preview = New Message
 
 title_search_form = Search
 title_search_result = Search results
@@ -143,7 +144,8 @@ XMLFileStore  = Save reports in individual files
 PStore        = Save reports using PStore
 PostgresStore = Save reports using PostgreSQL
 MySQLStore    = Save reports using MySQL
-MSSqlStore    = Save reports using SQL*Server
+MSSqlStore    = Save reports using SQL Server
+ODBCStore     = Save reports using SQL Server(ODBC)
 
 ### ElementType name
 Kagemai::StringElementType      = String
@@ -152,6 +154,7 @@ Kagemai::MultiSelectElementType = Multiple-selection box
 Kagemai::TextElementType        = Text box
 Kagemai::BooleanElementType     = Checkbox
 Kagemai::FileElementType        = File attachment
+Kagemai::DateElementType        = Date
 
 Kagemai::StringElementType_desc       = One-line string
 Kagemai::SelectElementType_desc       = Can select a single value among multiple candidates
@@ -159,6 +162,7 @@ Kagemai::MultiSelectElementType_desc  = Can select multiple values among multipl
 Kagemai::TextElementType_desc         = Multiple-line text box
 Kagemai::BooleanElementType_desc      = Takes the value "on" or "off"
 Kagemai::FileElementType_desc         = Field for entering a file attachment
+Kagemai::DateElementType_desc         = Filed for date (yyyy-mm-dd)
 
 ### Error messages
 err_no_such_project   = There is no project named "%s."
@@ -176,6 +180,7 @@ err_ascii_only = You can only use alphanumeric characters for the project ID.
 err_subject_tag_figure = Please specify a number from 0 to 7 for the bug ID padding.
 err_invalid_int_value = Please enter an integer value.
 err_exceed_max_size = too long input string
+err_invalid_date = invalid date format
 
 err_config_field_default = Since reports have already been submitted for this project, you cannot set the default value for this field to "nil" to make it required.
 err_config_field_default2 = If you create a field that is part of a bug report and that guests cannot alter, you must specify a default value for it. 

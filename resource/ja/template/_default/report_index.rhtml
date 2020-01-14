@@ -15,9 +15,9 @@
 <table>
   <tr>
     <th style="text-align:left" colspan="<%= item_size.to_s %>">
-      Á´<%= reports ? total : 0 %>·ï
+      å…¨<%= reports ? total : 0 %>ä»¶
       <% if reports.size < total then %>
-        (<%= offset + 1%>¡Á<%= offset + reports.size %>·ïÌÜ¤Þ¤Ç)
+        (<%= offset + 1%>ã€œ<%= offset + reports.size %>ä»¶ç›®ã¾ã§)
       <% end %>
     </th>
   </tr>
@@ -30,9 +30,9 @@
     <% end %>
 
     <% unless hide_first_reporter then %>
-      <th>ºÇ½é¤ÎÊó¹ð¼Ô</th>
+      <th>æœ€åˆã®å ±å‘Šè€…</th>
     <% end %>
-    <th>ºÇ½ª¹¹¿·Æü</th>
+    <th>æœ€çµ‚æ›´æ–°æ—¥</th>
   </tr>
   <% if reports then
        reports.each do |report| %>
@@ -45,7 +45,7 @@
       <% else %>
         <%
           value = report.element(etype.id).html_value(true)
-	  title = report.href(value) + " (#{report.visible_size - 1}¥ê¥×¥é¥¤)"
+	  title = report.href(value) + " (#{report.visible_size - 1}ãƒªãƒ—ãƒ©ã‚¤)"
         %>
         <td class="title_index"><%= title %></td>
       <% end %>
@@ -60,7 +60,7 @@
     <% end %>
   <% else %>
   <tr>
-  <td colspan="<%= item_size.to_s %>">(¤¢¤ê¤Þ¤»¤ó)</td>
+  <td colspan="<%= item_size.to_s %>">(ã‚ã‚Šã¾ã›ã‚“)</td>
   </tr>
   <% end %>
 </table>

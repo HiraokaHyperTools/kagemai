@@ -1,0 +1,11 @@
+To: kagemai-bugs@daifukuya.com
+From: FUKUOKA Tomoyuki <fukuoka@daifukuya.com>
+Subject: Mail Accept Test 1
+Message-ID: <hoge@mail.daifukuya.com>
+Date: Thu, 07 Jan 2003 23:23:00 +0900
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-2022-jp
+
+test mail accept 1.
+line 1.
+line 2.

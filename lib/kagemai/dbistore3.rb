@@ -1,54 +1,30 @@
 =begin
   BaseDBIStore3 - abstract DBI report manager
-  
-  Copyright(C) 2002-2008 FUKUOKA Tomoyuki.
-  
-  This file is part of KAGEMAI.  
-  
-  KAGEMAI is free software; you can redistribute it and/or modify
-  it under the terms of the GNU General Public License as published by
-  the Free Software Foundation; either version 2 of the License, or
-  (at your option) any later version.
-  
-  This program is distributed in the hope that it will be useful,
-  but WITHOUT ANY WARRANTY; without even the implied warranty of
-  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
-  
-  You should have received a copy of the GNU General Public License
-  along with this program; if not, write to the Free Software
-  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 =end
 
 require 'dbi'
 require 'tempfile'
+require 'kagemai/store'
 require 'kagemai/logger'
 require 'kagemai/searchcond'
 require 'kagemai/dbiutil'
 
-module Kagemai  
-  module BaseDBIStore3
-    
-    def self.create_driver_url(driver_name, dbname, args)
-      db_args = args ? args.dup : {}
-      db_args['database'] = dbname
-      db_args_str = db_args.collect{|k, v| "#{k}=#{v}"}.join(';')
+class DateTime
+  def to_time
+    Time.local(year(), month(), day(), hour(), min(), sec())
+  end
+end
 
-      "DBI:#{driver_name}:#{db_args_str}"
+module Kagemai  
+  class BaseDBIStore3 < Store
+    
+    def self.create(dir, project_id, report_type, charset)
+      init_tables(dir, project_id, report_type, charset)
     end
     
-    def self.create(type, dir, project_id, report_type, charset)
-      begin
-        init_tables(type, dir, project_id, report_type, charset)
-      rescue Exception => e
-        destroy(type, dir, project_id)
-        raise e
-      end
-    end
-    
-    def self.destroy(type, dir, project_id)
+    def self.destroy(dir, project_id)
       tables = %w(reports messages attachments)
-      store  = type.new(dir, project_id, nil, nil)
+      store  = self.new(dir, project_id, nil, nil)
       store.transaction do
         store.execute do |db|
           tables.each {|table| db.do("drop table #{store.table_name(table)}")}
@@ -59,18 +35,19 @@ module Kagemai
     def base_report_cols()
       [
        'id int primary key',
-       'size int',
-       'visible_size int',
+       'size int default 0',
+       'visible_size int default 0',
        "author      #{sql_types['varchar'].vt(255)}",
        "create_time #{sql_types['timestamp']}",
        "modify_time #{sql_types['timestamp']}",
+       "view_count int default 0",
       ]
     end
     
     def base_message_cols()
       [
        "id          #{sql_types['serial']} primary key",
-       "report_id   int",
+       "report_id   int not null",
        "create_time #{sql_types['timestamp']}",
        "hide        #{sql_types['boolean']}",
        "ip_addr     #{sql_types['varchar'].vt(15)}",
@@ -78,8 +55,8 @@ module Kagemai
       ]
     end
     
-    def self.init_tables(type, dir, project_id, report_type, charset)
-      store = type.new(dir, project_id, report_type, charset)
+    def self.init_tables(dir, project_id, report_type, charset)
+      store = self.new(dir, project_id, report_type, charset)
       
       report_cols = store.base_report_cols.dup
       message_cols = store.base_message_cols.dup
@@ -110,12 +87,21 @@ module Kagemai
     end
     
     def init_dbi(driver_name, dbname, user, pass, args, params = {})
-      @driver_url = BaseDBIStore3.create_driver_url(driver_name, dbname, args)
+      @driver_url = create_driver_url(driver_name, dbname, args)
       @user = user
       @pass = pass
       @params = params
       @connection = nil
     end
+    
+    def create_driver_url(driver_name, dbname, args)
+      db_args = args ? args.dup : {}
+      db_args['database'] = dbname
+      db_args_str = db_args.collect{|k, v| "#{k}=#{v}"}.join(';')
+      
+      "DBI:#{driver_name}:#{db_args_str}"
+    end
+    private :create_driver_url
     
     def table_opt()
       nil
@@ -128,7 +114,19 @@ module Kagemai
     def col_name(name)
       'e_' + name.downcase
     end
-        
+    
+    def sql_types()
+      self.class::SQL_TYPES
+    end
+    
+    def sql_op(key)
+      self.class::SQL_SEARCH_OP[key]
+    end
+    
+    def sql_search_op()
+      self.class::SQL_SEARCH_OP
+    end
+    
     def store_boolean(b)
       b
     end
@@ -189,7 +187,7 @@ module Kagemai
       next_id = nil
       execute do |db|
         next_id = db.select_one("select max(id) from #{table_name('reports')}")[0].to_i + 1
-        db.do("insert into #{table_name('reports')} (id, size) values (#{next_id}, 0)")
+        db.do("insert into #{table_name('reports')} (id) values (#{next_id})")
       end
       next_id
     end
@@ -243,7 +241,7 @@ module Kagemai
       execute do |db|
         id, = db.select_one("select id from #{table_name('reports')} where id = #{report.id}")
         if id.nil? then
-          db.do("insert into #{table_name('reports')} (id, size) values (#{report.id}, 0)")
+          db.do("insert into #{table_name('reports')} (id) values (#{report.id})")
         end
       end
       store(report)
@@ -286,7 +284,7 @@ module Kagemai
         report = Report.new(report_type, id)
         message_id = 0
         
-        db.select_all("select * from #{table_name('messages')} where report_id = #{id} order by id").each do |row|
+        db.select_all("select * from #{table_name('messages')} where report_id=? order by id", id).each do |row|
           message = Message.new(report_type, message_id)
           
           report_type.each {|etype| message[etype.id] = load_kconv(row[col_name(etype.id)]) }
@@ -307,6 +305,13 @@ module Kagemai
         
         report.ensure()
         report
+      end
+    end
+    
+    def increment_view_count(report_id)
+      execute do |db|
+        query = "UPDATE #{table_name('reports')} SET view_count=view_count+1 WHERE id=? "
+        db.do(query, report_id)
       end
     end
     
@@ -332,22 +337,26 @@ module Kagemai
       attr_id = []
       execute do |db|
         if cond_attr && cond_attr.size > 0 then
+          param = []
           cond_attr_query = cond_attr.to_sql3(sql_search_op()) {|eid, word|
-            [col_name(eid), db.quote(store_kconv(word))]
+            param << store_kconv(word)
+            [col_name(eid), '?']
           }
           rorder = (order == 'report_id') ? 'id' : order
           query = "select id from #{table_name('reports')} where (#{cond_attr_query}) order by #{rorder}"
-          attr_id = do_search_query(db, query, 'id', offset, limit)
+          attr_id = do_search_query(db, query, 'id', offset, limit, *param)
           id = attr_id
         end
         
         other_id = []
         if cond_other && cond_other.size > 0 then
+          param = []
           cond_other_query = cond_other.to_sql3(sql_search_op()) {|eid, word|
-            [col_name(eid), db.quote(store_kconv(word))]
+            param << store_kconv(word)
+            [col_name(eid), '?']
           }
           query = "select DISTINCT report_id from #{table_name('messages')} where #{cond_other_query} order by #{order}"
-          other_id = do_search_query(db, query, 'report_id', offset, limit)
+          other_id = do_search_query(db, query, 'report_id', offset, limit, *param)
           if id.nil? then
             id = other_id
           else
@@ -373,11 +382,9 @@ module Kagemai
     def collect_reports_with_choice(attr_id, choice_id)      
       reports = nil
       execute do |db|
-        query =  "select * from #{table_name('reports')}"
-        query += " where #{col_name(attr_id)} = '#{store_kconv(choice_id)}' order by id"
-        
+        query =  "select * from #{table_name('reports')} where #{col_name(attr_id)}=? order by id"
         reports = []
-        db.select_all(query) do |row|
+        db.select_all(query, store_kconv(choice_id)) do |row|
           reports << create_report_entry(row)
         end
       end
@@ -485,19 +492,18 @@ module Kagemai
     
     # convert encoding from view to db
     def store_kconv(view_encoded_str)
-      view_encoded_str
+      KKconv::conv(view_encoded_str, KKconv::EUC, KKconv::UTF8)
     end
     
     # convert encoding from db to view
     def load_kconv(db_encoded_str)
-      db_encoded_str
+      KKconv::conv(db_encoded_str.to_s, KKconv::UTF8, KKconv::EUC)
     end
     
-    def do_search_query(db, query, col, offset, limit)
-      Logger.debug('DBI', KKconv::conv(query, KKconv::EUC))
-      db.select_all(query).collect{|row| row[0]}
+    def do_search_query(db, query, col, offset, limit, *param)
+      db.select_all(query, *param).collect{|row| row[0]}
     end
-        
+    
     def do_search_query2(db, query, col, offset, limit)
       result = []
       db.execute(query) do |cursor|

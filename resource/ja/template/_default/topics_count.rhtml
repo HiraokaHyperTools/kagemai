@@ -14,10 +14,10 @@
   <%= choice.id.html_value.href(mode.url, params) %>(<%= counts[choice.id] %>) 
   <% total = total + counts[choice.id] %>
 <% end %>
-╧Г╥в: <%= total %>╥О 
+Е░┬Х╗┬: <%= total %>Д╩╤ 
 
 <% if project.size < total then %>
-  (╫ейё <%= total - project.size %>╥О)
+  (И┤█Х╓┤ <%= total - project.size %>Д╩╤)
 <% elsif project.size > total then %>
-  (л╓а╙бР <%= project.size - total %>╥О)
+  (Ф°╙И│╦Ф┼· <%= project.size - total %>Д╩╤)
 <% end %>
